@@ -15,6 +15,7 @@ public class LibraryManager {
     	String url = "jdbc:oracle:thin:@localhost:1588/FREEPDB1";
         String user = "libraryuser";
         String password = "java";
+        System.out.println("asd");
         return DriverManager.getConnection(url, user, password);
     }
 
