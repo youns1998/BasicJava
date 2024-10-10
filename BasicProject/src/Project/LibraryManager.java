@@ -12,8 +12,8 @@ public class LibraryManager {
     	} catch (ClassNotFoundException e) {
     	    e.printStackTrace();
     	}
-    	String url = "jdbc:oracle:thin:@localhost:1588/FREEPDB1";
-        String user = "luser";
+    	String url = "jdbc:oracle:thin:@192.168.142.32:1588/FREEPDB1";
+        String user = "libraryuser";
         String password = "java";
         return DriverManager.getConnection(url, user, password);
     }
