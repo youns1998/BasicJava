@@ -1,12 +1,12 @@
-package kr.or.ddit.dao;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import VO.UserVO;
 import kr.or.ddit.util.DBUtil;
-import kr.or.ddit.vo.UserVO;
 
 
 public class UserDaoImpl {
