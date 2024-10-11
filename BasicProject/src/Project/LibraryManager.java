@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class LibraryManager {
 
-    // Oracle DB 연결
+    // Oracle DB 연결123
     private static Connection connect() throws SQLException {
     	
     	try {
