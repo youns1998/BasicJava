@@ -1,4 +1,4 @@
-package kr.or.ddit.util;
+package UTIL;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

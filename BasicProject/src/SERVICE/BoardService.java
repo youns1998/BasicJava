@@ -3,18 +3,18 @@ package SERVICE;
 import java.util.List;
 
 import VO.BoardVO;
-import kr.or.ddit.dao.BoardDaoImpl;
+import DAO.BoardDao;
 
 
 
-public class BoardService{
-	private BoardDaoImpl dao;
+public class BoardService {
+	private BoardDao dao;
 	
 	//싱글톤 패턴 ------------------------------------------
 	private static BoardService service;
 	
 	private BoardService(){
-		dao = BoardDaoImpl.getInstance();
+		dao = BoardDao.getInstance();
 	}
 	
 	public static BoardService getInstance(){

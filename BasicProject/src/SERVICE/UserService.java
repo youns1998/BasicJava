@@ -1,16 +1,16 @@
 package SERVICE;
 
-import kr.or.ddit.dao.UserDaoImpl;
-import kr.or.ddit.vo.UserVO;
+import DAO.UserDao;
+import VO.UserVO;
 
 public class UserService{
-	private UserDaoImpl dao;
+	private UserDao dao;
 	
 	// 싱글톤 ----------------------------
 	private static UserService service;
 	
 	private UserService() {
-		dao = UserDaoImpl.getInstance();
+		dao = UserDao.getInstance();
 	}
 	
 	public static UserService getInstance() {

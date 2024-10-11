@@ -5,23 +5,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import UTIL.DBUtil;
 import VO.UserVO;
-import kr.or.ddit.util.DBUtil;
 
 
-public class UserDaoImpl {
+public class UserDao {
 	private Connection con = null;
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
 	
 	//싱글톤 패턴 ---------------------------------------------------
-	private static UserDaoImpl dao;
-	private UserDaoImpl(){}
-	public static UserDaoImpl getInstance(){
-		if(dao == null){
-			dao = new UserDaoImpl();
+	private static UserDao Dao;
+	private UserDao(){}
+	public static UserDao getInstance(){
+		if(Dao == null){
+			Dao = new UserDao();
 		}
-		return dao;
+		return Dao;
 	}
 	// ---------------------------------------------------------------
 	

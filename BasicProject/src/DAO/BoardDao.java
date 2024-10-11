@@ -1,4 +1,4 @@
-package kr.or.ddit.dao;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,25 +7,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.or.ddit.util.DBUtil;
-import kr.or.ddit.vo.BoardVO;
+import UTIL.DBUtil;
+import VO.BoardVO;
 
 
 
-public class BoardDaoImpl {
+public class BoardDao {
 	
 	private Connection con = null;
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
 	
 	//싱글톤 패턴 ---------------------------------------------------------
-	private static BoardDaoImpl dao;
+	private static BoardDao dao;
 	
-	private BoardDaoImpl(){}
+	private BoardDao(){}
 	
-	public static BoardDaoImpl getInstance(){
+	public static BoardDao getInstance(){
 		if(dao == null){
-			dao = new BoardDaoImpl();
+			dao = new BoardDao();
 		}
 		return dao;
 	}

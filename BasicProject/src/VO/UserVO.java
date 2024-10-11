@@ -1,6 +1,6 @@
 package VO;
 
-public class UserVo {
+public class UserVO {
 	private String user_id;
 	private String user_pass;
 	private String user_name;

@@ -1,17 +1,17 @@
-package kr.or.ddit.controller;
+package CONTROLLER;
 
-import kr.or.ddit.service.UserServiceImpl;
-import kr.or.ddit.util.Command;
-import kr.or.ddit.util.ScanUtil;
-import kr.or.ddit.vo.UserVO;
+import SERVICE.UserService;
+import UTIL.Command;
+import UTIL.ScanUtil;
+import VO.UserVO;
 
 public class UserController {
-	private UserServiceImpl userService;
+	private UserService userService;
 	
 	private static UserController controller;
 	
 	private UserController() {
-		userService = UserServiceImpl.getInstance();
+		userService = UserService.getInstance();
 	}
 	
 	public static UserController getInstance() {
