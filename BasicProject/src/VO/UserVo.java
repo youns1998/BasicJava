@@ -29,5 +29,4 @@ public class UserVo {
 		return "UserVO [user_id=" + user_id + ", user_pass=" + user_pass + ", user_name=" + user_name + "]";
 	}
 	
-
 }
