@@ -2,19 +2,19 @@ package CONTROLLER;
 
 import java.util.List;
 
-import kr.or.ddit.service.BoardServiceImpl;
-import kr.or.ddit.util.Command;
-import kr.or.ddit.util.ScanUtil;
-import kr.or.ddit.vo.BoardVO;
-import kr.or.ddit.vo.UserVO;
+import SERVICE.BoardService;
+import UTIL.Command;
+import UTIL.ScanUtil;
+import VO.BoardVO;
+import VO.UserVO;
 
 public class BoardController {
-	private BoardServiceImpl boardService;
+	private BoardService boardService;
 	
 	private static BoardController controller;
 	
 	private BoardController() {
-		boardService = BoardServiceImpl.getInstance();
+		boardService = BoardService.getInstance();
 	}
 	
 	public static BoardController getInstance() {

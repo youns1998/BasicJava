@@ -1,25 +1,25 @@
-package kr.or.ddit.dao;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import kr.or.ddit.util.DBUtil;
-import kr.or.ddit.vo.UserVO;
+import UTIL.DBUtil;
+import VO.UserVO;
 
 
-public class UserDaoImpl {
+public class UserDao {
 	private Connection con = null;
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
 	
 	//싱글톤 패턴 ---------------------------------------------------
-	private static UserDaoImpl dao;
-	private UserDaoImpl(){}
-	public static UserDaoImpl getInstance(){
+	private static UserDao dao;
+	private UserDao(){}
+	public static UserDao getInstance(){
 		if(dao == null){
-			dao = new UserDaoImpl();
+			dao = new UserDao();
 		}
 		return dao;
 	}

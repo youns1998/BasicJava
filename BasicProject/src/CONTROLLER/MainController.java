@@ -3,9 +3,9 @@ package CONTROLLER;
 import java.util.HashMap;
 import java.util.Map;
 
-import kr.or.ddit.util.ScanUtil;
-import Command;
-import UserVO;
+import UTIL.Command;
+import UTIL.ScanUtil;
+import VO.UserVO;
 
 
 public class MainController {

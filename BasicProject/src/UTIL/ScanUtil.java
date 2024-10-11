@@ -1,4 +1,4 @@
-package kr.or.ddit.util;
+package UTIL;
 
 import java.util.Scanner;
 
