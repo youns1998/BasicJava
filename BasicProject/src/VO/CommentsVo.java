@@ -1,11 +1,13 @@
 package VO;
 
+import java.time.LocalDateTime;
+
 public class CommentsVo {
 	private int comment_id;
 	private int post_id;
 	private String user_id;
 	private String content;
-	private String created_at;
+	private LocalDateTime created_at;
 	
 	public int getComment_id() {
 		return comment_id;
@@ -31,10 +33,10 @@ public class CommentsVo {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getCreated_at() {
+	public LocalDateTime getCreated_at() {
 		return created_at;
 	}
-	public void setCreated_at(String created_at) {
+	public void setCreated_at(LocalDateTime created_at) {
 		this.created_at = created_at;
 	}
 	
