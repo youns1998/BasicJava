@@ -11,7 +11,7 @@ import VO.UsersVo;
 
 public class UsersDao {
 	//사용자추가
-	public void addUser(UserVO user) {
+	public void addUser(UsersVo user) {
 		
 	}
 	//모든 사용자 조회
@@ -19,11 +19,11 @@ public class UsersDao {
 	//사용자 상세조회
 	
 	//사용자 정보 수정
-	public void updateUser(UserVO user) {
+	public void updateUser(UsersVo user) {
 		
 	}
 	//사용자 삭제
-	public void deleteUser(UserVO user) {
+	public void deleteUser(UsersVo user) {
 		
 	}
 }
