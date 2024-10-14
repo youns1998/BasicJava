@@ -2,7 +2,7 @@ package CONTROLLER;
 
 
 
-public class UserController {
+public class UsersController {
 	public static void main(String[] args) {
 		
 	}

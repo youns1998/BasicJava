@@ -9,7 +9,7 @@ import UTIL.DBUtil;
 import VO.UsersVo;
 
 
-public class UserDao {
+public class UsersDao {
 	//사용자추가
 	public void addUser(UserVO user) {
 		
