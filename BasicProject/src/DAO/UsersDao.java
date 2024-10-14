@@ -1,5 +1,5 @@
 package DAO;
-
+import java.time.LocalDateTime;
 import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +17,17 @@ public class UsersDao {
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
 	
+	private static UsersDao instance;
+
+	private UsersDao() {
+
+	}
+
+	public static UsersDao getInstance() {
+		if (instance == null)
+			instance = new UsersDao();
+		return instance;
+	}
 	private void disConnect() {
 		if(rs != null) try { rs.close(); } catch(Exception e) {}
 		if(ps != null) try { ps.close(); } catch(Exception e) {}
@@ -27,7 +38,7 @@ public class UsersDao {
 	public int addUser(UsersVo user) {
 		int cnt = 0;
 
-		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USER_NAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ) "
+		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS ) "
 				+ " VALUES (?, ? ,?, ?, ?, ?, ?)";
 		
 		try {
@@ -38,9 +49,10 @@ public class UsersDao {
 			ps.setString(3, user.getUsername());     // USER_NAME
 			ps.setString(4, user.getPhone_number()); // PHONE_NUMBER
 			ps.setString(5, user.getAddress());      // ADDRESS
-			ps.setTimestamp(6, Timestamp.valueOf(user.getCreated_at())); // CREATED_AT
+			ps.setTimestamp(6, user.getCreated_at() != null ? Timestamp.valueOf(user.getCreated_at()) : Timestamp.valueOf(LocalDateTime.now()));
 			ps.setString(7, user.getUser_pass());    // USER_PASS
 			cnt = ps.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

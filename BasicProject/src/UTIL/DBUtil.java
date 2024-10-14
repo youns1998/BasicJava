@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBUtil {
-    private static final String DB_URL = "jdbc:oracle:thin:@loc123123:1588/FREEPDB1";
-    private static final String DB_USER = "libraryuser";
+    private static final String DB_URL = "jdbc:oracle:thin:@localhost:1588/FREEPDB1";
+    private static final String DB_USER = "MARKET";
     private static final String DB_PASSWORD = "java";
 
     static {

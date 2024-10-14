@@ -3,13 +3,16 @@ package CONTROLLER;
 import UTIL.*;
 import VO.*;
 import CONTROLLER.*;
+import SERVICE.UsersService;
 
 public class UsersController {
-	
+	private UsersService userService;
 
 	private static UsersController instance;
 
-	
+	private UsersController() {
+		userService = UsersService.getInstance();
+	}
 
 	public static UsersController getInstance() {
 		if (instance == null)
@@ -33,15 +36,18 @@ public class UsersController {
 		userVo.setUser_id(userId);
 		userVo.setUser_pass(password);
 		userVo.setUsername(userName);
+		userVo.setAddress(address);
+		userVo.setEmail(email);
+		userVo.setPhone_number(phone_number);
 		
 		
-//		int result = userService.insertUser(userVo);
-//		
-//		if(0 < result){
-//			System.out.println("회원가입 성공");
-//		}else{
-//			System.out.println("회원가입 실패");
-//		}
+		int result = userService.addUser(userVo);
+		
+		if(0 < result){
+			System.out.println("회원가입 성공");
+		}else{
+			System.out.println("회원가입 실패");
+		}
 		
 		return Command.HOME;
 	}
