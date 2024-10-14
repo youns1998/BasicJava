@@ -1,10 +1,14 @@
 package CONTROLLER;
+import java.util.HashMap;
+import java.util.Map;
 import CONTROLLER.*;
 import UTIL.*;
 
 
 public class MainController {
 	
+	public static Map<String, Object> sessionMap = new HashMap<>();   
+
 	private UsersController usersController;
 	private CategoryController categoryController;
 	private CommentController commentController;

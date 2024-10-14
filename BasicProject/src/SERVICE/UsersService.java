@@ -28,6 +28,9 @@ public class UsersService{
 			return dao.addUser(user);
 		}
 		
+		public UsersVo getUser(UsersVo userVo) {
+			return dao.getUser(userVo);
+		}
 		public List<UsersVo> getPostList() {
 			return dao.getPostList();
 		}

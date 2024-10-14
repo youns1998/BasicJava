@@ -60,6 +60,36 @@ public class UsersDao {
 		}
 		return cnt;
 	}
+	
+	public UsersVo getUser(UsersVo userVo) {
+		UsersVo getUserVo = null;
+		
+		String sql = "SELECT USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS FROM USERS "
+				+ " WHERE USER_ID = ? AND USER_PASS = ?";
+		try {
+			con = DBUtil.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, userVo.getUser_id());
+			ps.setString(2, userVo.getUser_pass());
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				getUserVo = new UsersVo();
+				getUserVo.setUser_id(rs.getString("USER_ID"));
+				getUserVo.setUser_pass(rs.getString("USER_PASS"));
+				getUserVo.setUsername(rs.getString("USERNAME"));
+				getUserVo.setAddress(rs.getString("ADDRESS"));
+				getUserVo.setEmail(rs.getString("EMAIL"));
+				getUserVo.setPhone_number(rs.getString("PHONE_NUMBER"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disConnect();
+		}
+		
+		
+		return getUserVo;
+	}
 
 	//모든 사용자 조회
 	public List<UsersVo> getPostList(){

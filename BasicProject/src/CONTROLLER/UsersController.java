@@ -1,5 +1,6 @@
 package CONTROLLER;
-
+import java.util.HashMap;
+import java.util.Map;
 import UTIL.*;
 import VO.*;
 import CONTROLLER.*;
@@ -61,21 +62,20 @@ public class UsersController {
 		userVo.setUser_id(userId);
 		userVo.setUser_pass(password);
 		
-//		UsersVo loginUserVo = userService.getUser(userVo);
-//		
-//		if(loginUserVo == null){
-//			System.out.println("아이디 혹은 비밀번호를 잘못 입력하셨습니다.");
-//		}else{
-//			System.out.println("로그인 성공입니다...");
-//			// ProjectMain 클래스의 정적변수인 sessionMap에 로그인 정보를 저장한다.
-////			ProjectMain.sessionLoginUser = loginUser;
-//			MainController.sessionMap.put("loginUser", loginUserVo);
-//			
-//			return Command.USER_HOME;
-//		}
-//		return Command.LOGIN;
+		UsersVo loginUserVo = userService.getUser(userVo);
 		
-		return Command.USER_HOME;
+		if(loginUserVo == null){
+			System.out.println("아이디 혹은 비밀번호를 잘못 입력하셨습니다.");
+		}else{
+			System.out.println("로그인 성공입니다...");
+			// ProjectMain 클래스의 정적변수인 sessionMap에 로그인 정보를 저장한다.
+//			ProjectMain.sessionLoginUser = loginUser;
+			MainController.sessionMap.put("loginUser", loginUserVo);
+			
+			return Command.USER_HOME;
+		}
+		return Command.LOGIN;
+		
 	}
 	
 	public Command userHome() {
