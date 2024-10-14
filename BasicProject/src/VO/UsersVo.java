@@ -9,7 +9,7 @@ public class UsersVo {
 	private String phone_number;
 	private String address;
 	private LocalDateTime created_at;
-	
+	private String user_pass;
 
 
 
@@ -54,6 +54,12 @@ public class UsersVo {
 	public String toString() {
 		return "UsersVo [user_id=" + user_id + ", email=" + email + ", username=" + username + ", phone_number="
 				+ phone_number + ", address=" + address + ", created_at=" + created_at + "]";
+	}
+	public String getUser_pass() {
+		return user_pass;
+	}
+	public void setUser_pass(String user_pass) {
+		this.user_pass = user_pass;
 	}
 	
 	
