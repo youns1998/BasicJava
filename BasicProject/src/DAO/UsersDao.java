@@ -75,6 +75,7 @@ public class UsersDao {
 			ps.setString(1, userVo.getUser_id());
 			ps.setString(2, userVo.getUser_pass());
 			rs = ps.executeQuery();
+			
 			if(rs.next()) {
 				getUserVo = new UsersVo();
 				getUserVo.setUser_id(rs.getString("USER_ID"));

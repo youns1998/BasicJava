@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 import UTIL.*;
 import VO.*;
-import kr.or.ddit.vo.UserVO;
+import VO.UsersVo;
 import CONTROLLER.*;
 import SERVICE.UsersService;
 

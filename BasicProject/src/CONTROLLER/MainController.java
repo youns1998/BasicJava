@@ -4,10 +4,6 @@ import java.util.Map;
 import CONTROLLER.*;
 import UTIL.*;
 import VO.UsersVo;
-import kr.or.ddit.controller.MainController2;
-import kr.or.ddit.util.Command;
-import kr.or.ddit.util.ScanUtil;
-import kr.or.ddit.vo.UserVO;
 
 
 public class MainController {

@@ -1,6 +1,7 @@
 package CONTROLLER;
 
-import UTIL.*;
+import UTIL.Command;
+import UTIL.ScanUtil;
 
 
 ////작성글
