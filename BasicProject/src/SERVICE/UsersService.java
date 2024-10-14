@@ -15,7 +15,7 @@ public class UsersService{
 		}
 		
 		public List<UsersVo> getPostList() {
-			return dao.getPostList();
+			return dao.getUserList();
 		}
 		
 		public int search(String user_id) {
