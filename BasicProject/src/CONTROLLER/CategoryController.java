@@ -1,7 +1,15 @@
 package CONTROLLER;
 
 public class CategoryController {
-public static void main(String[] args) {
-	
-}
+	private static CategoryController instance;
+
+	private CategoryController() {
+
+	}
+
+	public static CategoryController getInstance() {
+		if (instance == null)
+			instance = new CategoryController();
+		return instance;
+	}
 }

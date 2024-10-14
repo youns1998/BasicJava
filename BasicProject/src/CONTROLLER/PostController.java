@@ -3,7 +3,15 @@ package CONTROLLER;
 
 
 public class PostController {
-public static void main(String[] args) {
-	
-}	
+	private static PostController instance;
+
+	private PostController() {
+
+	}
+
+	public static PostController getInstance() {
+		if (instance == null)
+			instance = new PostController();
+		return instance;
+	}
 }
