@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import UTIL.DBUtil;
-import VO.PostVO;
+import VO.PostVo;
 
 
 

@@ -2,7 +2,7 @@ package SERVICE;
 
 import java.util.List;
 
-import VO.PostVO;
+import VO.PostVo;
 import DAO.PostDAO;
 
 
