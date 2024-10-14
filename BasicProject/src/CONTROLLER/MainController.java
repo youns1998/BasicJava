@@ -35,12 +35,14 @@ public class MainController {
 			case LOGIN: cmd = usersController.login(); break;
 			case JOIN: cmd = usersController.join(); break;
 			case MYPAGE: cmd = usersController.myPage(); break;
+			//로그인 후
+			case USER_HOME: cmd = usersController.userHome(); break;
 			
 			//작성글
-			case POST_DELETE: cmd = postController
-			case POST_INSERT:
-			case POST_LIST:
-			case POST_UPDATE:
+			case POST_DELETE: cmd = postController.postDelete();break;
+			case POST_INSERT: cmd = postController.postInsert();break;
+			case POST_LIST: cmd = postController.postList();break;
+			case POST_UPDATE: cmd = postController.postUpdate();break;
 				
 			//댓글
 			case COMMENT_DELETE:
@@ -62,8 +64,7 @@ public class MainController {
 			
 			
 			
-			//내정보
-			case USER_HOME:
+			
 			
 			
 			case END:

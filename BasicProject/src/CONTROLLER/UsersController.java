@@ -72,6 +72,28 @@ public class UsersController {
 		return Command.USER_HOME;
 	}
 	
+	public Command userHome() {
+		System.out.println("메인 페이지");
+		String userId = ScanUtil.nextLine("돌아가기 1 글 보기 2");
+		int input = ScanUtil.nextInt("1 삭제 2 삽입 3 출력 4 업데이트 0 돌아가기>> ");
+
+		switch (input) {
+		case 1:
+			return Command.POST_DELETE;
+		case 2:
+			return Command.POST_INSERT;
+		case 3:
+			return Command.POST_LIST;
+		case 4:
+			return Command.POST_UPDATE;
+		case 0:
+			return Command.USER_HOME;
+			
+		}
+		return Command.USER_HOME;
+
+	}
+	
 	public Command myPage() {
 		System.out.println("============== MY PAGE ====================");
 		
