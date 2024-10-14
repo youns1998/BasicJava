@@ -1,6 +1,6 @@
 package VO;
 
-public class PostVO {
+public class PostVo {
 	
 	private int board_no;
 	private String title;

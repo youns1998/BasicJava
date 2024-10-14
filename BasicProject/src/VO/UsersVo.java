@@ -11,7 +11,8 @@ public class UsersVo {
 	private LocalDateTime created_at;
 	
 
-    
+
+
 	public String getUser_id() {
 		return user_id;
 	}
@@ -42,10 +43,10 @@ public class UsersVo {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getCreated_at() {
+	public LocalDateTime getCreated_at() {
 		return created_at;
 	}
-	public void setCreated_at(String created_at) {
+	public void setCreated_at(LocalDateTime created_at) {
 		this.created_at = created_at;
 	}
 	

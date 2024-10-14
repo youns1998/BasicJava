@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import UTIL.DBUtil;
-import VO.UserVO;
+import VO.UsersVo;
 
 
 public class UserDao {
