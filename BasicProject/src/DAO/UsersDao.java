@@ -23,10 +23,10 @@ public class UsersDao {
 		if(con != null) try { con.close(); } catch(Exception e) {}
 	}
 	
-	
 	//사용자 추가
 	public int addUser(UsersVo user) {
 		int cnt = 0;
+
 		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USER_NAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ) "
 				+ " VALUES (?, ? ,?, ?, ?, ?, ?)";
 		
@@ -40,34 +40,27 @@ public class UsersDao {
 			ps.setString(5, user.getAddress());      // ADDRESS
 			ps.setTimestamp(6, Timestamp.valueOf(user.getCreated_at())); // CREATED_AT
 			ps.setString(7, user.getUser_pass());    // USER_PASS
-			
 			cnt = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			disConnect();
 		}
-		
 		return cnt;
 	}
-	
 
 	//모든 사용자 조회
 	public List<UsersVo> getPostList(){
 		List<UsersVo> userList = null;
-		
 		String sql = "SELECT * FROM USERS";
 		
 		try {
 			con = DBUtil.getConnection();
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
-			
 			userList = new ArrayList<UsersVo>();
-			
 			while(rs.next()) {
 				UsersVo user = new UsersVo();
-				
 				user.setUser_id(rs.getString("USER_ID"));
 				user.setEmail(rs.getString("EMAIL"));
 				user.setUsername(rs.getString("USERNAME"));
@@ -76,7 +69,6 @@ public class UsersDao {
 				user.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
 				userList.add(user);
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -87,39 +79,29 @@ public class UsersDao {
 	
 	// 사용자 상세조회
 	public int search(String user_id) {
-	int cnt = 0;
-	
+		int cnt=0;
 	String sql = "SELECT FROM USERS "
 			+ " WHERE USER_ID = ? ";
-	
 	try {
 		con = DBUtil.getConnection();
 		ps = con.prepareStatement(sql);
 		ps.setString(1, user_id);
-		
 		rs = ps.executeQuery();
-		
 	} catch (SQLException e) {
 		e.printStackTrace();
 	} finally {
 		disConnect();
 	}
-	
 	return cnt;
 }
 
-<<<<<<< HEAD
-	//사용자 정보 수정
-	public int updateUser(UsersVo user) {
-		UsersVo getUserVo = null;
-=======
+
+
 	// 사용자 정보 수정
 	public int updateUser(UsersVo user) {
 		int cnt = 0;
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 
 	    String sql = "UPDATE USERS SET USER_PASS = ?,EMAIL = ? , USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ?, WHERE USER_ID = ?"; // 공백 추가
-
 	    try {
 	        con = DBUtil.getConnection();
 	        ps = con.prepareStatement(sql);
@@ -130,34 +112,13 @@ public class UsersDao {
 	        ps.setString(5, user.getAddress());
 	        ps.setString(6, user.getUser_id());
 	        
-	        ps = con.prepareStatement(sql);
-			
-<<<<<<< HEAD
+
 			ps.setString(1, user.getUser_pass());
 			ps.setString(2, user.getUser_id());
 			
-			rs =  ps.executeUpdate();
-			if(rs.next()) {
-				getUserVo = new UsersVo();
-				getUserVo.setUser_id(rs.getString("USER_ID"));
-				getUserVo.setUser_pass(rs.getString("USER_PASS"));
-				getUserVo.setUsername(rs.getString("USER_NAME"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			disConnect();
-		}
-
-
-		return ;
-		}
-=======
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
-	
-			
+			ps = con.prepareStatement(sql);
 			cnt = ps.executeUpdate();
-			
+
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } finally {
@@ -169,10 +130,8 @@ public class UsersDao {
 	//사용자 삭제
 	public int deleteUser(String user_id) {
 		int cnt = 0;
-		
 		String sql = "DELETE FROM USERS "
 				+ " WHERE USER_ID = ? ";
-		
 		try {
 			con = DBUtil.getConnection();
 			ps = con.prepareStatement(sql);
@@ -185,8 +144,29 @@ public class UsersDao {
 		} finally {
 			disConnect();
 		}
-		
 		return cnt;
 	}
 	
+//	회원ID의 갯수를 반환하는 메서드
+	public int getMemberCount(String user_id) {
+		int count = 0;		//반환 값이 저장될 변수
+		 try {
+	         con = DBUtil.getConnection();
+	         String sql = "select count(*) cnt from users "
+	               + "where user_id = ?";
+	         ps = con.prepareStatement(sql);
+	         ps.setString(1, user_id);
+	         
+	         rs = ps.executeQuery();
+	         
+	         if(rs.next()) {
+	            count = rs.getInt("cnt");
+	         }
+	      } catch (SQLException e) {
+	         e.printStackTrace();
+	      } finally {
+	    	  disConnect();
+	      }
+		return count;
+	}
 }

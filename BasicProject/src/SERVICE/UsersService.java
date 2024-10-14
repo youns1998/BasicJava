@@ -30,4 +30,8 @@ public class UsersService{
 			return deleteUser(user_id);
 		}
 		
+		public int getMemberCount(String user_id) {
+			return getMemberCount(user_id);
+		}
+		
 }
