@@ -3,13 +3,16 @@ package CONTROLLER;
 import UTIL.*;
 import VO.*;
 import CONTROLLER.*;
+import SERVICE.UsersService;
 
 public class UsersController {
-	
+	private UsersService userService;
 
 	private static UsersController instance;
 
-	
+	private UsersController() {
+		userService = UsersService.getInstance();
+	}
 
 	public static UsersController getInstance() {
 		if (instance == null)
@@ -33,15 +36,18 @@ public class UsersController {
 		userVo.setUser_id(userId);
 		userVo.setUser_pass(password);
 		userVo.setUsername(userName);
+		userVo.setAddress(address);
+		userVo.setEmail(email);
+		userVo.setPhone_number(phone_number);
 		
 		
-//		int result = userService.insertUser(userVo);
-//		
-//		if(0 < result){
-//			System.out.println("회원가입 성공");
-//		}else{
-//			System.out.println("회원가입 실패");
-//		}
+		int result = userService.addUser(userVo);
+		
+		if(0 < result){
+			System.out.println("회원가입 성공");
+		}else{
+			System.out.println("회원가입 실패");
+		}
 		
 		return Command.HOME;
 	}
@@ -70,6 +76,28 @@ public class UsersController {
 //		return Command.LOGIN;
 		
 		return Command.USER_HOME;
+	}
+	
+	public Command userHome() {
+		System.out.println("메인 페이지");
+		String userId = ScanUtil.nextLine("돌아가기 1 글 보기 2");
+		int input = ScanUtil.nextInt("1 삭제 2 삽입 3 출력 4 업데이트 0 돌아가기>> ");
+
+		switch (input) {
+		case 1:
+			return Command.POST_DELETE;
+		case 2:
+			return Command.POST_INSERT;
+		case 3:
+			return Command.POST_LIST;
+		case 4:
+			return Command.POST_UPDATE;
+		case 0:
+			return Command.USER_HOME;
+			
+		}
+		return Command.USER_HOME;
+
 	}
 	
 	public Command myPage() {
