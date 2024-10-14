@@ -26,7 +26,7 @@ public class UsersDao {
 	
 	//사용자 추가
 	public int addUser(UsersVo user) {
-int cnt = 0;
+		int cnt = 0;
 		
 		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USER_NAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ) "
 				+ " VALUES (?, ? ,?, ?, ?, ?, ?)";
@@ -54,7 +54,7 @@ int cnt = 0;
 	
 
 	//모든 사용자 조회
-	public List<UsersVo> getBoardList(){
+	public List<UsersVo> getPostList(){
 		List<UsersVo> userList = null;
 		
 		String sql = "SELECT * FROM USERS";
@@ -110,7 +110,7 @@ int cnt = 0;
 }
 
 	//사용자 정보 수정
-	public UsersVo updateUser(UsersVo user) {
+	public int updateUser(UsersVo user) {
 		UsersVo getUserVo = null;
 
 		String sql = "UPDATE USERS SET USER_PASS = ?"
@@ -137,12 +137,12 @@ int cnt = 0;
 		}
 
 
-		return getUserVo;
+		return ;
 		}
 	
 	//사용자 삭제
 	public int deleteUser(String user_id) {
-int cnt = 0;
+		int cnt = 0;
 		
 		String sql = "DELETE FROM TB_JDBC_BOARD "
 				+ " WHERE BOARD_NO = ? ";
