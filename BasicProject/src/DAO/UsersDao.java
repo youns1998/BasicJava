@@ -27,7 +27,7 @@ public class UsersDao {
 	//사용자 추가
 	public int addUser(UsersVo user) {
 		int cnt = 0;
-		
+		int c;
 		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USER_NAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ) "
 				+ " VALUES (?, ? ,?, ?, ?, ?, ?)";
 		
