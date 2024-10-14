@@ -1,16 +1,24 @@
 package CONTROLLER;
-
+import CONTROLLER.*;
 import UTIL.*;
 
-import CONTROLLER.UsersController;
 
 public class MainController {
 	
 	private UsersController usersController;
-
+	private CategoryController categoryController;
+	private CommentController commentController;
+	private FavoriteController favoriteController;
+	private HistoryController historyController;
+	private PostController postController;
 	
 	public MainController() {
 		usersController = UsersController.getInstance();
+		categoryController = CategoryController.getInstance();
+		commentController = CommentController.getInstance();
+		favoriteController = FavoriteController.getInstance();
+		historyController = HistoryController.getInstance();
+		postController = PostController.getInstance();
 	}
 	public static void main(String[] args) {
 		new MainController().start();
@@ -27,6 +35,13 @@ public class MainController {
 			case LOGIN: cmd = usersController.login(); break;
 			case JOIN: cmd = usersController.join(); break;
 			case MYPAGE: cmd = usersController.myPage(); break;
+			//거래 글
+			//댓글
+
+			//카테고리
+			//관심물품
+			//거래내역
+
 			
 			case END:
 				System.out.println("프로그램이 종료되었습니다. ");

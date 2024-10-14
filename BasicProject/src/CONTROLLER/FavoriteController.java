@@ -1,7 +1,15 @@
 package CONTROLLER;
 
 public class FavoriteController {
-public static void main(String[] args) {
-	
-}
+	private static FavoriteController instance;
+
+	private FavoriteController() {
+
+	}
+
+	public static FavoriteController getInstance() {
+		if (instance == null)
+			instance = new FavoriteController();
+		return instance;
+	}
 }
