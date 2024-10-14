@@ -2,7 +2,7 @@ package VO;
 
 public class PostVo {
 	
-	private int board_no;
+	private int post_id;
 	private String title;
 	private String content;
 	private String user_id;
@@ -10,12 +10,12 @@ public class PostVo {
 	
 	private String user_name;
 
-	public int getBoard_no() {
-		return board_no;
+	public int getpost_id() {
+		return post_id;
 	}
 
-	public void setBoard_no(int board_no) {
-		this.board_no = board_no;
+	public void setpost_id(int post_id) {
+		this.post_id = post_id;
 	}
 
 	public String getTitle() {
@@ -60,7 +60,7 @@ public class PostVo {
 
 	@Override
 	public String toString() {
-		return "BoardVO [board_no=" + board_no + ", title=" + title + ", content=" + content + ", user_id=" + user_id
+		return "BoardVO [post_id=" + post_id + ", title=" + title + ", content=" + content + ", user_id=" + user_id
 				+ ", reg_date=" + reg_date + ", user_name=" + user_name + "]";
 	}
 	
