@@ -35,13 +35,36 @@ public class MainController {
 			case LOGIN: cmd = usersController.login(); break;
 			case JOIN: cmd = usersController.join(); break;
 			case MYPAGE: cmd = usersController.myPage(); break;
-			//거래 글
+			
+			//작성글
+			case POST_DELETE: cmd = postController
+			case POST_INSERT:
+			case POST_LIST:
+			case POST_UPDATE:
+				
 			//댓글
-
+			case COMMENT_DELETE:
+			case COMMENT_INSERT:
+			case COMMENT_LIST:
+			case COMMENT_UPDATE:
+				
+				
 			//카테고리
+			case CATEGORY_LIST:
+			
+			
+			
 			//관심물품
-			//거래내역
-
+			case FAVORITE_LIST:
+			
+			//거래 기록
+			case HISTORY_LIST:
+			
+			
+			
+			//내정보
+			case USER_HOME:
+			
 			
 			case END:
 				System.out.println("프로그램이 종료되었습니다. ");
