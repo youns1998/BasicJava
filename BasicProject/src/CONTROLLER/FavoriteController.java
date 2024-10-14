@@ -9,7 +9,7 @@ import VO.FavoriteVo;
 public class FavoriteController {
 	private FavoriteService favoriteService = new FavoriteService();
 
-	 ㄴ
+	 
 	
 	
 	
