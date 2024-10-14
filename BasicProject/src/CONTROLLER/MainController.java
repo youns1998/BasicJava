@@ -38,7 +38,7 @@ public class MainController {
 				
 				// 로그인 후
 				case USER_HOME: cmd = usersController.userHome(); break;
-				
+				 
 //				// 게시글 관리
 //				case POST_DELETE: cmd = postController.postDelete(); break;
 //				case POST_INSERT: cmd = postController.postInsert(); break;

@@ -21,7 +21,7 @@ public class HistoryDAO {
 	public int addTransaction(HistoryVo history) {
 		int cnt = 0;
 		
-		String sql = "INSERT INTO TRANSACTION_HISTORY ("
+		String sql = "INSERT INTO TRANSACTION_HISTORY "
 	}
 	
 	
