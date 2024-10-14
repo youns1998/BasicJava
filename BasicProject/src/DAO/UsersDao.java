@@ -26,7 +26,7 @@ public class UsersDao {
 	
 	//사용자 추가
 	public int addUser(UsersVo user) {
-int cnt = 0;
+		int cnt = 0;
 		
 		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USER_NAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ) "
 				+ " VALUES (?, ? ,?, ?, ?, ?, ?)";
@@ -109,43 +109,42 @@ int cnt = 0;
 	return cnt;
 }
 
-	//사용자 정보 수정
-	public UsersVo updateUser(UsersVo user) {
-		UsersVo getUserVo = null;
+	// 사용자 정보 수정
+	public int updateUser(UsersVo user) {
+		int cnt = 0;
 
-		String sql = "UPDATE USERS SET USER_PASS = ?"
-				+ "WHERE USER_ID = ?";
-		
-		try {
-			con = DBUtil.getConnection();
-			ps = con.prepareStatement(sql);
+	    String sql = "UPDATE USERS SET USER_PASS = ?,EMAIL = ? , USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ?, WHERE USER_ID = ?"; // 공백 추가
+
+	    try {
+	        con = DBUtil.getConnection();
+	        ps = con.prepareStatement(sql);
+	        ps.setString(1, user.getUser_pass()); 
+	        ps.setString(2, user.getEmail()); 
+	        ps.setString(3, user.getUsername());
+	        ps.setString(4, user.getPhone_number());
+	        ps.setString(5, user.getAddress());
+	        ps.setString(6, user.getUser_id());
+	        
+	        ps = con.prepareStatement(sql);
 			
-			ps.setString(1, user.getUser_pass());
-			ps.setString(2, user.getUser_id());
-			
-			rs =  ps.executeUpdate();
-			if(rs.next()) {
-				getUserVo = new UsersVo();
-				getUserVo.setUser_id(rs.getString("USER_ID"));
-				getUserVo.setUser_pass(rs.getString("USER_PASS"));
-				getUserVo.setUsername(rs.getString("USER_NAME"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			disConnect();
-		}
-
-
-		return getUserVo;
-		}
 	
+			
+			cnt = ps.executeUpdate();
+			
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        disConnect(); // 자원 해제
+	    }
+
+	    return cnt;  
+	}
 	//사용자 삭제
 	public int deleteUser(String user_id) {
-int cnt = 0;
+		int cnt = 0;
 		
-		String sql = "DELETE FROM TB_JDBC_BOARD "
-				+ " WHERE BOARD_NO = ? ";
+		String sql = "DELETE FROM USERS "
+				+ " WHERE USER_ID = ? ";
 		
 		try {
 			con = DBUtil.getConnection();
