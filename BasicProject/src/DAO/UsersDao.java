@@ -10,7 +10,7 @@ import java.util.List;
 
 import UTIL.DBUtil;
 import VO.UsersVo;
-import kr.or.ddit.util.DButil;
+
 
 public class UsersDao {
 	private Connection con = null;
@@ -26,6 +26,7 @@ public class UsersDao {
 	//사용자 추가
 	public int addUser(UsersVo user) {
 		int cnt = 0;
+
 		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USER_NAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ) "
 				+ " VALUES (?, ? ,?, ?, ?, ?, ?)";
 		
@@ -49,7 +50,7 @@ public class UsersDao {
 	}
 
 	//모든 사용자 조회
-	public List<UsersVo> getBoardList(){
+	public List<UsersVo> getPostList(){
 		List<UsersVo> userList = null;
 		String sql = "SELECT * FROM USERS";
 		
@@ -93,9 +94,13 @@ public class UsersDao {
 	}
 	return cnt;
 }
+
+
+
 	// 사용자 정보 수정
 	public int updateUser(UsersVo user) {
 		int cnt = 0;
+
 	    String sql = "UPDATE USERS SET USER_PASS = ?,EMAIL = ? , USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ?, WHERE USER_ID = ?"; // 공백 추가
 	    try {
 	        con = DBUtil.getConnection();
@@ -107,8 +112,13 @@ public class UsersDao {
 	        ps.setString(5, user.getAddress());
 	        ps.setString(6, user.getUser_id());
 	        
-	        ps = con.prepareStatement(sql);
+
+			ps.setString(1, user.getUser_pass());
+			ps.setString(2, user.getUser_id());
+			
+			ps = con.prepareStatement(sql);
 			cnt = ps.executeUpdate();
+
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } finally {
