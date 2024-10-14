@@ -1,5 +1,7 @@
 package DAO;
 
+import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +19,17 @@ public class UsersDao {
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
 	
+	private static UsersDao instance;
+
+	private UsersDao() {
+
+	}
+
+	public static UsersDao getInstance() {
+		if (instance == null)
+			instance = new UsersDao();
+		return instance;
+	}
 	private void disConnect() {
 		if(rs != null) try { rs.close(); } catch(Exception e) {}
 		if(ps != null) try { ps.close(); } catch(Exception e) {}
@@ -27,7 +40,7 @@ public class UsersDao {
 	public int addUser(UsersVo user) {
 		int cnt = 0;
 
-		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS) "
+		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS ) "
 				+ " VALUES (?, ? ,?, ?, ?, ?, ?)";
 		
 		try {
@@ -38,7 +51,7 @@ public class UsersDao {
 			ps.setString(3, user.getUsername());     // USER_NAME
 			ps.setString(4, user.getPhone_number()); // PHONE_NUMBER
 			ps.setString(5, user.getAddress());      // ADDRESS
-			ps.setTimestamp(6, Timestamp.valueOf(user.getCreated_at())); // CREATED_AT
+			ps.setTimestamp(6, user.getCreated_at() != null ? Timestamp.valueOf(user.getCreated_at()) : Timestamp.valueOf(LocalDateTime.now()));
 			ps.setString(7, user.getUser_pass());    // USER_PASS
 			cnt = ps.executeUpdate();
 			
@@ -48,6 +61,37 @@ public class UsersDao {
 			disConnect();
 		}
 		return cnt;
+	}
+	
+	//사용자 상세 조회
+	public UsersVo getUser(UsersVo userVo) {
+		UsersVo getUserVo = null;
+		
+		String sql = "SELECT USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS FROM USERS "
+				+ " WHERE USER_ID = ? AND USER_PASS = ?";
+		try {
+			con = DBUtil.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, userVo.getUser_id());
+			ps.setString(2, userVo.getUser_pass());
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				getUserVo = new UsersVo();
+				getUserVo.setUser_id(rs.getString("USER_ID"));
+				getUserVo.setUser_pass(rs.getString("USER_PASS"));
+				getUserVo.setUsername(rs.getString("USERNAME"));
+				getUserVo.setAddress(rs.getString("ADDRESS"));
+				getUserVo.setEmail(rs.getString("EMAIL"));
+				getUserVo.setPhone_number(rs.getString("PHONE_NUMBER"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disConnect();
+		}
+		
+		
+		return getUserVo;
 	}
 
 	//모든 사용자 조회
@@ -78,40 +122,6 @@ public class UsersDao {
 		return userList;
 	}
 	
-	// 사용자 상세조회
-	public UsersVo getUser_id(String user_id) {
-		UsersVo uservo = null;
-	String sql = "SELECT * FROM USERS WHERE USER_ID = ?";
-
-	try {
-		
-		con = DBUtil.getConnection();
-		ps = con.prepareStatement(sql);
-		ps.setString(1, user_id);
-		rs = ps.executeQuery();
-		
-		if(rs.next()) {
-		 uservo= new UsersVo();
-		 uservo.setUser_id(rs.getString("USER_ID")); // 사용자 ID 설정
-	     uservo.setEmail(rs.getString("EMAIL")); // 이메일 설정
-		 uservo.setUsername(rs.getString("USERNAME")); // 사용자 이름 설정
-		 uservo.setPhone_number(rs.getString("PHONE_NUMBER")); // 전화번호 설정
-		 uservo.setAddress(rs.getString("ADDRESS")); // 주소 설정
-		 uservo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime()); // 생성일 설정
-			}
-			
-		}
-	
-	 catch (SQLException e) {
-		e.printStackTrace();
-	} finally {
-		disConnect();
-	}
-	return uservo;
-}
-
-
-
 	// 사용자 정보 수정
 	public int updateUser(UsersVo user) {
 		int cnt = 0;

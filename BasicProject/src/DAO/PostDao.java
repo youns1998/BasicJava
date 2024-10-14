@@ -150,6 +150,7 @@ try {
 		
 	String sql= "UPDATE POST SET TITLE = ?, CONTENT = ?, PRICE = ?, CONDITION = ?, "
 			+ " CATEGORY_ID = ?, UPDATED_AT = SYSDATE WHERE POST_ID = ?";	
+	
 	try {
 		con=DBUtil.getConnection();
 		ps= con.prepareStatement(sql);

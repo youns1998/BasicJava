@@ -10,10 +10,27 @@ public class UsersService{
 	private UsersDao dao;
 	
 		
+	
+	private static UsersService instance;
+
+	private UsersService() {
+		this.dao = UsersDao.getInstance();
+
+	}
+
+	public static UsersService getInstance() {
+		if (instance == null)
+			instance = new UsersService();
+		return instance;
+	}
+	
 		public int addUser(UsersVo user) {
 			return dao.addUser(user);
 		}
 		
+		public UsersVo getUser(UsersVo userVo) {
+			return dao.getUser(userVo);
+		}
 		public List<UsersVo> getPostList() {
 			return dao.getUserList();
 		}
