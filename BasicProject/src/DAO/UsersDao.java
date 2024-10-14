@@ -10,7 +10,6 @@ import java.util.List;
 
 import UTIL.DBUtil;
 import VO.UsersVo;
-import kr.or.ddit.util.DButil;
 
 public class UsersDao {
 	private Connection con = null;
@@ -40,6 +39,7 @@ public class UsersDao {
 			ps.setTimestamp(6, Timestamp.valueOf(user.getCreated_at())); // CREATED_AT
 			ps.setString(7, user.getUser_pass());    // USER_PASS
 			cnt = ps.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -96,7 +96,7 @@ public class UsersDao {
 	// 사용자 정보 수정
 	public int updateUser(UsersVo user) {
 		int cnt = 0;
-	    String sql = "UPDATE USERS SET USER_PASS = ?,EMAIL = ? , USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ?, WHERE USER_ID = ?"; // 공백 추가
+	    String sql = "UPDATE USERS SET USER_PASS = ?,EMAIL = ? , USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ?, WHERE USER_ID = ?"; 
 	    try {
 	        con = DBUtil.getConnection();
 	        ps = con.prepareStatement(sql);
