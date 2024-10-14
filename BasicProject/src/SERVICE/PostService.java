@@ -2,11 +2,11 @@ package SERVICE;
 
 import java.util.List;
 
-import VO.BoardVO;
+import VO.PostVO;
 import DAO.PostDAO;
 
 
 
-public class BoardService {
+public class PostService {
 	
 }

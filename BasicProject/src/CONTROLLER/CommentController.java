@@ -1,9 +1,9 @@
 package CONTROLLER;
 
+public class CommentController {
 
-
-public class UserController {
 	public static void main(String[] args) {
-		
+
 	}
+
 }
