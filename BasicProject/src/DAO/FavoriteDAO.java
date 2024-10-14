@@ -7,6 +7,8 @@ import java.util.List;
 import UTIL.DBUtil;
 import VO.FavoriteVo;
 
+ㄴ
+
 public class FavoriteDAO {
 //관심 상품 추가
 	public void addFavorite(FavoriteVo favorite) {
