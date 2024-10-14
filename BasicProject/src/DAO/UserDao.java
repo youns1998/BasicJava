@@ -10,9 +10,20 @@ import VO.UserVO;
 
 
 public class UserDao {
-//사용자추가
+	//사용자추가
+	public void addUser(UserVO user) {
+		
+	}
 	//모든 사용자 조회
+	
 	//사용자 상세조회
+	
 	//사용자 정보 수정
+	public void updateUser(UserVO user) {
+		
+	}
 	//사용자 삭제
+	public void deleteUser(UserVO user) {
+		
+	}
 }
