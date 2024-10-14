@@ -10,6 +10,9 @@ public class UsersVo {
 	private String phone_number;
 	private String address;
 	private LocalDateTime created_at;
+
+
+
 	
 	public String getUser_id() {
 		return user_id;
@@ -59,6 +62,7 @@ public class UsersVo {
 				+ username + ", phone_number=" + phone_number + ", address=" + address + ", created_at=" + created_at
 				+ "]";
 	}
+
 	
 	
 }
