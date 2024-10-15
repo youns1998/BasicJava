@@ -49,17 +49,16 @@ public class MainController {
 				// 게시글 관리
 				case POST_DELETE: cmd = postController.postDelete(); break;
 				case POST_INSERT: cmd = postController.postInsert(); break;
-			//	case POST_ADMIN: cmd = postController.
 				
 //				// 게시글 관리
 //				case POST_DELETE: cmd = postController.postDelete(); break;
 //				case POST_INSERT: cmd = postController.postInsert(); break;
 				case POST_LIST: cmd = postController.postList(); break;
 				case POST_UPDATE: cmd = postController.postUpdate(); break;
-//				
+				case POST_DETAIL: cmd = postController.detailPost(); break;	
 //				// 댓글 관리
 //				case COMMENT_DELETE: cmd = commentController.commentDelete(); break;
-//				case COMMENT_INSERT: cmd = commentController.commentInsert(); break;
+				case COMMENT_INSERT: cmd = commentController.commentInsert(); break;
 //				case COMMENT_LIST: cmd = commentController.commentList(); break;
 //				case COMMENT_UPDATE: cmd = commentController.commentUpdate(); break;
 //				
@@ -68,7 +67,7 @@ public class MainController {
 //				
 //				 관심 물품 보기
 //				case FAVORITE_LIST: cmd = favoriteController.favoriteList(); break;
-//				
+				case FAVORITE_INSERT: cmd = favoriteController.addFavorite();
 //				// 거래 기록 보기
 //				case HISTORY_LIST: cmd = historyController.historyList(); break;
 				

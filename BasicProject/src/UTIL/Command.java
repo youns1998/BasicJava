@@ -20,21 +20,22 @@ public enum Command {
 	// 카테고리 관련
 	CATEGORY_LIST,		// 카테고리
 	
-	// 관심 물품 관련
+	// 관심(찜) 물품 관련
 	FAVORITE_LIST,		// 관심 물품
-
+	FAVORITE_INSERT,	// 관심 물품 추가
+	FAVORITE_DELETE,    // 관심 물품 삭제
+	
 	// 거래 기록 관련
 	HISTORY_LIST,		// 거래 기록
 	
-	// 전체 글 보기
-	POST_LIST,
-	POST_ADMIN,		// 공지사항 (관리자)
-	POST_INSERT,	// 댓글 추가
-	POST_UPDATE,	// 댓글 수정
-	POST_DELETE,	// 댓글 삭제
+	// 전체 글 
+	POST_LIST,		// 전체 글 보기
+	POST_DETAIL,	// 상세보기
+	POST_INSERT,	// 글 추가
+	POST_UPDATE,	// 글 수정
+	POST_DELETE,	// 글 삭제
 
-	// 댓글 보기
-	COMMENT_LIST,	// 댓글 보기
+	// 댓글 
 	COMMENT_INSERT,	// 댓글 추가
 	COMMENT_UPDATE,	// 댓글 수정
 	COMMENT_DELETE	// 댓글 삭제

@@ -1,5 +1,7 @@
 package CONTROLLER;
 
+import UTIL.Command;
+
 public class CommentController {
 
 	private static CommentController instance;
@@ -13,5 +15,8 @@ public class CommentController {
 			instance = new CommentController();
 		return instance;
 	}
-
+	public Command commentInsert() {
+		
+		return Command.POST_DETAIL;
+	}
 }

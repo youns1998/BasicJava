@@ -2,8 +2,6 @@ package SERVICE;
 import java.util.List;
 
 import DAO.FavoriteDAO;
-import VO.PostVo;
-import VO.UsersVo;
 import VO.FavoriteVo;
 
 public class FavoriteService {

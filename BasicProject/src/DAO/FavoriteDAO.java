@@ -31,17 +31,24 @@ public class FavoriteDAO {
    
    
    //관심 상품 추가
-   public void addFavorite(FavoriteVo favorite) {
-        String sql = "INSERT INTO FAVORITE (USER_ID, POST_ID) VALUES (?, ?)";
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, favorite.getUser_id());
-            pstmt.setInt(2, favorite.getPost_id());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+   public int addFavorite(FavoriteVo favorite) {
+	    int cnt = 0;
+	    String sql = "INSERT INTO FAVORITE (USER_ID, POST_ID) VALUES (?, ?)";
+	    
+	    try (Connection con = DBUtil.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+	         
+	        ps.setString(1, favorite.getUser_id());
+	        ps.setInt(2, favorite.getPost_id());
+	        cnt = ps.executeUpdate();
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // 예외 발생 시 로그 출력
+	        // 동일한 상품이 있는 경우 처리 로직 추가
+	    }
+	    
+	    return cnt;
+	}
 
 // 사용자의 관심 상품 목록 조회
 	public List<FavoriteVo> getFavoritesByUser(String userId) {

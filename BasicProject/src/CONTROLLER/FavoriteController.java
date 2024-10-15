@@ -3,9 +3,12 @@ package CONTROLLER;
 import java.util.List;
 import java.util.Scanner;
 
-import DAO.FavoriteDAO;
 import SERVICE.FavoriteService;
+import UTIL.Command;
+import UTIL.ScanUtil;
 import VO.FavoriteVo;
+import VO.PostVo;
+import VO.UsersVo;
 
 public class FavoriteController {
    private FavoriteService favoriteService = new FavoriteService();
@@ -22,19 +25,23 @@ public class FavoriteController {
       return instance;
    }
 	// 관심 상품 등록
-    public void addFavorite() {
-        Scanner scanner = new Scanner(System.in);
+    public Command addFavorite() {
         FavoriteVo favorite = new FavoriteVo();
-
-        System.out.print("사용자 ID 입력: ");
-        favorite.setUser_id(scanner.next());
-        System.out.print("게시글 ID 입력: ");
-        favorite.setPost_id(scanner.nextInt());
-
+        PostVo postvo = new PostVo();
+        UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+       
+        favorite.setUser_id(loginUserVo.getUser_id());
+        int postId = ScanUtil.nextInt("관심 상품으로 등록할 게시물 ID를 입력하세요: ");
+        favorite.setPost_id(postId); // 입력받은 ID를 설정
+        
+        if(postId == favorite.getPost_id()) {
+        	System.out.println("찜 목록에 동일한 상품이 존재합니다");
+        	return Command.POST_DETAIL;										// 여기부분 수정해야함
+        }
         favoriteService.addFavorite(favorite);
         System.out.println("관심 상품 등록 완료.");
+        return Command.POST_LIST; // 게시물 목록으로 돌아가기
     }
-
     // 사용자의 관심 상품 목록 조회
     public void viewFavorites() {
         Scanner scanner = new Scanner(System.in);
