@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import UTIL.Command;
 import UTIL.DBUtil;
 import UTIL.ScanUtil;
 import VO.PostVo;
@@ -179,7 +181,8 @@ try {
 	    // 선택 수정 메서드
 	    public void updatePostSelect(PostVo postvo) {
 	        while (true) {
-	            System.out.println("수정할 항목을 선택하세요:");
+	        	System.out.println();
+	            System.out.println("수정할 항목을 선택하세요 >>");
 	            System.out.println("1. 제목");
 	            System.out.println("2. 내용");
 	            System.out.println("3. 가격");
@@ -220,7 +223,13 @@ try {
 	            try {
 	                int result = updatePost(postvo); // 게시물 업데이트
 	                if (result > 0) {
-	                    System.out.println("게시물이 수정되었습니다.");
+	                    System.out.println("게시물이 수정되었습니다.\n "
+	                    		+ "1.더 수정 하기 0.되돌아 가기");
+	                    int y = ScanUtil.nextInt();
+	                    if(y==1) {continue;}
+	                    if(y==0) {break;}	
+	                    
+	                    
 	                } else {
 	                    System.out.println("게시물 수정에 실패했습니다.");
 	                }
@@ -242,6 +251,11 @@ public int deletePost(int post_id) {
 		
 		ps.setInt(1, post_id);
 		cnt = ps.executeUpdate();
+         if (cnt > 0) {
+             System.out.println("게시물이 삭제되었습니다");
+         } else {
+             System.out.println("게시물 수정에 실패했습니다.");
+         }
 		
 	} catch (Exception e) {
 		e.printStackTrace();

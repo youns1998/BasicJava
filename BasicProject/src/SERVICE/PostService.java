@@ -49,7 +49,7 @@ public class PostService {
 		// 게시물 번호를 매개변수로 받아서 해당 게시글의 내용을 가져와 VO에 저장하여 반환하는 메서드
 		public PostVo getPost(int post_id) {
 	        if (post_id == 0) {
-	            System.out.println("유저 ID가 없습니다.");
+	            System.out.println("게시글 ID가 없습니다.");
 	            return null;
 	        }
 	        return dao.getPost(post_id);
@@ -73,7 +73,11 @@ public class PostService {
 		 }
 		
 		// 게시글 번호를 매개변수로 받아서 해당 게시글 정보를 삭제하는 메서드
-		public int deletePost(int postNo) {
-	        return dao.deletePost(postNo);
+		public int deletePost(int post_id) {
+			if (post_id == 0) {
+	            System.out.println("게시글 ID가 없습니다.");
+	            return 0;
+	        }
+	        return dao.deletePost(post_id);
 	    }
 	}
