@@ -10,7 +10,27 @@ import VO.FavoriteVo;
 
 
 public class FavoriteDAO {
-//관심 상품 추가
+	private Connection con = null;
+	private PreparedStatement ps = null;
+	private ResultSet rs = null;
+	
+	public FavoriteDAO() {
+	
+	}
+
+
+
+
+	private void disConnect() {
+		if(rs != null) try { rs.close(); } catch(Exception e) {}
+		if(ps != null) try { ps.close(); } catch(Exception e) {}
+		if(con != null) try { con.close(); } catch(Exception e) {}
+	}
+	
+	
+	
+	
+	//관심 상품 추가
 	public void addFavorite(FavoriteVo favorite) {
         String sql = "INSERT INTO FAVORITE (USER_ID, POST_ID) VALUES (?, ?)";
         try (Connection conn = DBUtil.getConnection();

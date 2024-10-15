@@ -3,15 +3,24 @@ package CONTROLLER;
 import java.util.List;
 import java.util.Scanner;
 
+import DAO.FavoriteDAO;
 import SERVICE.FavoriteService;
 import VO.FavoriteVo;
 
 public class FavoriteController {
 	private FavoriteService favoriteService = new FavoriteService();
+	
+	
+	private static FavoriteController instance;
+	
+	private FavoriteController() {
 
-	 
-	
-	
+	}
+	public static FavoriteController getInstance() {
+		if (instance == null)
+			instance = new FavoriteController();
+		return instance;
+	}
 	
 	// 관심 상품 등록
     public void addFavorite() {
@@ -102,5 +111,7 @@ public class FavoriteController {
             }
         }
     }
+
+	
     
 }
