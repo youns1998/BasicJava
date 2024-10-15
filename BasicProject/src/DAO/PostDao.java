@@ -61,18 +61,19 @@ private void disConnect() {
 //게시글추가
 	public int insertPost(PostVo PostVo) {
 		int cnt = 0;
-		String sql = "INSERT INTO POST (POST_ID, USER_ID, PRICE, CATEGORY_ID, TITLE, CONTENT, CREATED_AT, UPDATED_AT) "
-	            + " VALUES( (SELECT NVL(MAX(POST_ID), 0) + 1 FROM POST), ?, ?, ?, ?, ?, SYSDATE, SYSDATE )";
+		String sql = "INSERT INTO POST (POST_ID, USER_ID, PRICE, CATEGORY_ID, TITLE, CONTENT, CONDITION, CREATED_AT, UPDATED_AT) "
+	            + " VALUES( (SELECT NVL(MAX(POST_ID), 0) + 1 FROM POST), ?, ?, ?, ?, ?, ?, SYSDATE, SYSDATE)";
 
 		
 		try {
 			con = DBUtil.getConnection();
 			ps = con.prepareStatement(sql);
 			ps.setString(1, PostVo.getUser_id());
-			ps.setInt(2, PostVo.getCategory_id());
-			ps.setInt(3, PostVo.getPrice());
+			ps.setInt(2, PostVo.getPrice());
+			ps.setInt(3, PostVo.getCategory_id());
 			ps.setString(4, PostVo.getTitle());
 			ps.setString(5, PostVo.getContent());
+			ps.setString(6, PostVo.getCondition());
 //			ps.setTimestamp(5, Timestamp.valueOf(PostVo.getCreated_at()));
 //			ps.setTimestamp(6, Timestamp.valueOf(PostVo.getUpdated_at())); 
 			cnt = ps.executeUpdate();
@@ -89,7 +90,7 @@ private void disConnect() {
 	public List<PostVo> getAllPosts() {
 List<PostVo> postlist = new ArrayList<PostVo>();
 
-String sql = "SELECT * FROM POST";
+String sql = "SELECT * FROM POST ORDER BY IS_NOTICE DESC, CREATED_AT DESC";
 
 try {
 	con = DBUtil.getConnection();

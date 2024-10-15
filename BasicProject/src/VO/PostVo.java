@@ -14,7 +14,14 @@ public class PostVo {
 	private String condition;
 	private LocalDateTime created_at;
 	private LocalDateTime updated_at;
+	private boolean isNotice;	//공지사항 여부
 	
+	 public boolean getisNotice() {
+	        return isNotice;
+	    }
+	public void setNotice(boolean isNotice) {
+		this.isNotice = isNotice;
+	}
 	public int getPost_id() {
 		return post_id;
 	}

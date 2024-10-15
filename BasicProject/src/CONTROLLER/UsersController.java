@@ -1,14 +1,11 @@
 package CONTROLLER;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.processing.AbstractProcessor;
-
-import UTIL.*;
-import VO.*;
-import VO.UsersVo;
-import CONTROLLER.*;
 import SERVICE.UsersService;
+import UTIL.Command;
+import UTIL.ScanUtil;
+import VO.UsersVo;
 
 public class UsersController {
 	private UsersService userService;
@@ -23,6 +20,23 @@ public class UsersController {
 		if (instance == null)
 			instance = new UsersController();
 		return instance;
+	}
+	//전체 회원 출력
+	public Command userlist() {
+		UsersService userservice = UsersService.getInstance(); 
+		List<UsersVo> uservo = userservice.getPostList();
+		if(uservo.isEmpty()) {
+			System.out.println("등록된 유저가 없습니다");
+			return Command.USER_HOME;
+		}
+		System.out.println("전체 유저 리스트");
+		for (UsersVo user : uservo) {
+	        System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername() 
+	        + ", 주소: " + user.getAddress() +  "  전화번호: " + user.getPhone_number() + "  이메일: " +
+	        		user.getEmail());
+	        
+	    }
+		return Command.USER_HOME;
 	}
 	//회원가입
 	public Command join(){
