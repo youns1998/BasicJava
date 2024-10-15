@@ -7,7 +7,7 @@ import VO.FavoriteVo;
 import VO.PostVo;
 import VO.UsersVo;
 import VO.FavoriteVo;
-
+ㄴ
 public class FavoriteService {
 	 private FavoriteDAO favoriteDAO = new FavoriteDAO();
 
