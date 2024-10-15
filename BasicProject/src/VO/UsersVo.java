@@ -9,16 +9,20 @@ public class UsersVo {
 	private String username;
 	private String phone_number;
 	private String address;
+	private int role;
 	private LocalDateTime created_at;
 
-
-
-	
 	public String getUser_id() {
 		return user_id;
 	}
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int Role) {
+		this.role = Role;
 	}
 	public String getUser_pass() {
 		return user_pass;

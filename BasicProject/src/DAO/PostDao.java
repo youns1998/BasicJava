@@ -13,7 +13,12 @@ public class PostDao {
 	private Connection con = null;
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
-	
+	private static PostDao instance;
+	public static PostDao getInstance() {
+		if (instance == null)
+			instance = new PostDao();
+		return instance;
+	}
 private void disConnect() {
 		if(rs != null) try { rs.close(); } catch(Exception e) {}
 		if(ps != null) try { ps.close(); } catch(Exception e) {}

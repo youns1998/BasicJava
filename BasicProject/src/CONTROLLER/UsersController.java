@@ -1,6 +1,9 @@
 package CONTROLLER;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.processing.AbstractProcessor;
+
 import UTIL.*;
 import VO.*;
 import VO.UsersVo;
@@ -21,6 +24,7 @@ public class UsersController {
 			instance = new UsersController();
 		return instance;
 	}
+	//회원가입
 	public Command join(){
 		System.out.println("=========== 회원가입 =============");
 		String userId = ScanUtil.nextLine("아이디 >> ");
@@ -42,22 +46,22 @@ public class UsersController {
 		userVo.setEmail(email);
 		userVo.setPhone_number(phone_number);
 		
-		
 		int result = userService.addUser(userVo);
 		
 		if(0 < result){
-			System.out.println("회원가입 성공");
+			System.out.println("회원가입 성공!!");
 		}else{
-			System.out.println("회원가입 실패");
+			System.out.println("회원가입 실패!!");
 		}
 		
 		return Command.HOME;
 	}
 	
+	//로그인
 	public Command login(){
 		System.out.println("============== 로그인 ===============");
-		String userId = ScanUtil.nextLine("아이디 >> ");
-		String password = ScanUtil.nextLine("비밀번호 >> ");
+		String userId = ScanUtil.nextLine("ID를 입력하세요 >> ");
+		String password = ScanUtil.nextLine("PW를 입력하세요 >> ");
 		
 		UsersVo userVo = new UsersVo();
 		userVo.setUser_id(userId);
@@ -65,22 +69,29 @@ public class UsersController {
 		
 		UsersVo loginUserVo = userService.getUser(userVo);
 		
-		if(loginUserVo == null){
-			System.out.println("아이디 혹은 비밀번호를 잘못 입력하셨습니다.");
-		}else{
-			System.out.println("로그인 성공입니다...");
-			// ProjectMain 클래스의 정적변수인 sessionMap에 로그인 정보를 저장한다.
-//			ProjectMain.sessionLoginUser = loginUser;
-			MainController.sessionMap.put("loginUser", loginUserVo);
-			
-			return Command.USER_HOME;
+		 if (loginUserVo == null) {
+		        System.out.println("ID 혹은 PW를 잘못 입력하셨습니다.");
+		        return Command.LOGIN; // 로그인 실패 시 LOGIN으로 돌아감
+		    } else {
+		        int role = loginUserVo.getRole(); // 역할 가져오기
+
+		        if (role != 0 ) { // ADMIN 역할 확인
+		            System.out.println("관리자 로그인 성공!!");
+		            // 관리자 로그인 성공 시 추가 로직을 여기에 작성
+		        } else {
+		            System.out.println("일반 사용자 로그인 성공!!");
+		            // 일반 사용자 로그인 성공 시 추가 로직을 여기에 작성
+		        }
+
+		        // ProjectMain 클래스의 정적변수인 sessionMap에 로그인 정보를 저장한다.
+		        MainController.sessionMap.put("loginUser", loginUserVo);
+		        
+		        return Command.USER_HOME; // 로그인 성공 시 USER_HOME으로 이동
+		    }
 		}
-		return Command.LOGIN;
-		
-	}
 	
 
-	
+	//내 정보
 	public Command myPage() {
 		System.out.println("============== MY PAGE ====================");
 		UsersVo loginUser = (UsersVo) MainController.sessionMap.get("loginUser");
@@ -90,12 +101,13 @@ public class UsersController {
 	    }
 
 	    // 마이페이지 출력
-	    System.out.println("============== MY PAGE ====================");
-	    System.out.println("아이디: " + loginUser.getUser_id());
+	    System.out.println("ID: " + loginUser.getUser_id());
 	    System.out.println("이름: " + loginUser.getUsername());
-	    System.out.println("이메일: " + loginUser.getEmail());
+	    System.out.println("E-MAIL: " + loginUser.getEmail());
 	    System.out.println("전화번호: " + loginUser.getPhone_number());
-
+	    if(loginUser.getRole()!=0)
+	    System.out.println("관리자 : " + loginUser.getRole());
+	    
 		return Command.USER_HOME;
 	}
 

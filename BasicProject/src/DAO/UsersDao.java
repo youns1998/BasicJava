@@ -21,9 +21,7 @@ public class UsersDao {
 	
 	private static UsersDao instance;
 
-	private UsersDao() {
-
-	}
+	private UsersDao() {}
 
 	public static UsersDao getInstance() {
 		if (instance == null)
@@ -36,12 +34,12 @@ public class UsersDao {
 		if(con != null) try { con.close(); } catch(Exception e) {}
 	}
 	
-	//사용자 추가
+	//사용자 추가(회원가입)
 	public int addUser(UsersVo user) {
 		int cnt = 0;
 
 		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS ) "
-				+ " VALUES (?, ? ,?, ?, ?, ?, ?)";
+				+ " VALUES (?, ? ,?, ?, ?, ?,?)";
 		
 		try {
 			con = DBUtil.getConnection();
@@ -62,12 +60,30 @@ public class UsersDao {
 		}
 		return cnt;
 	}
-	
-	//사용자 상세 조회
+	//로그인
+//	public boolean login(String username, String password) {
+//	    String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+//	    try (Connection conn = DBUtil.getConnection();
+//	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//	        
+//	        pstmt.setString(1, username);
+//	        pstmt.setString(2, password);
+//	        ResultSet rs = pstmt.executeQuery();
+//
+//	        if (rs.next()) {
+//	            int role = rs.getInt("role");
+//	            return "1".equals(role); // 관리자인 경우만 true 반환
+//	        }
+//	    } catch (SQLException e) {
+//	        e.printStackTrace();
+//	    }
+//	    return false; // 로그인 실패
+//	}
+	// 로그인 
 	public UsersVo getUser(UsersVo userVo) {
 		UsersVo getUserVo = null;
 		
-		String sql = "SELECT USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS FROM USERS "
+		String sql = "SELECT USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ROLE FROM USERS "
 				+ " WHERE USER_ID = ? AND USER_PASS = ?";
 		try {
 			con = DBUtil.getConnection();
@@ -84,6 +100,8 @@ public class UsersDao {
 				getUserVo.setAddress(rs.getString("ADDRESS"));
 				getUserVo.setEmail(rs.getString("EMAIL"));
 				getUserVo.setPhone_number(rs.getString("PHONE_NUMBER"));
+				getUserVo.setRole(rs.getInt("ROLE"));
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -95,7 +113,7 @@ public class UsersDao {
 		return getUserVo;
 	}
 
-	//모든 사용자 조회
+	//모든 사용자 조회 - 관리자용 (사용자는 불가)
 	public List<UsersVo> getUserList(){
 		List<UsersVo> userList = null;
 		String sql = "SELECT * FROM USERS";
@@ -123,7 +141,7 @@ public class UsersDao {
 		return userList;
 	}
 	
-	// 사용자 정보 수정
+	// 내 정보 수정
 	public int updateUser(UsersVo user) {
 		int cnt = 0;
 		String sql = "UPDATE USERS SET USER_PASS = ?, EMAIL = ?, USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ? WHERE USER_ID = ?";
@@ -148,7 +166,7 @@ public class UsersDao {
 
 	    return cnt;  
 	}
-	//사용자 삭제
+	//회원 탈퇴
 	public int deleteUser(String user_id) {
 		int cnt = 0;
 		String sql = "DELETE FROM USERS "
