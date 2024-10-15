@@ -1,9 +1,11 @@
 package VO;
 
+import java.time.LocalDateTime;
+
 public class FavoriteVo {
 	private String user_id;
 	private int post_id;
-	private String created_at;
+	private LocalDateTime created_at;
 	
 	public String getUser_id() {
 		return user_id;
@@ -17,10 +19,10 @@ public class FavoriteVo {
 	public void setPost_id(int post_id) {
 		this.post_id = post_id;
 	}
-	public String getCreated_at() {
+	public LocalDateTime getCreated_at() {
 		return created_at;
 	}
-	public void setCreated_at(String created_at) {
+	public void setCreated_at(LocalDateTime created_at) {
 		this.created_at = created_at;
 	}
 	

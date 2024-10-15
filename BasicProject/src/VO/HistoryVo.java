@@ -2,6 +2,8 @@ package VO;
 
 import java.sql.Date;
 
+import java.time.LocalDateTime;
+
 public class HistoryVo {
 	private int transaction_id;
 	private String buyer_id;

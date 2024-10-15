@@ -4,6 +4,10 @@ import java.util.Map;
 import CONTROLLER.*;
 import UTIL.*;
 import VO.UsersVo;
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/origin/main
 
 
 public class MainController {
@@ -42,11 +46,22 @@ public class MainController {
 				case MYPAGE: cmd = usersController.myPage(); break;
 				
 				// 로그인 후
+
+				case USER_HOME: cmd = usersController.userHome(); break;
+				 
+
 				case USER_HOME: cmd = userHome(); break;
 				
+<<<<<<< HEAD
 				// 게시글 관리
 				case POST_DELETE: cmd = postController.postDelete(); break;
 				case POST_INSERT: cmd = postController.postInsert(); break;
+=======
+
+//				// 게시글 관리
+//				case POST_DELETE: cmd = postController.postDelete(); break;
+//				case POST_INSERT: cmd = postController.postInsert(); break;
+>>>>>>> refs/remotes/origin/main
 				case POST_LIST: cmd = postController.postList(); break;
 				case POST_UPDATE: cmd = postController.postUpdate(); break;
 //				
