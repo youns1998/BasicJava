@@ -11,6 +11,7 @@ public enum Command {
 	LOGIN,			// 로그인
 	JOIN,   		// 회원가입
 	MYPAGE, 		// 내 정보 수정
+	UESR_PAGE,		// 회원 관리(회원 수정)
 	S_ID,			// ID 찾기
 	S_PW,			// PW 찾기
 	

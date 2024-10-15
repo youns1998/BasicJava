@@ -22,6 +22,7 @@ public class HistoryDAO {
 		int cnt = 0;
 		
 		String sql = "INSERT INTO TRANSACTION_HISTORY ";
+		return 1;
 	}
 	
 	

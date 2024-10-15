@@ -4,10 +4,7 @@ import java.util.Map;
 import CONTROLLER.*;
 import UTIL.*;
 import VO.UsersVo;
-<<<<<<< HEAD
-=======
 
->>>>>>> refs/remotes/origin/main
 
 
 public class MainController {
@@ -46,22 +43,15 @@ public class MainController {
 				case MYPAGE: cmd = usersController.myPage(); break;
 				
 				// 로그인 후
-
-				case USER_HOME: cmd = usersController.userHome(); break;
-				 
-
 				case USER_HOME: cmd = userHome(); break;
 				
-<<<<<<< HEAD
 				// 게시글 관리
 				case POST_DELETE: cmd = postController.postDelete(); break;
 				case POST_INSERT: cmd = postController.postInsert(); break;
-=======
 
 //				// 게시글 관리
 //				case POST_DELETE: cmd = postController.postDelete(); break;
 //				case POST_INSERT: cmd = postController.postInsert(); break;
->>>>>>> refs/remotes/origin/main
 				case POST_LIST: cmd = postController.postList(); break;
 				case POST_UPDATE: cmd = postController.postUpdate(); break;
 //				
@@ -114,7 +104,7 @@ public class MainController {
 		if(loginUserVo==null) {
 			return Command.HOME;
 		}
-		if(loginUserVo.getRole()==1)
+		if(loginUserVo.getRole()!=0)
 			return Command.ADMIN_HOME;
 		System.out.println();
 		System.out.print(loginUserVo.getUsername() + "님 반가워요");
@@ -150,7 +140,8 @@ public class MainController {
 		int input = ScanUtil.nextInt("메뉴 선택 >> ");
 		
 		switch (input) {
-			case 1: return Command.POST_LIST;
+			case 1: return Command.
+			case 2: return Command.POST_LIST;
 			case 2: return Command.MYPAGE;
 //			case 3: return Command.MYPAGE;
 //			case 3: return Command.MYPAGE;
