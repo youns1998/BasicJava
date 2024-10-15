@@ -3,7 +3,7 @@ package UTIL;
 public enum Command {
 	
 	HOME, 			// 첫화면
-	USER_HOME,		// 로그인 성공 후 화면
+	USER_HOME,		// 로그인 성공 후 게시판 첫 화면
 	END,			// 종료
 	
 	// 회원 관련

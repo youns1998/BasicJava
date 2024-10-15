@@ -1,10 +1,12 @@
 package DAO;
+
 import java.time.LocalDateTime;
 import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,9 +62,40 @@ public class UsersDao {
 		}
 		return cnt;
 	}
+	
+	//사용자 상세 조회
+	public UsersVo getUser(UsersVo userVo) {
+		UsersVo getUserVo = null;
+		
+		String sql = "SELECT USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS FROM USERS "
+				+ " WHERE USER_ID = ? AND USER_PASS = ?";
+		try {
+			con = DBUtil.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, userVo.getUser_id());
+			ps.setString(2, userVo.getUser_pass());
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				getUserVo = new UsersVo();
+				getUserVo.setUser_id(rs.getString("USER_ID"));
+				getUserVo.setUser_pass(rs.getString("USER_PASS"));
+				getUserVo.setUsername(rs.getString("USERNAME"));
+				getUserVo.setAddress(rs.getString("ADDRESS"));
+				getUserVo.setEmail(rs.getString("EMAIL"));
+				getUserVo.setPhone_number(rs.getString("PHONE_NUMBER"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disConnect();
+		}
+		
+		
+		return getUserVo;
+	}
 
 	//모든 사용자 조회
-	public List<UsersVo> getPostList(){
+	public List<UsersVo> getUserList(){
 		List<UsersVo> userList = null;
 		String sql = "SELECT * FROM USERS";
 		
@@ -89,31 +122,10 @@ public class UsersDao {
 		return userList;
 	}
 	
-	// 사용자 상세조회
-	public int search(String user_id) {
-		int cnt=0;
-	String sql = "SELECT FROM USERS "
-			+ " WHERE USER_ID = ? ";
-	try {
-		con = DBUtil.getConnection();
-		ps = con.prepareStatement(sql);
-		ps.setString(1, user_id);
-		rs = ps.executeQuery();
-	} catch (SQLException e) {
-		e.printStackTrace();
-	} finally {
-		disConnect();
-	}
-	return cnt;
-}
-
-
-
 	// 사용자 정보 수정
 	public int updateUser(UsersVo user) {
 		int cnt = 0;
-
-	    String sql = "UPDATE USERS SET USER_PASS = ?,EMAIL = ? , USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ?, WHERE USER_ID = ?"; // 공백 추가
+		String sql = "UPDATE USERS SET USER_PASS = ?, EMAIL = ?, USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ? WHERE USER_ID = ?";
 	    try {
 	        con = DBUtil.getConnection();
 	        ps = con.prepareStatement(sql);
@@ -125,10 +137,6 @@ public class UsersDao {
 	        ps.setString(6, user.getUser_id());
 	        
 
-			ps.setString(1, user.getUser_pass());
-			ps.setString(2, user.getUser_id());
-			
-			ps = con.prepareStatement(sql);
 			cnt = ps.executeUpdate();
 
 	    } catch (SQLException e) {
@@ -160,7 +168,7 @@ public class UsersDao {
 	}
 	
 //	회원ID의 갯수를 반환하는 메서드
-	public int getMemberCount(String user_id) {
+	public int getUserCount(String user_id) {
 		int count = 0;		//반환 값이 저장될 변수
 		 try {
 	         con = DBUtil.getConnection();

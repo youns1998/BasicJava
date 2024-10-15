@@ -1,5 +1,6 @@
 package CONTROLLER;
-
+import java.util.HashMap;
+import java.util.Map;
 import UTIL.*;
 import VO.*;
 import CONTROLLER.*;
@@ -61,48 +62,39 @@ public class UsersController {
 		userVo.setUser_id(userId);
 		userVo.setUser_pass(password);
 		
-//		UsersVo loginUserVo = userService.getUser(userVo);
-//		
-//		if(loginUserVo == null){
-//			System.out.println("아이디 혹은 비밀번호를 잘못 입력하셨습니다.");
-//		}else{
-//			System.out.println("로그인 성공입니다...");
-//			// ProjectMain 클래스의 정적변수인 sessionMap에 로그인 정보를 저장한다.
-////			ProjectMain.sessionLoginUser = loginUser;
-//			MainController.sessionMap.put("loginUser", loginUserVo);
-//			
-//			return Command.USER_HOME;
-//		}
-//		return Command.LOGIN;
+		UsersVo loginUserVo = userService.getUser(userVo);
 		
-		return Command.USER_HOME;
+		if(loginUserVo == null){
+			System.out.println("아이디 혹은 비밀번호를 잘못 입력하셨습니다.");
+		}else{
+			System.out.println("로그인 성공입니다...");
+			// ProjectMain 클래스의 정적변수인 sessionMap에 로그인 정보를 저장한다.
+//			ProjectMain.sessionLoginUser = loginUser;
+			MainController.sessionMap.put("loginUser", loginUserVo);
+			
+			return Command.USER_HOME;
+		}
+		return Command.LOGIN;
+		
 	}
 	
-	public Command userHome() {
-		System.out.println("메인 페이지");
-		String userId = ScanUtil.nextLine("돌아가기 1 글 보기 2");
-		int input = ScanUtil.nextInt("1 삭제 2 삽입 3 출력 4 업데이트 0 돌아가기>> ");
 
-		switch (input) {
-		case 1:
-			return Command.POST_DELETE;
-		case 2:
-			return Command.POST_INSERT;
-		case 3:
-			return Command.POST_LIST;
-		case 4:
-			return Command.POST_UPDATE;
-		case 0:
-			return Command.USER_HOME;
-			
-		}
-		return Command.USER_HOME;
-
-	}
 	
 	public Command myPage() {
 		System.out.println("============== MY PAGE ====================");
-		
+		UsersVo loginUser = (UsersVo) MainController.sessionMap.get("loginUser");
+	    if (loginUser == null) {
+	        System.out.println("로그인이 필요합니다.");
+	        return Command.LOGIN;
+	    }
+
+	    // 마이페이지 출력
+	    System.out.println("============== MY PAGE ====================");
+	    System.out.println("아이디: " + loginUser.getUser_id());
+	    System.out.println("이름: " + loginUser.getUsername());
+	    System.out.println("이메일: " + loginUser.getEmail());
+	    System.out.println("전화번호: " + loginUser.getPhone_number());
+
 		return Command.USER_HOME;
 	}
 

@@ -28,8 +28,11 @@ public class UsersService{
 			return dao.addUser(user);
 		}
 		
+		public UsersVo getUser(UsersVo userVo) {
+			return dao.getUser(userVo);
+		}
 		public List<UsersVo> getPostList() {
-			return dao.getPostList();
+			return dao.getUserList();
 		}
 		
 		public int search(String user_id) {

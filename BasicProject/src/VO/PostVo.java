@@ -6,6 +6,7 @@ public class PostVo {
 	
 	private int post_id;
 	private String user_id;
+	private String username;
 	private int category_id;
 	private String title;
 	private String content;
@@ -25,6 +26,12 @@ public class PostVo {
 	}
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public int getCategory_id() {
 		return category_id;
@@ -71,12 +78,14 @@ public class PostVo {
 	
 	@Override
 	public String toString() {
-		return "PostVo [post_id=" + post_id + ", user_id=" + user_id + ", category_id=" + category_id + ", title="
-				+ title + ", content=" + content + ", price=" + price + ", condition=" + condition + ", created_at="
-				+ created_at + ", updated_at=" + updated_at + "]";
+		return "PostVo [post_id=" + post_id + ", user_id=" + user_id + ", username=" + username + ", category_id="
+				+ category_id + ", title=" + title + ", content=" + content + ", price=" + price + ", condition="
+				+ condition + ", created_at=" + created_at + ", updated_at=" + updated_at + "]";
 	}
-
 	
 	
 	
 }
+
+
+	
