@@ -31,7 +31,9 @@ public class PostController {
 		System.out.println("전체 게시물 ");
 		PostService postService = PostService.getInstance(); 
 		List<PostVo> posts = postService.getPostList(); 
-		if(post==null)
+		if(posts==null) {
+			System.out.println("작성된 게시물이 없습니다");
+		}
 		 for (PostVo post : posts) {
 		        System.out.println("게시글 ID: " + post.getPost_id() + ", 제목: " + post.getTitle() + ", 작성자: " + post.getUsername());
 		    }
