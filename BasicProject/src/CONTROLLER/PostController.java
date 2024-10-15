@@ -29,7 +29,12 @@ public class PostController {
 	
 	public Command postList() {
 		System.out.println("전체 게시물 ");
-		List<PostVo> posts = PostService.getPostList(); 
+		PostService postService = PostService.getInstance(); 
+		List<PostVo> posts = postService.getPostList(); 
+		if(post==null)
+		 for (PostVo post : posts) {
+		        System.out.println("게시글 ID: " + post.getPost_id() + ", 제목: " + post.getTitle() + ", 작성자: " + post.getUsername());
+		    }
 		int input = ScanUtil.nextInt("1.글 작성 2.글 삭제 3.수정 0.내화면으로 >> ");
 
 		switch (input) {
