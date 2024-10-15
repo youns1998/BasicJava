@@ -55,7 +55,7 @@ public class PostService {
 	        return dao.getPost(post_id);
 	    }
 		
-		// 수정할 게시글 정보가 저장된 VO객체를 매개변수로 받아서 수정하는 메서드
+		// 수정할 게시글 정보가 저장된 VO객체를 매개변수로 받아서 전체 수정하는 메서드
 		public int updatePost(PostVo postVo) {
 	        if (postVo == null) {
 	            System.out.println("수정할 게시글 정보가 없습니다.");
@@ -63,7 +63,14 @@ public class PostService {
 	        }
 	        return dao.updatePost(postVo);
 	    }
-		
+		// 선택 수정
+		 public void updatePostSelect(PostVo postvo) {
+		        if (postvo == null) {
+		            System.out.println("수정할 게시글 정보가 없습니다.");
+		            return;
+		        }
+		        dao.updatePostSelect(postvo);
+		 }
 		
 		// 게시글 번호를 매개변수로 받아서 해당 게시글 정보를 삭제하는 메서드
 		public int deletePost(int postNo) {
