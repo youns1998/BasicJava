@@ -44,11 +44,11 @@ public class MainController {
 				// 로그인 후
 				case USER_HOME: cmd = userHome(); break;
 				
-//				// 게시글 관리
-//				case POST_DELETE: cmd = postController.postDelete(); break;
-//				case POST_INSERT: cmd = postController.postInsert(); break;
+				// 게시글 관리
+				case POST_DELETE: cmd = postController.postDelete(); break;
+				case POST_INSERT: cmd = postController.postInsert(); break;
 				case POST_LIST: cmd = postController.postList(); break;
-//				case POST_UPDATE: cmd = postController.postUpdate(); break;
+				case POST_UPDATE: cmd = postController.postUpdate(); break;
 //				
 //				// 댓글 관리
 //				case COMMENT_DELETE: cmd = commentController.commentDelete(); break;
