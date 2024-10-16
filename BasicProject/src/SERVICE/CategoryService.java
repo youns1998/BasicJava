@@ -25,20 +25,27 @@ private CategoryDAO dao;
 		return instance;
 	}
 	
-		public int addUser(CategoryVo cate) {
+		public int insertCategory(CategoryVo cate) {
 			return dao.InsertCategory(cate);
 		}
 		
-		public List<UsersVo> getCategoryList() {
+		public List<CategoryVo> getCategoryList() {
 			return dao.getCategoryList();
 		}
 		
-		
+		public CategoryVo getCategorySelect(int category_Id) {
+		     return dao.getCategory(category_Id);
+	    }
+		 
 		public int UpdateCategory(CategoryVo cate) {
-			return UpdateCategory(cate);
+			return dao.UpdateCategory(cate);
 		}
 		
 		public int DeleteCategory(CategoryVo cate) {
-			return DeleteCategory(cate);
+			return dao.DeleteCategory(cate);
+		}
+
+		public boolean isCategoryIdExists(int newid) {
+			return dao.isCategoryIdExists(newid);
 		}
 }

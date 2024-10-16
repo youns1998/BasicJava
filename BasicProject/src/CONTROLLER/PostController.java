@@ -2,10 +2,12 @@ package CONTROLLER;
 
 import java.util.List;
 
+import SERVICE.CategoryService;
 import SERVICE.CommentsService;
 import SERVICE.PostService;
 import UTIL.Command;
 import UTIL.ScanUtil;
+import VO.CategoryVo;
 import VO.PostVo;
 import VO.UsersVo;
 
@@ -106,8 +108,8 @@ public class PostController {
 	public Command postList() {
 		System.out.println("============================ 전체 게시물 ================================");
 		PostService postService = PostService.getInstance(); 
-		UsersVo loginUserVo = (UsersVo)MainController.sessionMap.get("loginUser");
 		List<PostVo> posts = postService.getPostList(); 
+		UsersVo loginUserVo = (UsersVo)MainController.sessionMap.get("loginUser");
 		if (posts == null || posts.isEmpty()) {	//게시글 배열이 없으면
 	        System.out.println("작성된 게시물이 없습니다");
 	    } else {								//게시글 배열이 있다면
@@ -169,14 +171,22 @@ public class PostController {
 	        post.setTitle(title);
 	        post.setContent(content);
 	        post.setUser_id(loginUserVo.getUser_id()); // 관리자 ID 설정
+	        
 		}else {						//사용자의 게시글 추가
 		String Title = ScanUtil.nextLine("글 제목 >> ");
 		int price = ScanUtil.nextInt("가격 >> ");
 		
-		// 여기에 카테고리 전체리스트 보여줘야 밑에서 고를 수 있음
-		// ex) 남성 의류 >> 101 여성 의류 >> 102
-		
+		//카테고리 리스트 보여주는 곳
+		CategoryService cateservice = CategoryService.getInstance();
+		List<CategoryVo> catevo = cateservice.getCategoryList();
+		 for (CategoryVo category : catevo) {
+		        System.out.println("분류번호: " + category.getCategory_id() + ", 카테고리: " + category.getCategory_name());
+		    }
+		 System.out.println("======================================================================");
+		 System.out.println("보기의 분류에 맞게 번호를 입력해주세요 ");
 		int category = ScanUtil.nextInt("카테고리 >> ");
+		//여기까지 
+		
 		String content = ScanUtil.nextLine("글 내용 입력 >> ");
 			post.setTitle(Title);
 		    post.setPrice(price);

@@ -62,8 +62,10 @@ public class MainController {
 //				case COMMENT_UPDATE: cmd = commentController.commentUpdate(); break;
 //				
 //				// 카테고리 보기
-//				case CATEGORY_LIST: cmd = categoryController.categoryList(); break;
-//				
+				case CATEGORY_LIST: cmd = categoryController.categoryList(); break;
+				case CATEGORY_INSERT: cmd = categoryController.categoryInsert(); break;
+				case CATEGORY_UPDATE: cmd = categoryController.categoryUpdate(); break;
+				case CATEGORY_DELETE: cmd = categoryController.categoryDelete(); break;
 //				 관심 물품 보기
 //				case FAVORITE_LIST: cmd = favoriteController.favoriteList(); break;
 				case FAVORITE_INSERT: cmd = favoriteController.addFavorite();
@@ -146,7 +148,7 @@ public class MainController {
 			case 1: return Command.UESR_LIST;
 			case 2: return Command.POST_LIST;
 //			case 3: return Command.MYPAGE;
-//			case 3: return Command.MYPAGE;
+			case 4: return Command.CATEGORY_LIST;
 //			case 3: return Command.MYPAGE;
 			case 0:
 				// ProjectMain의 정적변수인 sessionMap에 저장된 모든 자료를 삭제한다.
