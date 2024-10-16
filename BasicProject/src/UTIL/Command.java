@@ -10,6 +10,7 @@ public enum Command {
 	END,			// 종료
 	
 	// 회원 관련
+	ADMIN_USERDETAIL, // 회원관리 화면
 	UESR_LIST,		// 회원 리스트 화면 
 	LOGIN,			// 로그인
 	JOIN,   		// 회원가입

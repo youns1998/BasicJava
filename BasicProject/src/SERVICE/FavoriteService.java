@@ -1,6 +1,5 @@
 package SERVICE;
 import java.util.List;
-
 import DAO.FavoriteDAO;
 import DAO.PostDao;
 import VO.FavoriteVo;

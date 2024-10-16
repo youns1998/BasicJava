@@ -38,10 +38,15 @@ public class UsersController {
         int input = ScanUtil.nextInt("1. 회원 관리  0. 뒤로가기");
         return input == 1 ? Command.ADMIN_USER : Command.USER_HOME;
     }
-
+    public Command userdetail() {
+    	System.out.println("1.회원 수정 2.회원 삭제 3.찜 목록 조회 4.쓴 게시물 조회 5.쓴 댓글 조회");
+    	
+    	
+    	return Command.USER_HOME;
+    }
     // 회원 상세보기
     public Command userSelect() {
-        int userId = ScanUtil.nextInt("조회할 회원 ID를 입력하세요: ");
+        String userId = ScanUtil.nextLine("조회할 회원 ID를 입력하세요: ");
         UsersVo user = userService.getUserSelect(userId);
         if (user != null) {
             System.out.println("ID: " + user.getUser_id());
@@ -49,15 +54,17 @@ public class UsersController {
             System.out.println("주소: " + user.getAddress());
             System.out.println("전화번호: " + user.getPhone_number());
             System.out.println("이메일: " + user.getEmail());
+            System.out.println();
         } else {
             System.out.println("해당 회원을 찾을 수 없습니다.");
+            System.out.println();
         }
-        return Command.USER_HOME;
+        return Command.ADMIN_USERDETAIL;
     }
 
     // 아이디 중복 확인 메서드
     private boolean isUserIdDuplicated(String userId) {
-        return userService.getUserById(userId) != null;
+        return userService.getUserSelect(userId) != null;
     }
 
     // 아이디 및 비밀번호 형식 검증 메서드
@@ -155,4 +162,6 @@ public class UsersController {
 
         return Command.USER_HOME;
     }
+
+	
 }
