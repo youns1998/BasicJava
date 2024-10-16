@@ -17,7 +17,6 @@ import VO.UsersVo;
 
 public class PostController {
 	private static PostController instance;
-
 	private PostController() {
 
 	}

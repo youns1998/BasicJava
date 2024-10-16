@@ -1,7 +1,7 @@
 package CONTROLLER;
-import java.util.ArrayList;
 import java.util.List;
 
+import DAO.UsersDao;
 import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
@@ -21,7 +21,7 @@ public class UsersController {
 			instance = new UsersController();
 		return instance;
 	}
-	//전체 회원 출력
+	//전체 회원 출력 (관리자용)
 	public Command userlist() {
 		UsersService userservice = UsersService.getInstance(); 
 		List<UsersVo> uservo = userservice.getPostList();
@@ -33,11 +33,35 @@ public class UsersController {
 		for (UsersVo user : uservo) {
 	        System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername() 
 	        + ", 주소: " + user.getAddress() +  "  전화번호: " + user.getPhone_number() + "  이메일: " +
-	        		user.getEmail());
-	        
+	        		user.getEmail() + ", 관리자:"+ user.getRole());
 	    }
+		System.out.println("======================================================");
+		int input = ScanUtil.nextInt("1.회원 관리  0.뒤로가기");
+		switch(input) {
+		case 1: return Command.ADMIN_USER;
+		case 0: return Command.USER_HOME;
+		}
 		return Command.USER_HOME;
 	}
+	//회원 상세보기
+	public Command userSelect() {
+		int userId = ScanUtil.nextInt("조회할 회원 ID를 입력하세요: ");
+	    UsersVo user = userService.getUserSelect(userId);
+
+	    if (user != null) {
+	        System.out.println("ID: " + user.getUser_id());
+	        System.out.println("이름: " + user.getUsername());
+	        System.out.println("주소:"+ user.getAddress());
+	        System.out.println("전화번호:"+user.getPhone_number());
+	        System.out.println("이메일:"+user.getEmail());
+	        System.out.println();
+	    } else {
+	        System.out.println("해당 회원을 찾을 수 없습니다.");
+	        System.out.println();
+	    }
+		 return Command.USER_HOME;
+		}
+	
 	//회원가입
 	public Command join(){
 		System.out.println("=========== 회원가입 =============");
@@ -119,8 +143,7 @@ public class UsersController {
 	    System.out.println("이름: " + loginUser.getUsername());
 	    System.out.println("E-MAIL: " + loginUser.getEmail());
 	    System.out.println("전화번호: " + loginUser.getPhone_number());
-	    if(loginUser.getRole()!=0)
-	    System.out.println("관리자 : " + loginUser.getRole());
+	    System.out.println("주소: " + loginUser.getAddress());
 	    
 		return Command.USER_HOME;
 	}
