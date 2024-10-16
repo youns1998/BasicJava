@@ -7,18 +7,75 @@ import SERVICE.PostService;
 import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
+<<<<<<< HEAD
 import VO.CategoryVo;
 import VO.PostVo;
 import VO.UsersVo;
+=======
+import VO.*;
+
+
+>>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 public class PostController {
 	
+	
+	private String padAndTruncate(String text, int maxLength) {
+	    if (text == null) {
+	        text = "";  // null일 경우 빈 문자열로 처리
+	    }
+	    int textLength = 0;
+
+	    // 한글과 영문의 길이 계산을 다르게 함
+	    for (char c : text.toCharArray()) {
+	        if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_SYLLABLES ||
+	            Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_JAMO ||
+	            Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_COMPATIBILITY_JAMO) {
+	            textLength += 2; // 한글은 2로 계산
+	        } else {
+	            textLength += 1; // 나머지는 1로 계산
+	        }
+	    }
+
+	    if (textLength > maxLength) {
+	        StringBuilder truncated = new StringBuilder();
+	        int currentLength = 0;
+	        for (char c : text.toCharArray()) {
+	            int charLength = (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_SYLLABLES ||
+	                              Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_JAMO ||
+	                              Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_COMPATIBILITY_JAMO) ? 2 : 1;
+
+	            if (currentLength + charLength > maxLength) {
+	                break;
+	            }
+	            truncated.append(c);
+	            currentLength += charLength;
+	        }
+	        return truncated.toString();
+	    } else {
+	        int padding = maxLength - textLength;
+	        return text + " ".repeat(padding); // 지정된 길이에 맞춰 오른쪽으로 공백 추가
+	    }
+	}
 	private static final int TITLE_MAX_LEN = 10;
 	private static final int AUTHOR_MAX_LEN = 5;
 	private static final int STATUS_MAX_LEN = 5;
 	private static PostController instance;
+<<<<<<< HEAD
     private CommentController commentController = CommentController.getInstance();
     
 	private PostController() {}
+=======
+    private CommentController commentController = CommentController.getInstance(); // CommentController 인스턴스 생성
+
+    private Command returnToPostList() {
+        PostController postController = PostController.getInstance();
+        return postController.postList();  // 게시물 목록을 출력하도록 호출
+    }
+	private PostController() {
+
+	}
+
+>>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 	public static PostController getInstance() {
 		if (instance == null)
 			instance = new PostController();
@@ -26,39 +83,67 @@ public class PostController {
 	}
 	//상세 게시글 보기
 	public Command detailPost() {
-		System.out.println("+==============================================================================+");
-		PostService postService = PostService.getInstance(); 
-		
-		 int choice = ScanUtil.nextInt("보고싶은 글 번호를 입력하세요: ");
-		    PostVo selectedPost = postService.getPost(choice);
-
-		    if (selectedPost == null) {
-		        System.out.println("해당 게시글이 존재하지 않습니다.");
-		        return Command.USER_HOME;
-		    }
-		    // 선택한 게시글의 상세정보 출력
-		    displayPostDetails(selectedPost);
-		    return commentMenu(selectedPost.getPost_id());
+	    int postId = ScanUtil.nextInt("보고싶은 글 번호를 입력하세요: ");
+	    return detailPost(postId);
 	}
 	
+<<<<<<< HEAD
+=======
+	public Command detailPost(int postId) {
+	    System.out.println("+==============================================================================+");
+	    PostService postService = PostService.getInstance();
+	    CommentsService commentsService = CommentsService.getInstance();
+
+	    PostVo selectedPost = postService.getPost(postId);
+
+	    if (selectedPost == null) {
+	        System.out.println("해당 게시글이 존재하지 않습니다.");
+	        return Command.USER_HOME;
+	    }
+	    
+	    displayPostDetails(selectedPost);
+
+	    // 댓글 출력 부분
+	    List<CommentsVo> comments = commentsService.getComments(selectedPost.getPost_id());
+	    if (comments.isEmpty()) {
+	        System.out.println("댓글이 없습니다.");
+	    } else {
+	        System.out.println("==== 댓글 목록 ====");
+	        for (CommentsVo comment : comments) {
+	            System.out.println("댓글 번호: " + comment.getComment_id() +
+	                               ", 작성자: " + comment.getUser_id() +
+	                               ", 내용: " + comment.getContent() +
+	                               ", 작성 시간: " + comment.getCreated_at());
+	        }
+	    }
+
+	    return commentMenu(selectedPost.getPost_id());
+	}
+
+>>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 	// 댓글 메뉴 메서드
 	private Command commentMenu(int postId) {
-	    System.out.println("1. 댓글 달기 2. 댓글 보기 3. 댓글 수정 4. 댓글 삭제 5. 찜하기 0. 전체 게시물 보러가기");
+	    System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
 	    int choice = ScanUtil.nextInt();
 
 	    switch (choice) {
-        case 1: return commentController.insertComment(postId); // 댓글 달기
-        case 2: return commentController.viewComments(postId); // 댓글 보기
-        case 3: return commentController.updateComment(postId); // 댓글 수정
-        case 4: return commentController.deleteComment(postId); // 댓글 삭제
-        case 5: return Command.FAVORITE_INSERT; // 찜하기
-        case 0: return Command.POST_LIST; // 전체 게시물 보기
-        default: 
-            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-            return commentMenu(postId); // 선택이 잘못되면 다시 메뉴 호출
-    }
+	        case 1:
+	            return commentController.insertComment(postId);
+	        case 2:
+	            return commentController.updateComment(postId);
+	        case 3:
+	            return commentController.deleteComment(postId);
+	        case 4:
+	            return Command.FAVORITE_INSERT;
+	        case 0:
+	            return returnToPostList();
+	        default:
+	            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+	            return commentMenu(postId); // 다시 메뉴 호출
+	    }
 	}
-	
+
+
 	
 	
 	
@@ -86,7 +171,7 @@ public class PostController {
 	    System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s \n", 
 	        padAndTruncate(post.getUser_id(), 12), 
 	        padAndTruncate(post.getTitle(), 20), 
-	        padAndTruncate(post.getPrice() + "만원", 8), 
+	        padAndTruncate(post.getPrice() + "원", 8), 
 	        padAndTruncate(post.getCondition(), 3));
 	    System.out.println(borderLine);
 
@@ -104,16 +189,24 @@ public class PostController {
 	    System.out.printf("| 댓글 수: %-10d 찜한 사람 수: %-48s \n", commentCount, "(찜한 사람 수 미정)");
 	    System.out.println(borderLine);
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 
+<<<<<<< HEAD
 	// 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하고, 초과 시 잘라내기 함수
 	private String padAndTruncate(String text, int maxLength) {
 	    int textLength = text.codePoints().map(cp -> (Character.isAlphabetic(cp) && cp <= 0x7F) ? 1 : 2).sum();
 	    int padding = Math.max(0, maxLength - textLength); // 패딩 계산
 	    return text + " ".repeat(padding);
 	}
+=======
+				 
+		 
+		
+>>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 
-	// 문자열 길이를 제한하고, 초과하면 ... 추가
 	
 
 
@@ -137,20 +230,23 @@ public class PostController {
 	 private static final String ANSI_RESET = "\033[0m";
 
 	 public Command postList() {
-	     int width = 80;
-	     System.out.println("+" + "=".repeat(width - 2) + "+"); // 상단 경계선
-	     
-	     PostService postService = PostService.getInstance();
-	     UsersService usersService = UsersService.getInstance();
-	     UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-	     List<PostVo> posts = postService.getPostList();
+		    int width = 80;
+		    System.out.println("+" + "=".repeat(width - 2) + "+"); // 상단 경계선
+		    
+		    // 게시물 목록 출력
+		    PostService postService = PostService.getInstance();
+		    UsersService usersService = UsersService.getInstance();
+		    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+		    List<PostVo> posts = postService.getPostList();
 
-	     if (posts == null || posts.isEmpty()) {
-	         System.out.println("작성된 게시물이 없습니다");
-	     } else {
-	         List<PostVo> adminPosts = new ArrayList<>();
-	         List<PostVo> userPosts = new ArrayList<>();
+		    if (posts == null || posts.isEmpty()) {
+		        System.out.println("작성된 게시물이 없습니다");
+		    } else {
+		        // 공지사항과 사용자 게시물 목록 출력
+		        List<PostVo> adminPosts = new ArrayList<>();
+		        List<PostVo> userPosts = new ArrayList<>();
 
+<<<<<<< HEAD
 	         for (PostVo post : posts) {
 	             UsersVo user = usersService.getUserSelect(post.getUser_id());
 	             if (user != null && user.getRole() == 1) {
@@ -159,63 +255,79 @@ public class PostController {
 	                 userPosts.add(post);
 	             }
 	         }
+=======
+		        for (PostVo post : posts) {
+		            UsersVo user = usersService.getUserById(post.getUser_id());
+		            if (user != null && user.getRole() == 1) {
+		                adminPosts.add(post);
+		            } else {
+		                userPosts.add(post);
+		            }
+		        }
+>>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 
-	         // 공지사항 출력 (눈에 띄게)
-	         for (PostVo post : adminPosts) {
-	             String content = "# 공지사항: " + post.getTitle() + " #";
-	             System.out.println(ANSI_LIGHT_RED + ANSI_BOLD + content + ANSI_RESET);
-	         }
+		        // 공지사항 출력
+		        for (PostVo post : adminPosts) {
+		            String content = "# 공지사항: " + post.getTitle() + " #";
+		            System.out.println(ANSI_LIGHT_RED + ANSI_BOLD + content + ANSI_RESET);
+		        }
 
-	         for (int i = 0; i < userPosts.size(); i++) {
-	             PostVo post = userPosts.get(i);
-	             String title = padRight(truncate(post.getTitle(), 15), 20);
-	             String author = padRight(truncate(post.getUser_id(), 5), 6);
-	             String status = padRight(truncate(post.getCondition(), 10), 10);
-	             String content = String.format(
-	                 "%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", 
-	                 post.getPost_id(),
-	                 title, 
-	                 post.getPrice(),
-	                 author,
-	                 status
-	             );
-	             printAsciiArtBox(content, i == userPosts.size() - 1);
-	         }
-	     }
-	     
-	     System.out.println("+" + "=".repeat(width - 2) + "+"); // 하단 경계선
+		        // 사용자 게시물 출력
+		        for (int i = 0; i < userPosts.size(); i++) {
+		            PostVo post = userPosts.get(i);
+		            String title = padRight(truncate(post.getTitle(), 15), 20);
+		            String author = padRight(truncate(post.getUser_id(), 5), 6);
+		            String status = padRight(truncate(post.getCondition(), 10), 10);
+		            String content = String.format(
+		                "%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", 
+		                post.getPost_id(),
+		                title, 
+		                post.getPrice(),
+		                author,
+		                status
+		            );
+		            printAsciiArtBox(content, i == userPosts.size() - 1);
+		        }
+		    }
+		    
+		    System.out.println("+" + "=".repeat(width - 2) + "+"); // 하단 경계선
+		    
+		    // 화면 클리어
+		    System.out.print("\033[H\033[2J");
+		    System.out.flush();
 
-	     if (loginUserVo.getRole() != 0) {
-	         int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
-	         switch (input) {
-	             case 1:
-	                 return Command.POST_INSERT;
-	             case 2:
-	                 return Command.POST_DELETE;
-	             case 3:
-	                 return Command.POST_UPDATE;
-	             case 4:
-	                 return Command.POST_DETAIL;
-	             case 0:
-	                 return Command.USER_HOME;
-	         }
-	     } else {
-	         int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
-	         switch (input) {
-	             case 1:
-	                 return Command.POST_INSERT;
-	             case 2:
-	                 return Command.POST_DELETE;
-	             case 3:
-	                 return Command.POST_UPDATE;
-	             case 4:
-	                 return Command.POST_DETAIL;
-	             case 0:
-	                 return Command.USER_HOME;
-	         }
-	     }
-	     return Command.USER_HOME;
-	 }
+		    // 메뉴 선택으로 이동
+		    if (loginUserVo.getRole() != 0) {
+		        int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
+		        switch (input) {
+		            case 1:
+		                return Command.POST_INSERT;
+		            case 2:
+		                return Command.POST_DELETE;
+		            case 3:
+		                return Command.POST_UPDATE;
+		            case 4:
+		                return Command.POST_DETAIL;
+		            case 0:
+		                return Command.USER_HOME;
+		        }
+		    } else {
+		        int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
+		        switch (input) {
+		            case 1:
+		                return Command.POST_INSERT;
+		            case 2:
+		                return Command.POST_DELETE;
+		            case 3:
+		                return Command.POST_UPDATE;
+		            case 4:
+		                return Command.POST_DETAIL;
+		            case 0:
+		                return Command.USER_HOME;
+		        }
+		    }
+		    return Command.USER_HOME;
+		}
 
 	 // 문자열 길이를 제한하고, 초과하면 ... 추가
 	 private String truncate(String text, int maxLength) {
@@ -223,7 +335,11 @@ public class PostController {
 	 }
 
 	 // 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하는 함수
+	// 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하는 함수
 	 private String padRight(String text, int length) {
+	     if (text == null) {
+	         text = "";  // null일 경우 빈 문자열로 처리
+	     }
 	     int textLength = text.codePoints().map(cp -> Character.isAlphabetic(cp) ? 1 : 2).sum();
 	     int padSize = length - textLength;
 	     return text + " ".repeat(Math.max(0, padSize));
@@ -276,7 +392,7 @@ public class PostController {
 		    } else {
 		        System.out.println("게시글 등록에 실패했습니다.");
 		    }
-		return Command.USER_HOME;
+		return Command.POST_LIST;
 		}
 	
 	//게시글 수정 메서드
@@ -298,7 +414,7 @@ public class PostController {
 	    }
 	    postService.updatePostSelect(post); // updatePostMenu를 호출하여 수정 진행
 
-	    return Command.USER_HOME; // 수정 완료 후 사용자 홈으로 돌아감
+	    return Command.POST_LIST; // 수정 완료 후 사용자 홈으로 돌아감
 	}
 	
 	//게시글 삭제 메서드
@@ -327,7 +443,7 @@ public class PostController {
 	        System.out.println("게시물 삭제에 실패했습니다.");
 	    }
 
-	    return Command.USER_HOME;
+	    return Command.POST_LIST;
 	}
 }
 

@@ -12,7 +12,6 @@ public class DBUtil {
     static {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-            System.out.println("드라이버 로딩 성공");
         } catch (ClassNotFoundException e) {
             System.out.println("드라이버 로딩 실패");
             e.printStackTrace();
@@ -34,7 +33,6 @@ public class DBUtil {
         if (conn != null) {
             try {
                 conn.close();
-                System.out.println("DB 연결 닫기 성공");
             } catch (SQLException e) {
                 System.out.println("DB 연결 닫기 실패");
                 e.printStackTrace();
