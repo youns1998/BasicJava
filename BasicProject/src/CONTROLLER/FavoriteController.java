@@ -10,7 +10,7 @@ import UTIL.ScanUtil;
 import VO.FavoriteVo;
 import VO.PostVo;
 import VO.UsersVo;
-s
+
 public class FavoriteController {
    private FavoriteService favoriteService = new FavoriteService();
    
@@ -53,12 +53,15 @@ public class FavoriteController {
             System.out.println("관심 상품이 없습니다.");
             
         } else {
+        	System.out.printf("%-15s %-30s %-10s%n", "게시글 번호", "게시글 제목", "작성자");
+            System.out.println("-----------------------------------------------------");
+             
             for (FavoriteVo favorite : favorites) {
-                System.out.println("게시글 번호 : " + favorite.getPost_id()
-                                 +"\t게시글 제목 : "+favorite.getPost_title()
-                                 +"\t작성자 : "+ favorite.getAuthor());
+                System.out.printf("%-15d %-30s %-10s%n", 
+                                  favorite.getPost_id(), 
+                                  favorite.getPost_title(), 
+                                  favorite.getAuthor());
             }
-      
         }
         return Command.USER_HOME; // 게시물 목록으로 돌아가기
     }
