@@ -12,7 +12,7 @@ public class ScanUtil {
 	}
 	
 	public static String nextLine(String title) {
-		System.out.println(title);
+		System.out.print(title);
 		return nextLine();
 	}
 	
@@ -28,7 +28,7 @@ public class ScanUtil {
 	}
 	
 	public static int nextInt(String title) {
-		System.out.println(title);
+		System.out.print(title);
 		return nextInt();
 	}
 	

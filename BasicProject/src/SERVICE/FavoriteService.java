@@ -8,6 +8,17 @@ import VO.UsersVo;
 public class FavoriteService {
     private FavoriteDAO favoriteDAO = new FavoriteDAO();
 
+    private static FavoriteService instance;
+
+	private FavoriteService() {
+
+	}
+
+	public static FavoriteService getInstance() {
+		if (instance == null)
+			instance = new FavoriteService();
+		return instance;
+	}
        // 관심 상품 등록
        public void addFavorite(FavoriteVo favorite) {
            favoriteDAO.addFavorite(favorite);

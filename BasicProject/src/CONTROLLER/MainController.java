@@ -57,9 +57,22 @@ public class MainController {
 				case POST_INSERT: cmd = postController.postInsert(); break;
 				case POST_LIST: cmd = postController.postList(); break;
 				case POST_UPDATE: cmd = postController.postUpdate(); break;
-				case POST_DETAIL: cmd = postController.detailPost(); break;	
+				case POST_DETAIL:
+				    Integer currentPostId = (Integer) MainController.sessionMap.get("currentPostId");
+				    if (currentPostId != null) {
+				        cmd = postController.detailPost(currentPostId); // 이미 보고 있는 게시글 ID로 이동
+				    } else {
+				        cmd = postController.detailPost(); // 처음 접근 시 글 번호를 입력받아야 함
+				    }
+				    break;
 
-//				// 카테고리 보기
+
+//				// 댓글 관리
+//				case COMMENT_DELETE: cmd = commentController.commentDelete(); break;
+//				case COMMENT_LIST: cmd = commentController.commentList(); break;
+//				case COMMENT_UPDATE: cmd = commentController.commentUpdate(); break;
+//				
+//				// 카테고리 보기 
 				case CATEGORY_LIST: cmd = categoryController.categoryList(); break;
 				case CATEGORY_INSERT: cmd = categoryController.categoryInsert(); break;
 				case CATEGORY_UPDATE: cmd = categoryController.categoryUpdate(); break;
@@ -67,7 +80,16 @@ public class MainController {
 
 //				 관심 물품 보기
 				case FAVORITE_LIST: cmd = favoriteController.displayMenu(); break;
-				case FAVORITE_INSERT: cmd = favoriteController.addFavorite(); break;
+				case FAVORITE_INSERT:
+				    Integer postId = (Integer) MainController.sessionMap.get("currentPostId");
+				    if (postId != null) {
+				        cmd = favoriteController.addFavorite(postId); // 현재 게시물의 ID를 전달
+				    } else {
+				        System.out.println("현재 선택된 게시물이 없습니다.");
+				        cmd = Command.POST_LIST; // 기본 게시물 목록으로 돌아가기
+				    }
+				    break;
+
 //				// 거래 기록 보기
 //				case HISTORY_LIST: cmd = historyController.historyList(); break;
 				
