@@ -380,11 +380,13 @@ public class PostController {
        }
        
        // 사용자 권한 확인
-       if (!post.getUser_id().equals(loginUserVo.getUser_id())) {
+       if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+           // 수정 진행
+           postService.updatePostSelect(post); // updatePostMenu를 호출하여 수정 진행
+           System.out.println("게시물이 성공적으로 수정되었습니다.");
+       } else {
            System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
-           return Command.POST_LIST;
        }
-       postService.updatePostSelect(post); // updatePostMenu를 호출하여 수정 진행
 
        return Command.POST_LIST; // 수정 완료 후 사용자 홈으로 돌아감
    }
@@ -403,9 +405,12 @@ public class PostController {
        }
 
        // 사용자 권한 확인
-       if (!post.getUser_id().equals(loginUserVo.getUser_id())) {
+       if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+           // 자신의 글이거나 관리자라면 삭제 가능
+           postService.deletePost(post.getPost_id());
+           System.out.println("게시물이 성공적으로 삭제되었습니다.");
+       } else {
            System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
-           return Command.POST_LIST;
        }
 
        return Command.POST_LIST;
