@@ -10,7 +10,7 @@ import UTIL.ScanUtil;
 import VO.FavoriteVo;
 import VO.PostVo;
 import VO.UsersVo;
-
+s
 public class FavoriteController {
    private FavoriteService favoriteService = new FavoriteService();
    

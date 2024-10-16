@@ -1,7 +1,7 @@
 package VO;
 
 import java.time.LocalDateTime;
-
+s
 public class FavoriteVo {
 	private String user_id;
 	private int post_id;
