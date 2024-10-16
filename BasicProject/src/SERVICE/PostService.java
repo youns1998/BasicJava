@@ -14,7 +14,7 @@ public class PostService {
 	//싱글톤 패턴 --------------------------------------------------
 		private static PostService service;
 		
-		private PostService() {
+		PostService() {
 			dao = PostDao.getInstance();
 		}
 		
@@ -80,4 +80,6 @@ public class PostService {
 	        }
 	        return dao.deletePost(post_id);
 	    }
+
+		
 	}

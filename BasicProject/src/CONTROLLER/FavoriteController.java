@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import SERVICE.FavoriteService;
+import SERVICE.PostService;
 import UTIL.Command;
 import UTIL.ScanUtil;
 import VO.FavoriteVo;
@@ -31,41 +32,54 @@ public class FavoriteController {
         UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
        
         favorite.setUser_id(loginUserVo.getUser_id());
-        int postId = ScanUtil.nextInt("관심 상품으로 등록할 게시물 ID를 입력하세요: ");
+        int postId = ScanUtil.nextInt("관심 상품으로 등록할 게시물 번호를 입력하세요: ");
         favorite.setPost_id(postId); // 입력받은 ID를 설정
         
-        if(postId == favorite.getPost_id()) {
-        	System.out.println("찜 목록에 동일한 상품이 존재합니다");
-        	return Command.POST_DETAIL;										// 여기부분 수정해야함
+        if (favoriteService.isFavoriteExists(loginUserVo.getUser_id(), postId)) {
+            System.out.println("관심 상품 목록에 동일한 상품이 존재합니다");
+            return Command.POST_LIST; // 동일한 상품이 존재할 경우 상세 페이지로 돌아가기
         }
         favoriteService.addFavorite(favorite);
         System.out.println("관심 상품 등록 완료.");
         return Command.POST_LIST; // 게시물 목록으로 돌아가기
     }
     // 사용자의 관심 상품 목록 조회
-    public void viewFavorites() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("사용자 ID 입력: ");
-        String userId = scanner.next();
-
-        List<FavoriteVo> favorites = favoriteService.getFavoritesByUser(userId);
-        System.out.println("관심 상품 목록:");
-        for (FavoriteVo favorite : favorites) {
-            System.out.println("게시글 ID: " + favorite.getPost_id());
+    public Command viewFavorites() {
+        List<FavoriteVo> favorites = favoriteService.getFavoritesByUser();
+        
+        System.out.println("관심 상품 목록:" + favorites.size());
+         
+        if (favorites.isEmpty()) {
+            System.out.println("관심 상품이 없습니다.");
             
+        } else {
+            for (FavoriteVo favorite : favorites) {
+                System.out.println("게시글 번호 : " + favorite.getPost_id()
+                                 +"\t게시글 제목 : "+favorite.getPost_title()
+                                 +"\t작성자 : "+ favorite.getAuthor());
+            }
+      
         }
+        return Command.USER_HOME; // 게시물 목록으로 돌아가기
     }
 
     // 관심 상품 삭제
     public void deleteFavorite() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("사용자 ID 입력: ");
-        String userId = scanner.next();
-        System.out.print("삭제할 게시글 ID 입력: ");
+        System.out.print("삭제할 게시글 번호 입력: ");
         int postId = scanner.nextInt();
 
-        favoriteService.deleteFavorite(userId, postId);
-        System.out.println("관심 상품 삭제 완료.");
+        UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+        String currentUserId = loginUserVo.getUser_id(); // 현재 로그인한 사용자 ID를 가져옵니다.
+
+        // 삭제 메서드 호출
+        boolean isDeleted = favoriteService.deleteFavorite(currentUserId, postId);
+        
+        if (isDeleted) {
+            System.out.println("관심 상품 삭제 완료.");
+        } else {
+            System.out.println("해당 게시글의 관심 상품이 존재하지 않거나 삭제할 수 없습니다.");
+        }
     }
 
     // 특정 사용자가 특정 게시글을 즐겨찾기 했는지 확인
@@ -76,42 +90,39 @@ public class FavoriteController {
         System.out.print("게시글 ID 입력: ");
         int postId = scanner.nextInt();
 
-        boolean isFavorite = favoriteService.isFavorite(userId, postId);
-        if (isFavorite) {
-            System.out.println("이 사용자는 이 게시글을 즐겨찾기 했습니다.");
-        } else {
-            System.out.println("이 사용자는 이 게시글을 즐겨찾기 하지 않았습니다.");
-        }
+//        boolean isFavorite = favoriteService.isFavoriteEx(userId, postId);
+//        if (isFavorite) {
+//            System.out.println("이 사용자는 이 게시글을 즐겨찾기 했습니다.");
+//        } else {
+//            System.out.println("이 사용자는 이 게시글을 즐겨찾기 하지 않았습니다.");
+//        }
     }
     
     // 관심 상품 관리 메뉴 표시
-    public void displayMenu() {
+    public Command displayMenu() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("1. 관심 상품 등록");
-            System.out.println("2. 관심 상품 목록 조회");
-            System.out.println("3. 관심 상품 삭제");
-            System.out.println("4. 특정 게시글 즐겨찾기 확인");
-            System.out.println("5. 종료");
+            System.out.println();
+        	System.out.println("1. 관심 상품 보기");
+        	System.out.println("2. 관심 상품 삭제");
+            System.out.println("3. 특정 게시글 즐겨찾기 확인");
+            System.out.println("4. 종료");
             System.out.print("선택: ");
             int choice = scanner.nextInt();
 
             switch (choice) {
-                case 1:
-                    addFavorite();
-                    break;
-                case 2:
-                    viewFavorites();
-                    break;
-                case 3:
+            	case 1:
+            		viewFavorites();
+            		break;
+            	case 2:
                     deleteFavorite();
                     break;
-                case 4:
+                case 3:
                     checkFavorite();
                     break;
-                case 5:
+                case 4:
                     System.out.println("종료합니다.");
-                    return;
+                    return Command.USER_HOME;
                 default:
                     System.out.println("잘못된 선택입니다.");
             }
