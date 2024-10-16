@@ -3,24 +3,55 @@ package CONTROLLER;
 import java.util.ArrayList;
 import java.util.List;
 
+import SERVICE.CategoryService;
 import SERVICE.CommentsService;
 import SERVICE.PostService;
 import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
-import VO.CommentsVo;
-import VO.PostVo;
-import VO.UsersVo;
+import VO.*;
 
-
-////작성글
-//case POST_DELETE: cmd = postController
-//case POST_INSERT:
-//case POST_LIST:
-//case POST_UPDATE:
 
 public class PostController {
 	
+	
+	private String padAndTruncate(String text, int maxLength) {
+	    if (text == null) {
+	        text = "";  // null일 경우 빈 문자열로 처리
+	    }
+	    int textLength = 0;
+
+	    // 한글과 영문의 길이 계산을 다르게 함
+	    for (char c : text.toCharArray()) {
+	        if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_SYLLABLES ||
+	            Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_JAMO ||
+	            Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_COMPATIBILITY_JAMO) {
+	            textLength += 2; // 한글은 2로 계산
+	        } else {
+	            textLength += 1; // 나머지는 1로 계산
+	        }
+	    }
+
+	    if (textLength > maxLength) {
+	        StringBuilder truncated = new StringBuilder();
+	        int currentLength = 0;
+	        for (char c : text.toCharArray()) {
+	            int charLength = (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_SYLLABLES ||
+	                              Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_JAMO ||
+	                              Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_COMPATIBILITY_JAMO) ? 2 : 1;
+
+	            if (currentLength + charLength > maxLength) {
+	                break;
+	            }
+	            truncated.append(c);
+	            currentLength += charLength;
+	        }
+	        return truncated.toString();
+	    } else {
+	        int padding = maxLength - textLength;
+	        return text + " ".repeat(padding); // 지정된 길이에 맞춰 오른쪽으로 공백 추가
+	    }
+	}
 	private static final int TITLE_MAX_LEN = 10;
 	private static final int AUTHOR_MAX_LEN = 5;
 	private static final int STATUS_MAX_LEN = 5;
@@ -146,22 +177,10 @@ public class PostController {
 	    System.out.println(borderLine);
 	}
 
-	// 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하고, 초과 시 잘라내기 함수
-	// 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하고, 초과 시 잘라내기 함수
-	private String padAndTruncate(String text, int maxLength) {
-	    if (text == null) {
-	        text = "";  // null일 경우 빈 문자열로 처리
-	    }
-	    int textLength = text.codePoints().map(cp -> (Character.isAlphabetic(cp) && cp <= 0x7F) ? 1 : 2).sum();
-	    if (textLength > maxLength) {
-	        return text.substring(0, Math.min(text.length(), maxLength));  // 초과 시 자르기만 수행
-	    } else {
-	        int padding = maxLength - textLength;
-	        return text + " ".repeat(padding);
-	    }
-	}
+				 
+		 
+		
 
-	// 문자열 길이를 제한하고, 초과하면 ... 추가
 	
 
 
@@ -314,14 +333,22 @@ public class PostController {
 	        post.setTitle(title);
 	        post.setContent(content);
 	        post.setUser_id(loginUserVo.getUser_id()); // 관리자 ID 설정
+	        
 		}else {						//사용자의 게시글 추가
 		String Title = ScanUtil.nextLine("글 제목 >> ");
 		int price = ScanUtil.nextInt("가격 >> ");
 		
-		// 여기에 카테고리 전체리스트 보여줘야 밑에서 고를 수 있음
-		// ex) 남성 의류 >> 101 여성 의류 >> 102
-		
+		//카테고리 리스트 보여주는 곳
+		CategoryService cateservice = CategoryService.getInstance();
+		List<CategoryVo> catevo = cateservice.getCategoryList();
+		 for (CategoryVo category : catevo) {
+		        System.out.println("분류번호: " + category.getCategory_id() + ", 카테고리: " + category.getCategory_name());
+		    }
+		 System.out.println("======================================================================");
+		 System.out.println("보기의 분류에 맞게 번호를 입력해주세요 ");
 		int category = ScanUtil.nextInt("카테고리 >> ");
+		//여기까지 
+		
 		String content = ScanUtil.nextLine("글 내용 입력 >> ");
 			post.setTitle(Title);
 		    post.setPrice(price);

@@ -64,11 +64,13 @@ public class MainController {
 //				case COMMENT_UPDATE: cmd = commentController.commentUpdate(); break;
 //				
 //				// 카테고리 보기
-//				case CATEGORY_LIST: cmd = categoryController.categoryList(); break;
-//				
+				case CATEGORY_LIST: cmd = categoryController.categoryList(); break;
+				case CATEGORY_INSERT: cmd = categoryController.categoryInsert(); break;
+				case CATEGORY_UPDATE: cmd = categoryController.categoryUpdate(); break;
+				case CATEGORY_DELETE: cmd = categoryController.categoryDelete(); break;
 //				 관심 물품 보기
-//				case FAVORITE_LIST: cmd = favoriteController.favoriteList(); break;
-				case FAVORITE_INSERT: cmd = favoriteController.addFavorite();
+				case FAVORITE_LIST: cmd = favoriteController.displayMenu(); break;
+				case FAVORITE_INSERT: cmd = favoriteController.addFavorite(); break;
 //				// 거래 기록 보기
 //				case HISTORY_LIST: cmd = historyController.historyList(); break;
 				
@@ -116,13 +118,14 @@ public class MainController {
 		System.out.println("\t 메인 페이지입니다");
 		System.out.println("아래 메뉴에서 작업할 번호를 선택하세요.");
 		System.out.println("-----------------------------------------------------------------------");
-		System.out.println("1.중고장터보기\t2.내정보보기\t3.찜한상품보기\t4.나의거래내역\t0.로그아웃");
+		System.out.println("1.중고장터보기\t2.내정보보기\t3.관심상품보기\t4.나의거래내역\t0.로그아웃");
 		System.out.println("-----------------------------------------------------------------------");
 		int input = ScanUtil.nextInt("메뉴 선택 >> ");
 		
 		switch (input) {
 			case 1: return Command.POST_LIST;
 			case 2: return Command.MYPAGE;
+			case 3: return Command.FAVORITE_LIST;
 			case 0:
 				// ProjectMain의 정적변수인 sessionMap에 저장된 모든 자료를 삭제한다.
 				MainController.sessionMap.clear();;
@@ -148,7 +151,7 @@ public class MainController {
 			case 1: return Command.UESR_LIST;
 			case 2: return Command.POST_LIST;
 //			case 3: return Command.MYPAGE;
-//			case 3: return Command.MYPAGE;
+			case 4: return Command.CATEGORY_LIST;
 //			case 3: return Command.MYPAGE;
 			case 0:
 				// ProjectMain의 정적변수인 sessionMap에 저장된 모든 자료를 삭제한다.
