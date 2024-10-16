@@ -35,7 +35,7 @@ public class UsersService{
 			return dao.getUserList();
 		}
 		
-		 public UsersVo getUserSelect(int userId) {
+		 public UsersVo getUserSelect(String userId) {
 		        return dao.getUserSelect(userId);
 		    }
 		
@@ -50,8 +50,4 @@ public class UsersService{
 		public int getMemberCount(String user_id) {
 			return getMemberCount(user_id);
 		}
-		public UsersVo getUserById(String userId) {
-	        return dao.getUserById(userId);
-	    }
-	
 }

@@ -41,7 +41,7 @@ public class UsersController {
 
     // 회원 상세보기
     public Command userSelect() {
-        int userId = ScanUtil.nextInt("조회할 회원 ID를 입력하세요: ");
+        String userId = ScanUtil.nextLine("조회할 회원 ID를 입력하세요: ");
         UsersVo user = userService.getUserSelect(userId);
         if (user != null) {
             System.out.println("ID: " + user.getUser_id());
@@ -57,7 +57,7 @@ public class UsersController {
 
     // 아이디 중복 확인 메서드
     private boolean isUserIdDuplicated(String userId) {
-        return userService.getUserById(userId) != null;
+        return userService.getUserSelect(userId) != null;
     }
 
     // 아이디 및 비밀번호 형식 검증 메서드

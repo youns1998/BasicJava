@@ -38,10 +38,8 @@ public class UsersDao {
 	//사용자 추가(회원가입)
 	public int addUser(UsersVo user) {
 		int cnt = 0;
-
 		String sql = "INSERT INTO USERS (USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS ) "
 				+ " VALUES (?, ? ,?, ?, ?, ?,?)";
-		
 		try {
 			con = DBUtil.getConnection();
 			ps = con.prepareStatement(sql);
@@ -61,25 +59,6 @@ public class UsersDao {
 		}
 		return cnt;
 	}
-	//로그인
-//	public boolean login(String username, String password) {
-//	    String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-//	    try (Connection conn = DBUtil.getConnection();
-//	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//	        
-//	        pstmt.setString(1, username);
-//	        pstmt.setString(2, password);
-//	        ResultSet rs = pstmt.executeQuery();
-//
-//	        if (rs.next()) {
-//	            int role = rs.getInt("role");
-//	            return "1".equals(role); // 관리자인 경우만 true 반환
-//	        }
-//	    } catch (SQLException e) {
-//	        e.printStackTrace();
-//	    }
-//	    return false; // 로그인 실패
-//	}
 	// 로그인 
 	public UsersVo getUser(UsersVo userVo) {
 		UsersVo getUserVo = null;
@@ -114,14 +93,14 @@ public class UsersDao {
 		return getUserVo;
 	}
 	//사용자 상세보기
-	 public UsersVo getUserSelect(int userId) {
+	 public UsersVo getUserSelect(String userId) {
 	        UsersVo user = null;
 	        String sql = "SELECT * FROM USERS WHERE USER_ID = ?";
 
 	        try {
 	            con = DBUtil.getConnection();
 	            ps = con.prepareStatement(sql);
-	            ps.setInt(1, userId);
+	            ps.setString(1, userId);
 	            ResultSet rs = ps.executeQuery();
 
 	            if (rs.next()) {
@@ -133,7 +112,6 @@ public class UsersDao {
 	                user.setEmail(rs.getString("EMAIL"));
 	                user.setPhone_number(rs.getString("PHONE_NUMBER"));
 	                user.setRole(rs.getInt("ROLE"));
-	                // 필요한 다른 필드 설정
 	            }
 
 	        } catch (SQLException e) {
@@ -243,26 +221,6 @@ public class UsersDao {
 		return count;
 	}
 	
-	 public UsersVo getUserById(String userId) {
-	        String sql = "SELECT * FROM users WHERE user_id = ?";
-	        try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	            pstmt.setString(1, userId);
-	            try (ResultSet rs = pstmt.executeQuery()) {
-	                if (rs.next()) {
-	                    UsersVo user = new UsersVo();
-	                    user.setUser_id(rs.getString("user_id"));
-	                    user.setUser_pass(rs.getString("user_pass"));
-	                    user.setUsername(rs.getString("username"));
-	                    user.setAddress(rs.getString("address"));
-	                    user.setEmail(rs.getString("email"));
-	                    user.setPhone_number(rs.getString("phone_number"));
-	                    user.setRole(rs.getInt("role"));
-	                    return user;
-	                }
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return null; // 사용자 정보가 없을 경우 null 반환
-	    }
+	
+	 
 }

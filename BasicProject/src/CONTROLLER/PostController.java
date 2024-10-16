@@ -1,8 +1,6 @@
 package CONTROLLER;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import SERVICE.CategoryService;
 import SERVICE.CommentsService;
 import SERVICE.PostService;
@@ -12,26 +10,15 @@ import UTIL.ScanUtil;
 import VO.CategoryVo;
 import VO.PostVo;
 import VO.UsersVo;
-
-
-////작성글
-//case POST_DELETE: cmd = postController
-//case POST_INSERT:
-//case POST_LIST:
-//case POST_UPDATE:
-
 public class PostController {
 	
 	private static final int TITLE_MAX_LEN = 10;
 	private static final int AUTHOR_MAX_LEN = 5;
 	private static final int STATUS_MAX_LEN = 5;
 	private static PostController instance;
-    private CommentController commentController = CommentController.getInstance(); // CommentController 인스턴스 생성
-
-	private PostController() {
-
-	}
-
+    private CommentController commentController = CommentController.getInstance();
+    
+	private PostController() {}
 	public static PostController getInstance() {
 		if (instance == null)
 			instance = new PostController();
@@ -53,10 +40,6 @@ public class PostController {
 		    displayPostDetails(selectedPost);
 		    return commentMenu(selectedPost.getPost_id());
 	}
-	
-	
-	
-	
 	
 	// 댓글 메뉴 메서드
 	private Command commentMenu(int postId) {
@@ -121,67 +104,13 @@ public class PostController {
 	    System.out.printf("| 댓글 수: %-10d 찜한 사람 수: %-48s \n", commentCount, "(찜한 사람 수 미정)");
 	    System.out.println(borderLine);
 	}
-<<<<<<< HEAD
-	//전체 게시글 보기
-	public Command postList() {
-		System.out.println("============================ 전체 게시물 ================================");
-		PostService postService = PostService.getInstance(); 
-		List<PostVo> posts = postService.getPostList(); 
-		UsersVo loginUserVo = (UsersVo)MainController.sessionMap.get("loginUser");
-		if (posts == null || posts.isEmpty()) {	//게시글 배열이 없으면
-	        System.out.println("작성된 게시물이 없습니다");
-	    } else {								//게시글 배열이 있다면
-	        for (PostVo post : posts) {
-	        	 System.out.println(
-	 	                "게시물 번호:" + post.getPost_id() + 
-	 	                ",  제목:" + post.getTitle() + 
-	 	                ",  가격:" + post.getPrice() + 
-	 	                ",  분류:" + post.getCategory_id() +
-	 	                ",  작성자:" + post.getUser_id() + 
-	 	                ",  상태:" + post.getCondition());
-	 	                // 댓글 달린 갯수도 표시 해줘야함
-	        }
-	    }
-		 System.out.println("======================================================================");
-		 if(loginUserVo.getRole()!=0 ) {	//관리자가 보는 게시글 페이지
-			 int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
-				switch (input) {
-				case 1:
-					return Command.POST_INSERT;
-				case 2:
-					return Command.POST_DELETE;
-				case 3:
-					return Command.POST_UPDATE;
-				case 4:
-					return Command.POST_DETAIL;
-				case 0:
-					return Command.USER_HOME;
-				}	 
-		 }
-		 else {								//사용자가 보는 게시글 페이지
-		int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
-		switch (input) {
-		case 1:
-			return Command.POST_INSERT;
-		case 2:
-			return Command.POST_DELETE;
-		case 3:
-			return Command.POST_UPDATE;
-		case 4:
-			return Command.POST_DETAIL;
-		case 0:
-			return Command.USER_HOME;
-		}
-		 }
-		 return Command.USER_HOME;
-=======
+
 
 	// 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하고, 초과 시 잘라내기 함수
 	private String padAndTruncate(String text, int maxLength) {
 	    int textLength = text.codePoints().map(cp -> (Character.isAlphabetic(cp) && cp <= 0x7F) ? 1 : 2).sum();
 	    int padding = Math.max(0, maxLength - textLength); // 패딩 계산
 	    return text + " ".repeat(padding);
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 	}
 
 	// 문자열 길이를 제한하고, 초과하면 ... 추가
@@ -223,7 +152,7 @@ public class PostController {
 	         List<PostVo> userPosts = new ArrayList<>();
 
 	         for (PostVo post : posts) {
-	             UsersVo user = usersService.getUserById(post.getUser_id());
+	             UsersVo user = usersService.getUserSelect(post.getUser_id());
 	             if (user != null && user.getRole() == 1) {
 	                 adminPosts.add(post);
 	             } else {

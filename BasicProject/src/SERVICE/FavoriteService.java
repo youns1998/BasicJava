@@ -5,7 +5,6 @@ import DAO.FavoriteDAO;
 import DAO.PostDao;
 import VO.FavoriteVo;
 import VO.UsersVo;
-s
 public class FavoriteService {
     private FavoriteDAO favoriteDAO = new FavoriteDAO();
 
