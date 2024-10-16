@@ -378,8 +378,9 @@ public class PostController {
            System.out.println("해당 게시물을 찾을 수 없습니다.");
            return Command.POST_LIST; 
        }
+       
        // 사용자 권한 확인
-       if (post.getUser_id() != loginUserVo.getUser_id() && loginUserVo.getRole() == 0) {
+       if (!post.getUser_id().equals(loginUserVo.getUser_id())) {
            System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
            return Command.POST_LIST;
        }
@@ -402,7 +403,7 @@ public class PostController {
        }
 
        // 사용자 권한 확인
-       if (post.getUser_id() != loginUserVo.getUser_id() && loginUserVo.getRole() == 0) {
+       if (!post.getUser_id().equals(loginUserVo.getUser_id())) {
            System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
            return Command.POST_LIST;
        }
