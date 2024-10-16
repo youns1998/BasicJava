@@ -50,5 +50,8 @@ public class UsersService{
 		public int getMemberCount(String user_id) {
 			return getMemberCount(user_id);
 		}
-		
+		public UsersVo getUserById(String userId) {
+	        return dao.getUserById(userId);
+	    }
+	
 }

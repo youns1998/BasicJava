@@ -242,4 +242,27 @@ public class UsersDao {
 	      }
 		return count;
 	}
+	
+	 public UsersVo getUserById(String userId) {
+	        String sql = "SELECT * FROM users WHERE user_id = ?";
+	        try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, userId);
+	            try (ResultSet rs = pstmt.executeQuery()) {
+	                if (rs.next()) {
+	                    UsersVo user = new UsersVo();
+	                    user.setUser_id(rs.getString("user_id"));
+	                    user.setUser_pass(rs.getString("user_pass"));
+	                    user.setUsername(rs.getString("username"));
+	                    user.setAddress(rs.getString("address"));
+	                    user.setEmail(rs.getString("email"));
+	                    user.setPhone_number(rs.getString("phone_number"));
+	                    user.setRole(rs.getInt("role"));
+	                    return user;
+	                }
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return null; // 사용자 정보가 없을 경우 null 반환
+	    }
 }
