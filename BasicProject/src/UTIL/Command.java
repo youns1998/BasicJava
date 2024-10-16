@@ -11,13 +11,15 @@ public enum Command {
 	
 	// 회원 관련
 	ADMIN_USERDETAIL, // 회원관리 화면
+	
 	UESR_LIST,		// 회원 리스트 화면 
 	LOGIN,			// 로그인
 	JOIN,   		// 회원가입
 	MYPAGE, 		// 내 정보 수정
 	S_ID,			// ID 찾기
 	S_PW,			// PW 찾기
-	
+	USER_UPDATE,	//회원 정보 수정
+	USER_DELETE,	//회원 정보 삭제
 	// 카테고리 관련
 	CATEGORY_LIST,		// 카테고리
 	CATEGORY_INSERT, 	// 카테고리 추가

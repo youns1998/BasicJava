@@ -239,7 +239,7 @@ public class PostController {
 
               // 공지사항 출력
               for (PostVo post : adminPosts) {
-                  String content = "# 공지사항: " + post.getTitle() + " #";
+                  String content = "# 공지사항 : " + post.getTitle() + " #";
                   System.out.println(ANSI_LIGHT_RED + ANSI_BOLD + content + ANSI_RESET);
               }
 
@@ -308,7 +308,6 @@ public class PostController {
         return text.length() > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
     }
 
-    // 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하는 함수
    // 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하는 함수
     private String padRight(String text, int length) {
         if (text == null) {
@@ -382,7 +381,6 @@ public class PostController {
        if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
            // 수정 진행
            postService.updatePostSelect(post); // updatePostMenu를 호출하여 수정 진행
-           System.out.println("게시물이 성공적으로 수정되었습니다.");
        } else {
            System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
        }
@@ -407,7 +405,6 @@ public class PostController {
        if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
            // 자신의 글이거나 관리자라면 삭제 가능
            postService.deletePost(post.getPost_id());
-           System.out.println("게시물이 성공적으로 삭제되었습니다.");
        } else {
            System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
        }

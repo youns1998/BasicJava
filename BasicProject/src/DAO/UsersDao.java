@@ -12,6 +12,7 @@ import java.util.List;
 
 import UTIL.DBUtil;
 import UTIL.ScanUtil;
+import VO.PostVo;
 import VO.UsersVo;
 
 
@@ -59,6 +60,63 @@ public class UsersDao {
 		}
 		return cnt;
 	}
+	 // 선택 수정 메서드
+    public void updateUserSelect(UsersVo uservo) {
+    	
+        while (true) {
+        	System.out.println();
+            System.out.println("수정할 항목을 선택하세요 >>");
+            System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 0.뒤로가기");
+            int choice = ScanUtil.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.print("새로운 PW를 입력하세요: ");
+                    String newpw = ScanUtil.nextLine();
+                    uservo.setUser_pass(newpw);
+                    break;
+                case 2:
+                    System.out.print("새로운 이름을 입력하세요: ");
+                    String newname = ScanUtil.nextLine();
+                    uservo.setUsername(newname);
+                    break;
+                case 3:
+                    System.out.print("새로운 번호를 입력하세요: ");
+                    String newphone_number = ScanUtil.nextLine();
+                    uservo.setPhone_number(newphone_number);
+                    break;
+                case 4:
+                    System.out.print("새로운 주소를 입력하세요: ");
+                    String newAdd = ScanUtil.nextLine();
+                    uservo.setAddress(newAdd);
+                    break;
+                case 5:
+                    System.out.println("새로운 이메일을 입력하세요.");
+                    String newemail = ScanUtil.nextLine();	
+                    uservo.setEmail(newemail);
+                    return;
+                default:
+                    System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+                    continue;
+            }
+
+            // 수정된 내용을 데이터베이스에 반영
+            try {
+                int result = updateUser(uservo); // 게시물 업데이트
+                if (result > 0) {
+                    System.out.println("회원 정보가 수정되었습니다.\n "
+                    		+ "1.더 수정 하기 0.되돌아 가기");
+                    int y = ScanUtil.nextInt();
+                    if(y==1) {continue;}
+                    if(y==0) {break;}	
+                    
+                } else {
+                    System.out.println("회원정보 수정에 실패했습니다.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 	// 로그인 
 	public UsersVo getUser(UsersVo userVo) {
 		UsersVo getUserVo = null;
@@ -161,7 +219,6 @@ public class UsersDao {
 	                user.setPhone_number(rs.getString("PHONE_NUMBER"));
 	                user.setRole(rs.getInt("ROLE"));
 	            }
-
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        } finally {
@@ -226,15 +283,15 @@ public class UsersDao {
 
 	    return cnt;  
 	}
-	//회원 탈퇴
-	public int deleteUser(String user_id) {
+	//회원 탈퇴 (회원 삭제)
+	public int deleteUser(UsersVo user) {
 		int cnt = 0;
 		String sql = "DELETE FROM USERS "
 				+ " WHERE USER_ID = ? ";
 		try {
 			con = DBUtil.getConnection();
 			ps = con.prepareStatement(sql);
-			ps.setString(1, user_id);
+			ps.setString(1, user.getUser_id());
 			
 			cnt = ps.executeUpdate();
 			
@@ -245,30 +302,4 @@ public class UsersDao {
 		}
 		return cnt;
 	}
-	
-//	회원ID의 갯수를 반환하는 메서드
-	public int getUserCount(String user_id) {
-		int count = 0;		//반환 값이 저장될 변수
-		 try {
-	         con = DBUtil.getConnection();
-	         String sql = "select count(*) cnt from users "
-	               + "where user_id = ?";
-	         ps = con.prepareStatement(sql);
-	         ps.setString(1, user_id);
-	         
-	         rs = ps.executeQuery();
-	         
-	         if(rs.next()) {
-	            count = rs.getInt("cnt");
-	         }
-	      } catch (SQLException e) {
-	         e.printStackTrace();
-	      } finally {
-	    	  disConnect();
-	      }
-		return count;
-	}
-	
-	
-	 
 }

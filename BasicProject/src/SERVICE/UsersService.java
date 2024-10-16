@@ -23,28 +23,29 @@ public class UsersService{
 			instance = new UsersService();
 		return instance;
 	}
-	
+		//회원가입
 		public int addUser(UsersVo user) {
 			return dao.addUser(user);
 		}
-		
+		//로그인
 		public UsersVo getUser(UsersVo userVo) {
 			return dao.getUser(userVo);
 		}
+		//전체 회원 보기
 		public List<UsersVo> getPostList() {
 			return dao.getUserList();
 		}
-		
+		//상세보기
 		public UsersVo getUserSelect(String userId) {
 		        return dao.getUserSelect(userId);
 		    }
-		
-		public int updateUser(UsersVo user) {
-			return dao.updateUser(user);
+		//수정
+		public void updateUser(UsersVo userVo) {
+			 dao.updateUserSelect(userVo);
 		}
-		
-		public int deleteUser(String user_id) {
-			return dao.deleteUser(user_id);
+		//삭제
+		public void deleteUser(UsersVo userVo) {
+			 dao.deleteUser(userVo);
 		}
 		
 		public int getMemberCount(String user_id) {
