@@ -19,6 +19,10 @@ import VO.UsersVo;
 //case POST_UPDATE:
 
 public class PostController {
+	
+	private static final int TITLE_MAX_LEN = 10;
+	private static final int AUTHOR_MAX_LEN = 5;
+	private static final int STATUS_MAX_LEN = 5;
 	private static PostController instance;
     private CommentController commentController = CommentController.getInstance(); // CommentController 인스턴스 생성
 
@@ -106,83 +110,127 @@ public class PostController {
 	}
 	//전체 게시글 보기
 	// ANSI 색상 코드 설정
-	 private static final String ANSI_RED = "\u001B[31m";
-	 private static final String ANSI_RESET = "\u001B[0m";
+
+	
+
+	
+	// 아스키 아트 박스 출력 함수 (마지막 닫는 라인을 출력하지 않음)
+	 private void printAsciiArtBox(String content, boolean isLast) {
+	     int width = 80; // 가로 너비 설정 (박스 내부 포함하여 고정)
+	     String borderLine = "+" + "-".repeat(width - 2) + "+"; // 박스의 상단과 하단 라인
+	     System.out.println(borderLine);
+	     System.out.printf("| %-"+ (width - 3) +"s\n", content); // 박스 내용 출력 (마지막 | 생략)
+	     if (!isLast) { // 마지막 박스가 아닌 경우에만 닫는 선을 출력
+	         System.out.println(borderLine);
+	     }
+	 }
+
+	// 덜 진한 빨간색 설정
+	 private static final String ANSI_LIGHT_RED = "\033[38;5;203m"; // 덜한 빨간색
 	 private static final String ANSI_BOLD = "\033[1m";
+	 private static final String ANSI_RESET = "\033[0m";
 
 	 public Command postList() {
-		    System.out.println("============================ 전체 게시물 ================================");
-		    PostService postService = PostService.getInstance();
-		    UsersService usersService = UsersService.getInstance(); // UsersService 인스턴스 추가
-		    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-		    List<PostVo> posts = postService.getPostList();
+	     int width = 80;
+	     System.out.println("+" + "=".repeat(width - 2) + "+"); // 상단 경계선
+	     
+	     PostService postService = PostService.getInstance();
+	     UsersService usersService = UsersService.getInstance();
+	     UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	     List<PostVo> posts = postService.getPostList();
 
-		    if (posts == null || posts.isEmpty()) {
-		        System.out.println("작성된 게시물이 없습니다");
-		    } else {
-		        // 관리자와 일반 사용자 게시글을 구분하여 저장
-		        List<PostVo> adminPosts = new ArrayList<>();
-		        List<PostVo> userPosts = new ArrayList<>();
+	     if (posts == null || posts.isEmpty()) {
+	         System.out.println("작성된 게시물이 없습니다");
+	     } else {
+	         List<PostVo> adminPosts = new ArrayList<>();
+	         List<PostVo> userPosts = new ArrayList<>();
 
-		        for (PostVo post : posts) {
-		            UsersVo user = usersService.getUserById(post.getUser_id()); // 작성자의 User 정보 가져오기
-		            if (user != null && user.getRole() == 1) { // ROLE이 1이면 관리자 게시글
-		                adminPosts.add(post);
-		            } else {
-		                userPosts.add(post);
-		            }
-		        }
+	         for (PostVo post : posts) {
+	             UsersVo user = usersService.getUserById(post.getUser_id());
+	             if (user != null && user.getRole() == 1) {
+	                 adminPosts.add(post);
+	             } else {
+	                 userPosts.add(post);
+	             }
+	         }
 
-		        // 관리자 게시글 출력 (공지사항과 게시물 번호만 빨간색으로)
-		        for (PostVo post : adminPosts) {
-		            System.out.println(ANSI_RED + ANSI_BOLD +
-		                "공지사항: " + post.getTitle() + ANSI_RESET);
-		        }
+	         // 공지사항 출력 (눈에 띄게)
+	         for (PostVo post : adminPosts) {
+	             String content = "# 공지사항: " + post.getTitle() + " #";
+	             System.out.println(ANSI_LIGHT_RED + ANSI_BOLD + content + ANSI_RESET);
+	         }
 
-		        // 일반 사용자 게시글 출력 (상세 정보 포함)
-		        for (PostVo post : userPosts) {
-		            System.out.println(
-		                "게시물 번호: " + post.getPost_id() +
-		                ", 제목: " + post.getTitle() +
-		                ", 가격: " + post.getPrice() +
-		                ", 분류: " + post.getCategory_id() +
-		                ", 작성자: " + post.getUser_id() +
-		                ", 상태: " + post.getCondition());
-		        }
-		    }
-		    System.out.println("======================================================================");
+	         for (int i = 0; i < userPosts.size(); i++) {
+	             PostVo post = userPosts.get(i);
+	             String title = padRight(truncate(post.getTitle(), 15), 20);
+	             String author = padRight(truncate(post.getUser_id(), 5), 6);
+	             String status = padRight(truncate(post.getCondition(), 10), 10);
+	             String content = String.format(
+	                 "%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", 
+	                 post.getPost_id(),
+	                 title, 
+	                 post.getPrice(),
+	                 author,
+	                 status
+	             );
+	             printAsciiArtBox(content, i == userPosts.size() - 1);
+	         }
+	     }
+	     
+	     System.out.println("+" + "=".repeat(width - 2) + "+"); // 하단 경계선
 
-		    if (loginUserVo.getRole() != 0) { // 관리자가 보는 게시글 페이지
-		        int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
-		        switch (input) {
-		            case 1:
-		                return Command.POST_INSERT;
-		            case 2:
-		                return Command.POST_DELETE;
-		            case 3:
-		                return Command.POST_UPDATE;
-		            case 4:
-		                return Command.POST_DETAIL;
-		            case 0:
-		                return Command.USER_HOME;
-		        }
-		    } else { // 사용자가 보는 게시글 페이지
-		        int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
-		        switch (input) {
-		            case 1:
-		                return Command.POST_INSERT;
-		            case 2:
-		                return Command.POST_DELETE;
-		            case 3:
-		                return Command.POST_UPDATE;
-		            case 4:
-		                return Command.POST_DETAIL;
-		            case 0:
-		                return Command.USER_HOME;
-		        }
-		    }
-		    return Command.USER_HOME;
-		}
+	     if (loginUserVo.getRole() != 0) {
+	         int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
+	         switch (input) {
+	             case 1:
+	                 return Command.POST_INSERT;
+	             case 2:
+	                 return Command.POST_DELETE;
+	             case 3:
+	                 return Command.POST_UPDATE;
+	             case 4:
+	                 return Command.POST_DETAIL;
+	             case 0:
+	                 return Command.USER_HOME;
+	         }
+	     } else {
+	         int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
+	         switch (input) {
+	             case 1:
+	                 return Command.POST_INSERT;
+	             case 2:
+	                 return Command.POST_DELETE;
+	             case 3:
+	                 return Command.POST_UPDATE;
+	             case 4:
+	                 return Command.POST_DETAIL;
+	             case 0:
+	                 return Command.USER_HOME;
+	         }
+	     }
+	     return Command.USER_HOME;
+	 }
+
+	 // 문자열 길이를 제한하고, 초과하면 ... 추가
+	 private String truncate(String text, int maxLength) {
+	     return text.length() > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
+	 }
+
+	 // 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하는 함수
+	 private String padRight(String text, int length) {
+	     int textLength = text.codePoints().map(cp -> Character.isAlphabetic(cp) ? 1 : 2).sum();
+	     int padSize = length - textLength;
+	     return text + " ".repeat(Math.max(0, padSize));
+	 }
+
+
+
+
+
+
+
+
+
 
 
 
