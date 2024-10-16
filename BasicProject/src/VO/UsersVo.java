@@ -20,6 +20,12 @@ public class UsersVo {
         this.username = name;
         this.email = email;
     }
+	public UsersVo(String userId, String name, String email, String userpass) {
+		this.user_id = userId;
+		this.username = name;
+		this.email = email;
+		this.user_pass = userpass;
+	}
 	
 
 	

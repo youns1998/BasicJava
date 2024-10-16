@@ -95,7 +95,7 @@ public class UsersDao {
 	
 	// 비번 찾기
 	public UsersVo findUserPass(String userId, String name, String email) {
-		 String sql = "SELECT user_pass FROM USERS WHERE user_id = ? AND username = ? AND email = ?";
+		 String sql = "SELECT user_pass FROM USERS WHERE user_id = ? AND username = ? AND email = ? ";
 		 
 		 try (Connection conn = DBUtil.getConnection();
 	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -106,8 +106,8 @@ public class UsersDao {
 	            ResultSet rs = pstmt.executeQuery();
 
 	            if (rs.next()) {
-	                String userPass = rs.getString("USER_PASS");
-	                return new UsersVo(userId, name, email); // 반환할 VO 생성
+	                String userPass = rs.getString("user_pass");
+	                return new UsersVo(userId, name, email, userPass); // 반환할 VO 생성
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
