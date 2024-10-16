@@ -29,17 +29,19 @@ public class UsersController {
             return Command.USER_HOME;
         }
 
-        System.out.println("전체 유저 리스트");
-        for (UsersVo user : users) {
-            System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername() 
-            + ", 주소: " + user.getAddress() + ", 전화번호: " + user.getPhone_number() 
-            + ", 이메일: " + user.getEmail() + ", 관리자: " + user.getRole());
-        }
-        System.out.println("======================================================");
+        
         return Command.ADMIN_USERDETAIL;
     }	
     //회원관리 - 조회할 회원 ID 입력 후 나타나는 화면
     public Command userdetail() {
+    	 System.out.println("전체 유저 리스트");
+    	 List<UsersVo> users = userService.getPostList();
+         for (UsersVo user : users) {
+             System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername() 
+             + ", 주소: " + user.getAddress() + ", 전화번호: " + user.getPhone_number() 
+             + ", 이메일: " + user.getEmail() + ", 관리자: " + user.getRole());
+         }
+         System.out.println("======================================================");
     	int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.찜 목록 조회 5.쓴 게시물 조회 6.쓴 댓글 조회 0.뒤로가기");
     	switch(input) {
     	case 1: return Command.ADMIN_USER;
@@ -53,6 +55,7 @@ public class UsersController {
     	
     	return Command.USER_HOME;
     }
+    //회원 수정
     public Command userUpdate() {
     	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
          String choice = ScanUtil.nextLine("수정할 회원 ID를 입력하세요: ");
@@ -68,6 +71,7 @@ public class UsersController {
          if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
              // 수정 진행
              userService.updateUser(uservo);
+             System.out.println("선택한 회원이 수정되었습니다");
          } 
     	
     	return Command.ADMIN_USERDETAIL;
@@ -89,6 +93,7 @@ public class UsersController {
          if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
              // 자신이거나 관리자라면 삭제 가능
              userService.deleteUser(user);
+             System.out.println("선택한 회원이 삭제 되었습니다");
          } 
     	
     	return Command.ADMIN_USERDETAIL;

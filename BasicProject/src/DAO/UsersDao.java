@@ -171,7 +171,6 @@ public class UsersDao {
 	                user.setPhone_number(rs.getString("PHONE_NUMBER"));
 	                user.setRole(rs.getInt("ROLE"));
 	            }
-	            System.out.println("쿼리 실행: USER_ID = " + userId);
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        } finally {
