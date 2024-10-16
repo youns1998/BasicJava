@@ -2,8 +2,10 @@ package SERVICE;
 import java.util.List;
 
 import DAO.FavoriteDAO;
+import DAO.PostDao;
 import VO.FavoriteVo;
-
+import VO.UsersVo;
+s
 public class FavoriteService {
     private FavoriteDAO favoriteDAO = new FavoriteDAO();
 
@@ -13,18 +15,20 @@ public class FavoriteService {
        }
 
        // 사용자의 관심 상품 목록 조회
-       public List<FavoriteVo> getFavoritesByUser(String userId) {
-           return favoriteDAO.getFavoritesByUser(userId);
+       public List<FavoriteVo> getFavoritesByUser() {
+    	   return favoriteDAO.getFavoritesByUser();
        }
 
        // 관심 상품 삭제
-       public void deleteFavorite(String userId, int postId) {
-           favoriteDAO.deleteFavorite(userId, postId);
+       public boolean deleteFavorite(String userId, int postId) {
+         return favoriteDAO.deleteFavorite(userId, postId);
        }
 
        // 특정 사용자가 특정 게시글을 즐겨찾기 했는지 확인
-       public boolean isFavorite(String userId, int postId) {
+       public boolean isFavoriteExists(String userId, int postId) {
            return favoriteDAO.isFavorite(userId, postId);
        }
+       
+     
 }
 
