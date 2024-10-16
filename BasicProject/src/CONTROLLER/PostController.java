@@ -5,6 +5,7 @@ import java.util.List;
 
 import SERVICE.CategoryService;
 import SERVICE.CommentsService;
+import SERVICE.FavoriteService;
 import SERVICE.PostService;
 import SERVICE.UsersService;
 import UTIL.Command;
@@ -57,7 +58,7 @@ public class PostController {
    private static final int STATUS_MAX_LEN = 5;
    private static PostController instance;
     private CommentController commentController = CommentController.getInstance(); // CommentController 인스턴스 생성
-
+    private FavoriteController favoriteController = FavoriteController.getInstance();
     private Command returnToPostList() {
         PostController postController = PostController.getInstance();
         return postController.postList();  // 게시물 목록을 출력하도록 호출
@@ -91,76 +92,86 @@ public class PostController {
        
        displayPostDetails(selectedPost);
 
-       // 댓글 출력 부분
-       List<CommentsVo> comments = commentsService.getComments(selectedPost.getPost_id());
-       if (comments.isEmpty()) {
-           System.out.println("댓글이 없습니다.");
-       } else {
-           System.out.println("==== 댓글 목록 ====");
-           for (CommentsVo comment : comments) {
-               System.out.println("댓글 번호: " + comment.getComment_id() +
-                                  ", 작성자: " + comment.getUser_id() +
-                                  ", 내용: " + comment.getContent() +
-                                  ", 작성 시간: " + comment.getCreated_at());
-           }
-       }
+	    // 댓글 출력 부분
+	    List<CommentsVo> comments = commentsService.getComments(selectedPost.getPost_id());
+	    if (comments.isEmpty()) {
+	        System.out.println("댓글이 없습니다.");
+	    } else {
+	        System.out.println("==== 댓글 목록 ====");
+	        for (CommentsVo comment : comments) {
+	            System.out.println("댓글 번호: " + comment.getComment_id() +
+	                               ", 작성자: " + comment.getUser_id() +
+	                               ", 내용: " + comment.getContent() +
+	                               ", 작성 시간: " + comment.getCreated_at());
+	        }
+	    }
+	    MainController.sessionMap.put("currentPostId", postId);
+	    return commentMenu(postId);
+	}
 
-       return commentMenu(selectedPost.getPost_id());
-   }
 
    // 댓글 메뉴 메서드
    private Command commentMenu(int postId) {
        System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
        int choice = ScanUtil.nextInt();
 
-       switch (choice) {
-           case 1:
-               return commentController.insertComment(postId);
-           case 2:
-               return commentController.updateComment(postId);
-           case 3:
-               return commentController.deleteComment(postId);
-           case 4:
-               return Command.FAVORITE_INSERT;
-           case 0:
-               return returnToPostList();
-           default:
-               System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-               return commentMenu(postId); // 다시 메뉴 호출
-       }
-   }
+	    switch (choice) {
+	        case 1:
+	            return commentController.insertComment(postId);
+	        case 2:
+	            return commentController.updateComment(postId);
+	        case 3:
+	            return commentController.deleteComment(postId);
+	        case 4:
+	        	return favoriteController.addFavorite(postId); // 현재 보고 있는 게시물 번호 전달
+	        case 0:
+	            return returnToPostList();
+	        default:
+	            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+	            return commentMenu(postId); // 다시 메뉴 호출
+	    }
+	}
 
 
-   
-   
-   
-   
-   private Command viewComments(int postId) {
-       // List<CommentVo> comments = commentService.getComments(postId);
-       return Command.POST_LIST; 
-   }
-   private Command updateComment(int postId) {
-       return Command.POST_LIST; 
-   }
-   private Command deleteComment(int postId) {
-       return Command.POST_LIST; 
-   }
-   
-   //게시물 상세보기
-   private void displayPostDetails(PostVo post) {
-       CommentsService commentsService = CommentsService.getInstance();
-       int commentCount = commentsService.getCommentCount(post.getPost_id());
+
+	
+	
+	
+	
+	private Command viewComments(int postId) {
+	    // List<CommentVo> comments = commentService.getComments(postId);
+	    return Command.POST_LIST; 
+	}
+	private Command updateComment(int postId) {
+	    return Command.POST_LIST; 
+	}
+	private Command deleteComment(int postId) {
+	    return Command.POST_LIST; 
+	}
+	
+	//게시물 상세보기
+	private void displayPostDetails(PostVo post) {
+	    CommentsService commentsService = CommentsService.getInstance();
+	    FavoriteService favoriteService = FavoriteService.getInstance();
+	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+
+	    int commentCount = commentsService.getCommentCount(post.getPost_id());
+	    boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id());
+
 
        String borderLine = "+==============================================================================+";
        System.out.println(borderLine);
 
-       // 작성자, 제목, 가격, 상태 출력
-       System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s \n", 
-           padAndTruncate(post.getUser_id(), 12), 
-           padAndTruncate(post.getTitle(), 20), 
-           padAndTruncate(post.getPrice() + "원", 8), 
-           padAndTruncate(post.getCondition(), 3));
-       System.out.println(borderLine);
+	    // 작성자, 제목, 가격, 상태, 찜 상태 출력
+	    System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s %s\n", 
+	        padAndTruncate(post.getUser_id(), 12), 
+	        padAndTruncate(post.getTitle(), 20), 
+	        padAndTruncate(post.getPrice() + "원", 8), 
+	        padAndTruncate(post.getCondition(), 3),
+	        isFavorite ? "♡ 찜한 상품" : " "
+	    );
+	    System.out.println(borderLine);
+
 
        // 내용 출력
        System.out.printf("| 내용: %-72s \n", padAndTruncate(post.getContent(), 72));
@@ -177,9 +188,6 @@ public class PostController {
        System.out.println(borderLine);
    }
 
-             
-       
-      
 
    
 
@@ -259,38 +267,41 @@ public class PostController {
           System.out.print("\033[H\033[2J");
           System.out.flush();
 
-          // 메뉴 선택으로 이동
-          if (loginUserVo.getRole() != 0) {
-              int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
-              switch (input) {
-                  case 1:
-                      return Command.POST_INSERT;
-                  case 2:
-                      return Command.POST_DELETE;
-                  case 3:
-                      return Command.POST_UPDATE;
-                  case 4:
-                      return Command.POST_DETAIL;
-                  case 0:
-                      return Command.USER_HOME;
-              }
-          } else {
-              int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
-              switch (input) {
-                  case 1:
-                      return Command.POST_INSERT;
-                  case 2:
-                      return Command.POST_DELETE;
-                  case 3:
-                      return Command.POST_UPDATE;
-                  case 4:
-                      return Command.POST_DETAIL;
-                  case 0:
-                      return Command.USER_HOME;
-              }
-          }
-          return Command.USER_HOME;
-      }
+		    // 메뉴 선택으로 이동
+		    if (loginUserVo.getRole() != 0) {
+		        int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
+		        switch (input) {
+		            case 1:
+		                return Command.POST_INSERT;
+		            case 2:
+		                return Command.POST_DELETE;
+		            case 3:
+		                return Command.POST_UPDATE;
+		            case 4:
+		            	MainController.sessionMap.remove("currentPostId");
+		                return Command.POST_DETAIL;
+		            case 0:
+		                return Command.USER_HOME;
+		        }
+		    } else {
+		        int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
+		        switch (input) {
+		            case 1:
+		                return Command.POST_INSERT;
+		            case 2:
+		                return Command.POST_DELETE;
+		            case 3:
+		                return Command.POST_UPDATE;
+		            case 4:
+		                MainController.sessionMap.remove("currentPostId"); // 처음 접근 시에는 postId를 초기화
+		                return Command.POST_DETAIL;
+		            case 0:
+		                return Command.USER_HOME;
+		        }
+		    }
+		    return Command.USER_HOME;
+		}
+
 
     // 문자열 길이를 제한하고, 초과하면 ... 추가
     private String truncate(String text, int maxLength) {
@@ -307,18 +318,6 @@ public class PostController {
         return text + " ".repeat(Math.max(0, padSize));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-   
    //게시글 추가 메서드
    public Command postInsert() {   
       PostService postService = PostService.getInstance();

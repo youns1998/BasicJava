@@ -75,7 +75,7 @@ public class PostService {
 		// 게시글 번호를 매개변수로 받아서 해당 게시글 정보를 삭제하는 메서드
 		public int deletePost(int post_id) {
 			if (post_id == 0) {
-	            System.out.println("게시글 ID가 없습니다.");
+	            System.out.println("게시글 번호가 없습니다.");
 	            return 0;
 	        }
 	        return dao.deletePost(post_id);

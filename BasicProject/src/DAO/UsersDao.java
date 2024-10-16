@@ -150,6 +150,54 @@ public class UsersDao {
 		
 		return getUserVo;
 	}
+	
+	// 비번 찾기
+	public UsersVo findUserPass(String userId, String name, String email) {
+		 String sql = "SELECT user_pass FROM USERS WHERE user_id = ? AND username = ? AND email = ?";
+		 
+		 try (Connection conn = DBUtil.getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            
+			 	pstmt.setString(1, userId);
+			 	pstmt.setString(2, name);
+	            pstmt.setString(3, email);
+	            ResultSet rs = pstmt.executeQuery();
+
+	            if (rs.next()) {
+	                String userPass = rs.getString("USER_PASS");
+	                return new UsersVo(userId, name, email); // 반환할 VO 생성
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        return null; // 사용자를 찾지 못한 경우
+	    }
+	
+	
+	// 아이디 찾기
+	 public UsersVo findUserId(String name, String email) {
+	        String sql = "SELECT user_id FROM USERS WHERE username = ? AND email = ? ";
+	        
+	        try (Connection conn = DBUtil.getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, name);
+	            pstmt.setString(2, email);
+	            ResultSet rs = pstmt.executeQuery();
+
+	            if (rs.next()) {
+	                String userId = rs.getString("user_id");
+	                return new UsersVo(userId, name, email); // 반환할 VO 생성
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        return null; // 사용자를 찾지 못한 경우
+	    }
+	
+	
+	
 	//사용자 상세보기
 	 public UsersVo getUserSelect(String userId) {
 	        UsersVo user = null;
