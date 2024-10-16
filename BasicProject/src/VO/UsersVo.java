@@ -12,6 +12,17 @@ public class UsersVo {
 	private int role;
 	private LocalDateTime created_at;
 
+
+	
+	
+	public UsersVo(String userId, String name, String email) {
+        this.user_id = userId;
+        this.username = name;
+        this.email = email;
+    }
+	
+
+	
 	public String getUser_id() {
 		return user_id;
 	}

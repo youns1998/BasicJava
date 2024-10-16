@@ -1,7 +1,10 @@
 package CONTROLLER;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+
 import CONTROLLER.*;
+import SERVICE.UsersService;
 import UTIL.*;
 import VO.UsersVo;
 
@@ -43,28 +46,25 @@ public class MainController {
 				case UESR_LIST: cmd =usersController.userList(); break;
 				case ADMIN_USER: cmd = usersController.userSelect(); break;
 				case ADMIN_USERDETAIL: cmd = usersController.userdetail(); break;
+				case S_ID: cmd = usersController.findUserId(); break;
+				case S_PW: cmd = usersController.findUserPass(); break;
 				// 로그인 후
 				case USER_HOME: cmd = userHome(); break;
 				case ADMIN_HOME: cmd = admin_home(); break;
+				
 				// 게시글 관리
 				case POST_DELETE: cmd = postController.postDelete(); break;
 				case POST_INSERT: cmd = postController.postInsert(); break;
-				
-//				case POST_DELETE: cmd = postController.postDelete(); break;
-//				case POST_INSERT: cmd = postController.postInsert(); break;
 				case POST_LIST: cmd = postController.postList(); break;
 				case POST_UPDATE: cmd = postController.postUpdate(); break;
 				case POST_DETAIL: cmd = postController.detailPost(); break;	
-//				// 댓글 관리
-//				case COMMENT_DELETE: cmd = commentController.commentDelete(); break;
-//				case COMMENT_LIST: cmd = commentController.commentList(); break;
-//				case COMMENT_UPDATE: cmd = commentController.commentUpdate(); break;
-//				
+
 //				// 카테고리 보기
 				case CATEGORY_LIST: cmd = categoryController.categoryList(); break;
 				case CATEGORY_INSERT: cmd = categoryController.categoryInsert(); break;
 				case CATEGORY_UPDATE: cmd = categoryController.categoryUpdate(); break;
 				case CATEGORY_DELETE: cmd = categoryController.categoryDelete(); break;
+
 //				 관심 물품 보기
 				case FAVORITE_LIST: cmd = favoriteController.displayMenu(); break;
 				case FAVORITE_INSERT: cmd = favoriteController.addFavorite(); break;
@@ -102,6 +102,8 @@ public class MainController {
 				return Command.HOME;
 		}
 	}
+		
+	
 	
 	public Command userHome() {
 		UsersVo loginUserVo = (UsersVo)MainController.sessionMap.get("loginUser");

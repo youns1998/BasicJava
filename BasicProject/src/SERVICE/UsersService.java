@@ -13,7 +13,7 @@ public class UsersService{
 	
 	private static UsersService instance;
 
-	private UsersService() {
+	public UsersService() {
 		this.dao = UsersDao.getInstance();
 
 	}
@@ -35,7 +35,7 @@ public class UsersService{
 			return dao.getUserList();
 		}
 		
-		 public UsersVo getUserSelect(String userId) {
+		public UsersVo getUserSelect(String userId) {
 		        return dao.getUserSelect(userId);
 		    }
 		
@@ -50,4 +50,13 @@ public class UsersService{
 		public int getMemberCount(String user_id) {
 			return getMemberCount(user_id);
 		}
+		
+		public UsersVo findUserId(String name, String email) {
+		        return dao.findUserId(name, email);
+		    }
+		
+		public UsersVo findUserPass(String userId, String name, String email) {
+	        return dao.findUserPass(userId, name, email);
+	    }
+		 
 }

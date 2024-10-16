@@ -308,18 +308,6 @@ public class PostController {
         return text + " ".repeat(Math.max(0, padSize));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-   
    //게시글 추가 메서드
    public Command postInsert() {   
       PostService postService = PostService.getInstance();

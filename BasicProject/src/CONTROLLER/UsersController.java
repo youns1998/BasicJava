@@ -1,6 +1,8 @@
 package CONTROLLER;
 
 import java.util.List;
+import java.util.Scanner;
+
 import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
@@ -121,7 +123,37 @@ public class UsersController {
         System.out.println(result > 0 ? "회원가입 성공!!" : "회원가입 실패!!");
         return Command.HOME;
     }
+    
+    // 비번 찾기
+    public Command findUserPass() {
+        String userId = ScanUtil.nextLine("아이디를 입력하세요 : ");
+        String name = ScanUtil.nextLine("이름을 입력하세요 : ");
+        String email = ScanUtil.nextLine("이메일을 입력하세요 : ");
+        
+        UsersVo user = userService.findUserPass(userId, name, email);
+        
+        if (user != null) {
+    		System.out.println("찾은 비밀번호: " + user.getUser_pass());
+    	} else {
+    		System.out.println("해당 정보로 비밀번호를 찾을 수 없습니다.");
+    	}		
+    	return Command.HOME;
+    }
+    
+    // 아이디 찾기 
+    public Command findUserId() {
+    	String name = ScanUtil.nextLine("이름을 입력하세요 : ");
+    	String email = ScanUtil.nextLine("이메일을 입력하세요 : ");
 
+    	UsersVo user = userService.findUserId(name, email);
+    
+    	if (user != null) {
+    		System.out.println("찾은 아이디: " + user.getUser_id());
+    	} else {
+    		System.out.println("해당 정보로 아이디를 찾을 수 없습니다.");
+    	}		
+    	return Command.HOME;
+}
     // 로그인
     public Command login() {
         System.out.println("============== 로그인 ===============");
