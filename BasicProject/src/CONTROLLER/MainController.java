@@ -58,7 +58,6 @@ public class MainController {
 				case POST_DETAIL: cmd = postController.detailPost(); break;	
 //				// 댓글 관리
 //				case COMMENT_DELETE: cmd = commentController.commentDelete(); break;
-				case COMMENT_INSERT: cmd = commentController.commentInsert(); break;
 //				case COMMENT_LIST: cmd = commentController.commentList(); break;
 //				case COMMENT_UPDATE: cmd = commentController.commentUpdate(); break;
 //				

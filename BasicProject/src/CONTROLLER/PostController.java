@@ -2,6 +2,7 @@ package CONTROLLER;
 
 import java.util.List;
 
+import SERVICE.CommentsService;
 import SERVICE.PostService;
 import UTIL.Command;
 import UTIL.ScanUtil;
@@ -17,7 +18,7 @@ import VO.UsersVo;
 
 public class PostController {
 	private static PostController instance;
-
+    private CommentController commentController = CommentController.getInstance(); // CommentController 인스턴스 생성
 	private PostController() {
 
 	}
@@ -43,28 +44,33 @@ public class PostController {
 		    displayPostDetails(selectedPost);
 		    return commentMenu(selectedPost.getPost_id());
 	}
+	
+	
+	
+	
+	
 	// 댓글 메뉴 메서드
 	private Command commentMenu(int postId) {
 	    System.out.println("1. 댓글 달기 2. 댓글 보기 3. 댓글 수정 4. 댓글 삭제 5. 찜하기 0. 전체 게시물 보러가기");
 	    int choice = ScanUtil.nextInt();
 
 	    switch (choice) {
-	        case 1: return insertComment(postId); 
-	        case 2: return viewComments(postId); 
-	        case 3: return updateComment(postId); 
-	        case 4: return deleteComment(postId); 
-	        case 5: return Command.FAVORITE_INSERT;
-	        case 0: return Command.POST_LIST;
-	        default: System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-	            return commentMenu(postId); 
-	    }
+        case 1: return commentController.insertComment(postId); // 댓글 달기
+        case 2: return commentController.viewComments(postId); // 댓글 보기
+        case 3: return commentController.updateComment(postId); // 댓글 수정
+        case 4: return commentController.deleteComment(postId); // 댓글 삭제
+        case 5: return Command.FAVORITE_INSERT; // 찜하기
+        case 0: return Command.POST_LIST; // 전체 게시물 보기
+        default: 
+            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+            return commentMenu(postId); // 선택이 잘못되면 다시 메뉴 호출
+    }
 	}
-	private Command insertComment(int postId) {
-	    String comment = ScanUtil.nextLine("댓글을 입력하세요: ");
-	 //  CommentService.addComment(postId, comment);
-	    System.out.println("댓글이 추가되었습니다.");
-	    return Command.POST_LIST; 
-	}
+	
+	
+	
+	
+	
 	private Command viewComments(int postId) {
 	    // List<CommentVo> comments = commentService.getComments(postId);
 	    return Command.POST_LIST; 
@@ -78,6 +84,8 @@ public class PostController {
 	
 	//게시물 상세보기
 	 private void displayPostDetails(PostVo post) {
+		  CommentsService commentsService = CommentsService.getInstance();
+		  int commentCount = commentsService.getCommentCount(post.getPost_id());
 		  System.out.println("◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆");
 		  System.out.print("작성자:" + post.getUser_id() +"  \t");
 		  System.out.print("제목:" + post.getTitle()+" \t");
@@ -86,10 +94,10 @@ public class PostController {
 		  System.out.println("＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊");
 		  System.out.println("내용:" + post.getContent()+" \n");
 		  System.out.println("＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊");
-		  System.out.println("작성 시간:");
+		  System.out.println("작성 시간:"+post.getCreated_at());
 		  System.out.println("수정 시간:");
 		  System.out.println("＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊");
-		  System.out.print("댓글 : 						찜한 사람 수: \n" );
+		  System.out.print("댓글 : 	" + commentCount + "					찜한 사람 수: \n" );
 		  //여기에 댓글 개수 + 찜한 사람의 수 그리고 작성시간과 수정시간을 넣어야함
 		  System.out.println("◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆");
 	}
