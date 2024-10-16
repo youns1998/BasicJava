@@ -19,6 +19,9 @@ public enum Command {
 	
 	// 카테고리 관련
 	CATEGORY_LIST,		// 카테고리
+	CATEGORY_INSERT, 	// 카테고리 추가
+	CATEGORY_UPDATE, 	// 카테고리 수정
+	CATEGORY_DELETE, 	// 카테고리 삭제
 	
 	// 관심(찜) 물품 관련
 	FAVORITE_LIST,		// 관심 물품

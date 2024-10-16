@@ -66,7 +66,34 @@ public class UsersVo {
 				+ username + ", phone_number=" + phone_number + ", address=" + address + ", created_at=" + created_at
 				+ "]";
 	}
-
 	
+	public UsersVo() {
+	
+	};
+
+	public UsersVo(String user_id, String user_pass, String username, String address, String email, String phone_number) {
+        this.user_id = user_id;
+        this.user_pass = user_pass;
+        this.username = username;
+        this.address = address;
+        this.email = email;
+        this.phone_number = phone_number;
+    }
+
+    // 필요한 경우 role과 created_at까지 포함하는 생성자
+    public UsersVo(String user_id, String user_pass, String username, String address, String email, String phone_number, int role, LocalDateTime created_at) {
+        this.user_id = user_id;
+        this.user_pass = user_pass;
+        this.username = username;
+        this.address = address;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.role = role;
+        this.created_at = created_at;
+    }
+    public UsersVo(String user_id, String user_pass) {
+        this.user_id = user_id;
+        this.user_pass = user_pass;
+    }
 	
 }

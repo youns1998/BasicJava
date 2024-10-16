@@ -37,15 +37,17 @@ public class MainController {
 		while(true) {
 			switch(cmd) {
 				case HOME: cmd = home(); break;
-				case ADMIN_HOME: cmd = admin_home(); break;
+				
 				case LOGIN: cmd = usersController.login(); break;
 				case JOIN: cmd = usersController.join(); break;
+				
 				case MYPAGE: cmd = usersController.myPage(); break;
-				case UESR_LIST: cmd =usersController.userlist(); break;
-			//	case ADMIN_USER: cmd = usercontroller.
+				case UESR_LIST: cmd =usersController.userList(); break;
+				case ADMIN_USER: cmd = usersController.userSelect(); break;
 				// 로그인 후
 				case USER_HOME: cmd = userHome(); break;
-				
+				case ADMIN_HOME: cmd = admin_home(); break;
+
 				// 게시글 관리
 				case POST_DELETE: cmd = postController.postDelete(); break;
 				case POST_INSERT: cmd = postController.postInsert(); break;
@@ -58,7 +60,6 @@ public class MainController {
 				case POST_DETAIL: cmd = postController.detailPost(); break;	
 //				// 댓글 관리
 //				case COMMENT_DELETE: cmd = commentController.commentDelete(); break;
-				case COMMENT_INSERT: cmd = commentController.commentInsert(); break;
 //				case COMMENT_LIST: cmd = commentController.commentList(); break;
 //				case COMMENT_UPDATE: cmd = commentController.commentUpdate(); break;
 //				

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import UTIL.DBUtil;
+import UTIL.ScanUtil;
 import VO.UsersVo;
 
 
@@ -112,6 +113,38 @@ public class UsersDao {
 		
 		return getUserVo;
 	}
+	//사용자 상세보기
+	 public UsersVo getUserSelect(int userId) {
+	        UsersVo user = null;
+	        String sql = "SELECT * FROM USERS WHERE USER_ID = ?";
+
+	        try {
+	            con = DBUtil.getConnection();
+	            ps = con.prepareStatement(sql);
+	            ps.setInt(1, userId);
+	            ResultSet rs = ps.executeQuery();
+
+	            if (rs.next()) {
+	                user = new UsersVo();
+	                user.setUser_id(rs.getString("USER_ID"));
+	                user.setUser_pass(rs.getString("USER_PASS"));
+	                user.setUsername(rs.getString("USERNAME"));
+	                user.setAddress(rs.getString("ADDRESS"));
+	                user.setEmail(rs.getString("EMAIL"));
+	                user.setPhone_number(rs.getString("PHONE_NUMBER"));
+	                user.setRole(rs.getInt("ROLE"));
+	                // 필요한 다른 필드 설정
+	            }
+
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            disConnect();
+	        }
+
+	        return user;
+	    }
+	
 
 	//모든 사용자 조회 - 관리자용 (사용자는 불가)
 	public List<UsersVo> getUserList(){
@@ -130,6 +163,7 @@ public class UsersDao {
 				user.setUsername(rs.getString("USERNAME"));
 				user.setPhone_number(rs.getString("PHONE_NUMBER"));
 				user.setAddress(rs.getString("ADDRESS"));
+				user.setRole(rs.getInt("ROLE"));
 				user.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
 				userList.add(user);
 			}
@@ -208,4 +242,27 @@ public class UsersDao {
 	      }
 		return count;
 	}
+	
+	 public UsersVo getUserById(String userId) {
+	        String sql = "SELECT * FROM users WHERE user_id = ?";
+	        try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, userId);
+	            try (ResultSet rs = pstmt.executeQuery()) {
+	                if (rs.next()) {
+	                    UsersVo user = new UsersVo();
+	                    user.setUser_id(rs.getString("user_id"));
+	                    user.setUser_pass(rs.getString("user_pass"));
+	                    user.setUsername(rs.getString("username"));
+	                    user.setAddress(rs.getString("address"));
+	                    user.setEmail(rs.getString("email"));
+	                    user.setPhone_number(rs.getString("phone_number"));
+	                    user.setRole(rs.getInt("role"));
+	                    return user;
+	                }
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return null; // 사용자 정보가 없을 경우 null 반환
+	    }
 }
