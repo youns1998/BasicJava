@@ -232,14 +232,6 @@ public class PostController {
 
 
 
-
-
-
-
-
-
-
-
 	
 	//게시글 추가 메서드
 	public Command postInsert() {	
@@ -323,9 +315,16 @@ public class PostController {
 	    }
 
 	    // 사용자 권한 확인
-	    if (post.getUser_id() != loginUserVo.getUser_id() && loginUserVo.getRole() == 0) {
+	    if (post.getUser_id() != loginUserVo.getUser_id() ) {
 	        System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
 	        return Command.POST_LIST;
+	    }
+	    
+	    int result = postService.deletePost(choice);
+	    if (result > 0) {
+	        System.out.println("게시물이 성공적으로 삭제되었습니다.");
+	    } else {
+	        System.out.println("게시물 삭제에 실패했습니다.");
 	    }
 
 	    return Command.USER_HOME;

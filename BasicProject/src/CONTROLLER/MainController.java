@@ -42,6 +42,7 @@ public class MainController {
 				case MYPAGE: cmd = usersController.myPage(); break;
 				case UESR_LIST: cmd =usersController.userList(); break;
 				case ADMIN_USER: cmd = usersController.userSelect(); break;
+				case ADMIN_USERDETAIL: cmd = usersController.userdetail(); break;
 				// 로그인 후
 				case USER_HOME: cmd = userHome(); break;
 				case ADMIN_HOME: cmd = admin_home(); break;

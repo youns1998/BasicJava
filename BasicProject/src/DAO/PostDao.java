@@ -28,38 +28,6 @@ private void disConnect() {
 		if(con != null) try { con.close(); } catch(Exception e) {}
 	}
 
-////전체 게시판  List<PostVo>에 저장
-//public List<PostVo> getpostList(){
-//	List<PostVo> postList = new ArrayList<>();
-//	
-//	String sql = "SELECT A.POST_ID, A.TITLE, A.CONTENT, B.USERNAME, "
-//			+ "A.CREATED_AT, A.UPDATED_AT"
-//			+ " FROM POST A LEFT OUTER JOIN USERS B"
-//			+ " ON A.USER_ID = B.USER_ID"
-//			+ " ORDER BY A.POST_ID DESC";
-//	try {
-//		con = DBUtil.getConnection();
-//		ps = con.prepareStatement(sql);
-//		rs = ps.executeQuery();
-//		
-//		postList = new ArrayList<PostVo>();
-//		while(rs.next()) {
-//			PostVo pvo = new PostVo();
-//			pvo.setPost_id(rs.getInt("POST_ID"));
-//			pvo.setTitle(rs.getString("TITLE"));
-//			pvo.setContent(rs.getString("CONTENT"));
-//			pvo.setUsername(rs.getString("USERNAME"));
-//			pvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
-//			pvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
-//			postList.add(pvo);
-//		}
-//	} catch (SQLException e) {
-//		e.printStackTrace();
-//	} finally {
-//		disConnect();
-//	}
-//	return postList;
-//}
 
 //게시글추가
 	public int insertPost(PostVo PostVo) {
@@ -183,11 +151,7 @@ try {
 	        while (true) {
 	        	System.out.println();
 	            System.out.println("수정할 항목을 선택하세요 >>");
-	            System.out.println("1. 제목");
-	            System.out.println("2. 내용");
-	            System.out.println("3. 가격");
-	            System.out.println("4. 상태");
-	            System.out.println("0. 종료");
+	            System.out.println("1.제목 2.내용 3.가격 4.상태 0.종료");
 
 	            int choice = ScanUtil.nextInt();
 	            switch (choice) {
@@ -234,7 +198,7 @@ try {
 	                    System.out.println("게시물 수정에 실패했습니다.");
 	                }
 	            } catch (Exception e) {
-	                System.out.println("게시물 수정 중 오류가 발생했습니다: " + e.getMessage());
+	                e.printStackTrace();
 	            }
 	        }
 	    }

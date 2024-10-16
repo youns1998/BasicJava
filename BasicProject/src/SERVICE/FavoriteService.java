@@ -1,10 +1,10 @@
 package SERVICE;
 import java.util.List;
-
 import DAO.FavoriteDAO;
 import DAO.PostDao;
 import VO.FavoriteVo;
 import VO.UsersVo;
+
 public class FavoriteService {
     private FavoriteDAO favoriteDAO = new FavoriteDAO();
 

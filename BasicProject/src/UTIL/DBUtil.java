@@ -23,8 +23,6 @@ public class DBUtil {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-            System.out.println("DB 연결 성공");
-            System.out.println();
         } catch (SQLException e) {
             System.out.println("DB 연결 실패");
             e.printStackTrace();
