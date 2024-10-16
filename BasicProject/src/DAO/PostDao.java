@@ -218,7 +218,7 @@ public int deletePost(int post_id) {
          if (cnt > 0) {
              System.out.println("게시물이 삭제되었습니다");
          } else {
-             System.out.println("게시물 수정에 실패했습니다.");
+             System.out.println("게시물 삭제가 실패했습니다.");
          }
 		
 	} catch (Exception e) {

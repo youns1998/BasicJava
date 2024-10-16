@@ -43,6 +43,8 @@ public class MainController {
 				case UESR_LIST: cmd =usersController.userList(); break;
 				case ADMIN_USER: cmd = usersController.userSelect(); break;
 				case ADMIN_USERDETAIL: cmd = usersController.userdetail(); break;
+				case USER_UPDATE: cmd =usersController.userUpdate(); break;
+				case USER_DELETE: cmd = usersController.userDelete(); break;
 				// 로그인 후
 				case USER_HOME: cmd = userHome(); break;
 				case ADMIN_HOME: cmd = admin_home(); break;
@@ -80,7 +82,6 @@ public class MainController {
 			}
 		}
 	}
-	
 	private Command home() {
 		System.out.println("##############################################");
 		System.out.println("#     땅 콩 마 켓 에 오 신 것 을 환 영 합 니 다     # ");
@@ -112,7 +113,6 @@ public class MainController {
 			return Command.ADMIN_HOME;
 		System.out.println();
 		System.out.print(loginUserVo.getUsername() + "님 반가워요");
-		System.out.println("\t 메인 페이지입니다");
 		System.out.println("아래 메뉴에서 작업할 번호를 선택하세요.");
 		System.out.println("-----------------------------------------------------------------------");
 		System.out.println("1.중고장터보기\t2.내정보보기\t3.관심상품보기\t4.나의거래내역\t0.로그아웃");
@@ -136,7 +136,6 @@ public class MainController {
 		if(loginUserVo==null) {
 			return Command.HOME;
 		}
-		System.out.println("관리자 페이지");
 		System.out.println(loginUserVo.getUsername() + "님은 관리자 메뉴를 이용할 수 있습니다");
 		System.out.println("아래 메뉴에서 작업할 번호를 선택하세요.");
 		System.out.println("-------------------------------------------------------------");

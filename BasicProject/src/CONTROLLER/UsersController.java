@@ -1,6 +1,7 @@
 package CONTROLLER;
 
 import java.util.List;
+
 import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
@@ -35,14 +36,62 @@ public class UsersController {
             + ", 이메일: " + user.getEmail() + ", 관리자: " + user.getRole());
         }
         System.out.println("======================================================");
-        int input = ScanUtil.nextInt("1. 회원 관리  0. 뒤로가기");
-        return input == 1 ? Command.ADMIN_USER : Command.USER_HOME;
-    }
+        return Command.ADMIN_USERDETAIL;
+    }	
+    //회원관리 - 조회할 회원 ID 입력 후 나타나는 화면
     public Command userdetail() {
-    	System.out.println("1.회원 수정 2.회원 삭제 3.찜 목록 조회 4.쓴 게시물 조회 5.쓴 댓글 조회");
-    	
+    	int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.찜 목록 조회 5.쓴 게시물 조회 6.쓴 댓글 조회 0.뒤로가기");
+    	switch(input) {
+    	case 1: return Command.ADMIN_USER;
+    	case 2: return Command.USER_UPDATE;
+    	case 3: return Command.USER_DELETE;
+    	case 4:
+    	case 5:
+    	case 6:
+    	case 0:
+    	}
     	
     	return Command.USER_HOME;
+    }
+    public Command userUpdate() {
+    	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+         String choice = ScanUtil.nextLine("수정할 회원 ID를 입력하세요: ");
+         UsersService userService = UsersService.getInstance();
+         
+         UsersVo uservo = userService.getUserSelect(choice); 
+         if (uservo == null) {
+             System.out.println("해당 회원을 찾을 수 없습니다.");
+             return Command.UESR_LIST; 
+         }
+         
+         // 사용자 권한 확인
+         if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+             // 수정 진행
+             userService.updateUser(uservo);
+         } 
+    	
+    	return Command.ADMIN_USERDETAIL;
+    }
+    //회원 삭제
+    public Command userDelete() {
+    	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+         String choice = ScanUtil.nextLine("삭제할 회원 ID를 입력하세요: ");
+         UsersService userService = UsersService.getInstance();
+         
+         
+         UsersVo user = userService.getUserSelect(choice);
+         if (user == null) {
+             System.out.println("해당 유저를 찾을 수 없습니다.");
+             return Command.ADMIN_USERDETAIL;
+         }
+
+         // 사용자 권한 확인
+         if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+             // 자신이거나 관리자라면 삭제 가능
+             userService.deleteUser(user);
+         } 
+    	
+    	return Command.ADMIN_USERDETAIL;
     }
     // 회원 상세보기
     public Command userSelect() {
@@ -141,7 +190,7 @@ public class UsersController {
         }
 
         MainController.sessionMap.put("loginUser", loginUserVo);
-        System.out.println(loginUserVo.getRole() != 0 ? "관리자 로그인 성공!!" : "일반 사용자 로그인 성공!!");
+        System.out.println(loginUserVo.getRole() != 0 ? "관리자 로그인 성공!! \n" : "일반 사용자 로그인 성공!!\n");
         return Command.USER_HOME;
     }
 
