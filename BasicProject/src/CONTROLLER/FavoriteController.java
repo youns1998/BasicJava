@@ -54,15 +54,16 @@ public class FavoriteController {
             
         } else {
         	System.out.printf("%-15s %-30s %-10s%n", "게시글 번호", "게시글 제목", "작성자");
-            System.out.println("-----------------------------------------------------");
+            System.out.println("-------------------------------------------------------------");
              
             for (FavoriteVo favorite : favorites) {
-                System.out.printf("%-15d %-30s %-10s%n", 
+                System.out.printf("%-20d %-30s %-10s%n", 
                                   favorite.getPost_id(), 
                                   favorite.getPost_title(), 
                                   favorite.getAuthor());
             }
         }
+        System.out.println("-------------------------------------------------------------");
         return Command.USER_HOME; // 게시물 목록으로 돌아가기
     }
 
@@ -108,8 +109,7 @@ public class FavoriteController {
             System.out.println();
         	System.out.println("1. 관심 상품 보기");
         	System.out.println("2. 관심 상품 삭제");
-            System.out.println("3. 특정 게시글 즐겨찾기 확인");
-            System.out.println("4. 종료");
+            System.out.println("0. 종료");
             System.out.print("선택: ");
             int choice = scanner.nextInt();
 
@@ -120,10 +120,7 @@ public class FavoriteController {
             	case 2:
                     deleteFavorite();
                     break;
-                case 3:
-                    checkFavorite();
-                    break;
-                case 4:
+                case 0:
                     System.out.println("종료합니다.");
                     return Command.USER_HOME;
                 default:
