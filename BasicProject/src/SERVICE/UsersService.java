@@ -35,16 +35,16 @@ public class UsersService{
 			return dao.getUserList();
 		}
 		
-		public int search(String user_id) {
-			return search(user_id);
-		}
+		 public UsersVo getUserSelect(int userId) {
+		        return dao.getUserSelect(userId);
+		    }
 		
 		public int updateUser(UsersVo user) {
-			return updateUser(user);
+			return dao.updateUser(user);
 		}
 		
 		public int deleteUser(String user_id) {
-			return deleteUser(user_id);
+			return dao.deleteUser(user_id);
 		}
 		
 		public int getMemberCount(String user_id) {

@@ -93,7 +93,7 @@ private void disConnect() {
 	public List<PostVo> getAllPosts() {
 List<PostVo> postlist = new ArrayList<PostVo>();
 
-String sql = "SELECT * FROM POST ORDER BY CREATED_AT DESC";
+String sql = "SELECT * FROM POST ORDER BY CREATED_AT";
 
 try {
 	con = DBUtil.getConnection();

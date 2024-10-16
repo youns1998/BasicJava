@@ -42,7 +42,7 @@ public class MainController {
 				case JOIN: cmd = usersController.join(); break;
 				case MYPAGE: cmd = usersController.myPage(); break;
 				case UESR_LIST: cmd =usersController.userlist(); break;
-			//	case ADMIN_USER: cmd = usercontroller.
+				case ADMIN_USER: cmd = usersController.userSelect(); break;
 				// 로그인 후
 				case USER_HOME: cmd = userHome(); break;
 				
