@@ -160,7 +160,6 @@ public class PostController {
 	        post.setContent(content);
 	        post.setUser_id(loginUserVo.getUser_id()); // 관리자 ID 설정
 		}else {						//사용자의 게시글 추가
-		System.out.println("글 쓰기");
 		String Title = ScanUtil.nextLine("글 제목 >> ");
 		int price = ScanUtil.nextInt("가격 >> ");
 		
@@ -200,7 +199,7 @@ public class PostController {
 	    // 사용자 권한 확인
 	    if (post.getUser_id() != loginUserVo.getUser_id() && loginUserVo.getRole() == 0) {
 	        System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
-	        return Command.USER_HOME;
+	        return Command.POST_LIST;
 	    }
 	    postService.updatePostSelect(post); // updatePostMenu를 호출하여 수정 진행
 
@@ -223,7 +222,7 @@ public class PostController {
 	    // 사용자 권한 확인
 	    if (post.getUser_id() != loginUserVo.getUser_id() && loginUserVo.getRole() == 0) {
 	        System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
-	        return Command.USER_HOME;
+	        return Command.POST_LIST;
 	    }
 
 	    return Command.USER_HOME;
