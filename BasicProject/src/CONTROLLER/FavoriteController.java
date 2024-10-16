@@ -12,7 +12,7 @@ import VO.PostVo;
 import VO.UsersVo;
 
 public class FavoriteController {
-   private FavoriteService favoriteService = new FavoriteService();
+   private FavoriteService favoriteService = FavoriteService.getInstance(); // 싱글톤 인스턴스를 가져옴
    
    
    private static FavoriteController instance;
@@ -26,23 +26,25 @@ public class FavoriteController {
       return instance;
    }
 	// 관심 상품 등록
-    public Command addFavorite() {
-        FavoriteVo favorite = new FavoriteVo();
-        PostVo postvo = new PostVo();
-        UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-       
-        favorite.setUser_id(loginUserVo.getUser_id());
-        int postId = ScanUtil.nextInt("관심 상품으로 등록할 게시물 번호를 입력하세요: ");
-        favorite.setPost_id(postId); // 입력받은 ID를 설정
-        
-        if (favoriteService.isFavoriteExists(loginUserVo.getUser_id(), postId)) {
-            System.out.println("관심 상품 목록에 동일한 상품이 존재합니다");
-            return Command.POST_LIST; // 동일한 상품이 존재할 경우 상세 페이지로 돌아가기
-        }
-        favoriteService.addFavorite(favorite);
-        System.out.println("관심 상품 등록 완료.");
-        return Command.POST_LIST; // 게시물 목록으로 돌아가기
-    }
+   public Command addFavorite(int postId) {
+	    FavoriteVo favorite = new FavoriteVo();
+	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+
+	    favorite.setUser_id(loginUserVo.getUser_id());
+	    favorite.setPost_id(postId);
+
+	    if (favoriteService.isFavoriteExists(loginUserVo.getUser_id(), postId)) {
+	        System.out.println("이미 찜한 상품입니다.");
+	    } else {
+	        favoriteService.addFavorite(favorite);
+	        System.out.println("관심 상품 등록 완료.");
+	    }
+
+	    // 현재 게시글 ID를 유지한 채로 상세보기로 돌아가기
+	    MainController.sessionMap.put("currentPostId", postId);
+	    return Command.POST_DETAIL;
+	}
+
     // 사용자의 관심 상품 목록 조회
     public Command viewFavorites() {
         List<FavoriteVo> favorites = favoriteService.getFavoritesByUser();
