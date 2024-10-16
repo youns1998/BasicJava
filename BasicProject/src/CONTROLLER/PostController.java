@@ -37,7 +37,7 @@ public class PostController {
 	}
 	//상세 게시글 보기
 	public Command detailPost() {
-		System.out.println("=====================================================================");
+		System.out.println("+==============================================================================+");
 		PostService postService = PostService.getInstance(); 
 		
 		 int choice = ScanUtil.nextInt("보고싶은 글 번호를 입력하세요: ");
@@ -90,26 +90,46 @@ public class PostController {
 	}
 	
 	//게시물 상세보기
-	 private void displayPostDetails(PostVo post) {
-		  CommentsService commentsService = CommentsService.getInstance();
-		  int commentCount = commentsService.getCommentCount(post.getPost_id());
-		  System.out.println("◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆");
-		  System.out.print("작성자:" + post.getUser_id() +"  \t");
-		  System.out.print("제목:" + post.getTitle()+" \t");
-		  System.out.print("가격:" + post.getPrice()+" \t");
-		  System.out.println("상태:" + post.getCondition()     );
-		  System.out.println("＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊");
-		  System.out.println("내용:" + post.getContent()+" \n");
-		  System.out.println("＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊");
-		  System.out.println("작성 시간:"+post.getCreated_at());
-		  System.out.println("수정 시간:");
-		  System.out.println("＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊");
-		  System.out.print("댓글 : 	" + commentCount + "					찜한 사람 수: \n" );
-		  //여기에 댓글 개수 + 찜한 사람의 수 그리고 작성시간과 수정시간을 넣어야함
-		  System.out.println("◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆");
+	private void displayPostDetails(PostVo post) {
+	    CommentsService commentsService = CommentsService.getInstance();
+	    int commentCount = commentsService.getCommentCount(post.getPost_id());
+
+	    String borderLine = "+==============================================================================+";
+	    System.out.println(borderLine);
+
+	    // 작성자, 제목, 가격, 상태 출력
+	    System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s \n", 
+	        padAndTruncate(post.getUser_id(), 12), 
+	        padAndTruncate(post.getTitle(), 20), 
+	        padAndTruncate(post.getPrice() + "만원", 8), 
+	        padAndTruncate(post.getCondition(), 3));
+	    System.out.println(borderLine);
+
+	    // 내용 출력
+	    System.out.printf("| 내용: %-72s \n", padAndTruncate(post.getContent(), 72));
+	    System.out.printf("| %-78s \n", "");
+	    System.out.println(borderLine);
+
+	    // 작성 시간 및 수정 시간 출력
+	    System.out.printf("| 작성 시간: %-61s \n", post.getCreated_at());
+	    System.out.printf("| 수정 시간: %-61s \n", "(수정 시각 정보 미정)");
+	    System.out.println(borderLine);
+
+	    // 댓글 수와 찜한 사람 수 출력
+	    System.out.printf("| 댓글 수: %-10d 찜한 사람 수: %-48s \n", commentCount, "(찜한 사람 수 미정)");
+	    System.out.println(borderLine);
 	}
-	//전체 게시글 보기
-	// ANSI 색상 코드 설정
+
+	// 한글과 영문 모두 정렬을 맞추기 위해 패딩을 추가하고, 초과 시 잘라내기 함수
+	private String padAndTruncate(String text, int maxLength) {
+	    int textLength = text.codePoints().map(cp -> (Character.isAlphabetic(cp) && cp <= 0x7F) ? 1 : 2).sum();
+	    int padding = Math.max(0, maxLength - textLength); // 패딩 계산
+	    return text + " ".repeat(padding);
+	}
+
+	// 문자열 길이를 제한하고, 초과하면 ... 추가
+	
+
 
 	
 
