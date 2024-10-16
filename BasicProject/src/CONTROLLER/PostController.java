@@ -1,9 +1,11 @@
 package CONTROLLER;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import SERVICE.CommentsService;
 import SERVICE.PostService;
+import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
 import VO.PostVo;
@@ -103,58 +105,87 @@ public class PostController {
 		  System.out.println("◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆");
 	}
 	//전체 게시글 보기
-	public Command postList() {
-		System.out.println("============================ 전체 게시물 ================================");
-		PostService postService = PostService.getInstance(); 
-		UsersVo loginUserVo = (UsersVo)MainController.sessionMap.get("loginUser");
-		List<PostVo> posts = postService.getPostList(); 
-		if (posts == null || posts.isEmpty()) {	//게시글 배열이 없으면
-	        System.out.println("작성된 게시물이 없습니다");
-	    } else {								//게시글 배열이 있다면
-	        for (PostVo post : posts) {
-	        	 System.out.println(
-	 	                "게시물 번호:" + post.getPost_id() + 
-	 	                ",  제목:" + post.getTitle() + 
-	 	                ",  가격:" + post.getPrice() + 
-	 	                ",  분류:" + post.getCategory_id() +
-	 	                ",  작성자:" + post.getUser_id() + 
-	 	                ",  상태:" + post.getCondition());
-	 	                // 댓글 달린 갯수도 표시 해줘야함
-	        }
-	    }
-		 System.out.println("======================================================================");
-		 if(loginUserVo.getRole()!=0 ) {	//관리자가 보는 게시글 페이지
-			 int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
-				switch (input) {
-				case 1:
-					return Command.POST_INSERT;
-				case 2:
-					return Command.POST_DELETE;
-				case 3:
-					return Command.POST_UPDATE;
-				case 4:
-					return Command.POST_DETAIL;
-				case 0:
-					return Command.USER_HOME;
-				}	 
-		 }
-		 else {								//사용자가 보는 게시글 페이지
-		int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
-		switch (input) {
-		case 1:
-			return Command.POST_INSERT;
-		case 2:
-			return Command.POST_DELETE;
-		case 3:
-			return Command.POST_UPDATE;
-		case 4:
-			return Command.POST_DETAIL;
-		case 0:
-			return Command.USER_HOME;
+	// ANSI 색상 코드 설정
+	 private static final String ANSI_RED = "\u001B[31m";
+	 private static final String ANSI_RESET = "\u001B[0m";
+	 private static final String ANSI_BOLD = "\033[1m";
+
+	 public Command postList() {
+		    System.out.println("============================ 전체 게시물 ================================");
+		    PostService postService = PostService.getInstance();
+		    UsersService usersService = UsersService.getInstance(); // UsersService 인스턴스 추가
+		    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+		    List<PostVo> posts = postService.getPostList();
+
+		    if (posts == null || posts.isEmpty()) {
+		        System.out.println("작성된 게시물이 없습니다");
+		    } else {
+		        // 관리자와 일반 사용자 게시글을 구분하여 저장
+		        List<PostVo> adminPosts = new ArrayList<>();
+		        List<PostVo> userPosts = new ArrayList<>();
+
+		        for (PostVo post : posts) {
+		            UsersVo user = usersService.getUserById(post.getUser_id()); // 작성자의 User 정보 가져오기
+		            if (user != null && user.getRole() == 1) { // ROLE이 1이면 관리자 게시글
+		                adminPosts.add(post);
+		            } else {
+		                userPosts.add(post);
+		            }
+		        }
+
+		        // 관리자 게시글 출력 (공지사항과 게시물 번호만 빨간색으로)
+		        for (PostVo post : adminPosts) {
+		            System.out.println(ANSI_RED + ANSI_BOLD +
+		                "공지사항: " + post.getTitle() + ANSI_RESET);
+		        }
+
+		        // 일반 사용자 게시글 출력 (상세 정보 포함)
+		        for (PostVo post : userPosts) {
+		            System.out.println(
+		                "게시물 번호: " + post.getPost_id() +
+		                ", 제목: " + post.getTitle() +
+		                ", 가격: " + post.getPrice() +
+		                ", 분류: " + post.getCategory_id() +
+		                ", 작성자: " + post.getUser_id() +
+		                ", 상태: " + post.getCondition());
+		        }
+		    }
+		    System.out.println("======================================================================");
+
+		    if (loginUserVo.getRole() != 0) { // 관리자가 보는 게시글 페이지
+		        int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
+		        switch (input) {
+		            case 1:
+		                return Command.POST_INSERT;
+		            case 2:
+		                return Command.POST_DELETE;
+		            case 3:
+		                return Command.POST_UPDATE;
+		            case 4:
+		                return Command.POST_DETAIL;
+		            case 0:
+		                return Command.USER_HOME;
+		        }
+		    } else { // 사용자가 보는 게시글 페이지
+		        int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
+		        switch (input) {
+		            case 1:
+		                return Command.POST_INSERT;
+		            case 2:
+		                return Command.POST_DELETE;
+		            case 3:
+		                return Command.POST_UPDATE;
+		            case 4:
+		                return Command.POST_DETAIL;
+		            case 0:
+		                return Command.USER_HOME;
+		        }
+		    }
+		    return Command.USER_HOME;
 		}
-		 }
-		 return Command.USER_HOME;
-	}
+
+
+
 	
 	//게시글 추가 메서드
 	public Command postInsert() {	
