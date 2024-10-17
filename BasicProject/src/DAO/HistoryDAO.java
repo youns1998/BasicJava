@@ -20,7 +20,7 @@ public class HistoryDAO {
 	
 	//거래 내역 추가
 	public void addTransaction(HistoryVo history) {
-		 String sql = "INSERT INTO 거래내역 (buyer_id, seller_id, post_id, transaction_date) VALUES (?, ?, ?, ?)";
+		 String sql = "INSERT INTO TRANSACTION_HISTORY (buyer_id, seller_id, post_id, transaction_date) VALUES (?, ?, ?, ?)";
 
 	       try (Connection con = DBUtil.getConnection();
 	            PreparedStatement ps = con.prepareStatement(sql)) {
@@ -54,7 +54,7 @@ public class HistoryDAO {
             
             while (rs.next()) {
                 HistoryVo history = new HistoryVo();
-                history.setTransaction_id(rs.getInt("transaction_id"));
+                history.setTransaction_id(rs.getString("transaction_id"));
                 history.setBuyer_id(rs.getString("buyer_id"));
                 history.setSeller_id(rs.getString("seller_id"));
                 history.setPost_id(rs.getInt("post_id"));

@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 
 public class HistoryVo {
-	private int transaction_id;
+	private String transaction_id;
 	private String buyer_id;
 	private String seller_id;
 	private int post_id;
@@ -15,7 +15,7 @@ public class HistoryVo {
     public HistoryVo() {}
     
     // 모든 필드를 포함하는 생성자
-    public HistoryVo(int transactionId, String buyerId, String sellerId, int postId, Date transactionDate) {
+    public HistoryVo(String transactionId, String buyerId, String sellerId, int postId, Date transactionDate) {
         this.transaction_id = transactionId;
         this.buyer_id = buyerId;
         this.seller_id = sellerId;
@@ -24,10 +24,10 @@ public class HistoryVo {
     }
 	
 	
-	public int getTransaction_id() {
+	public String getTransaction_id() {
 		return transaction_id;
 	}
-	public void setTransaction_id(int transaction_id) {
+	public void setTransaction_id(String transaction_id) {
 		this.transaction_id = transaction_id;
 	}
 	public String getBuyer_id() {
