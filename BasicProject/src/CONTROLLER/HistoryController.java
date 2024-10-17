@@ -52,11 +52,11 @@ public class HistoryController {
 	        } else {
 	            System.out.println("거래 내역:");
 	            for (HistoryVo history : historyList) {
-	                System.out.println("거래 ID: " + history.getTransaction_id() +
-	                                   ", 구매자 ID: " + history.getBuyer_id() +
-	                                   ", 판매자 ID: " + history.getSeller_id() +
-	                                   ", 게시글 ID: " + history.getPost_id() +
-	                                   ", 거래 날짜: " + history.getTransaction_date());
+	                System.out.println("거래 번호 : " + history.getTransaction_id() +
+	                                   ", 구매자 ID : " + history.getBuyer_id() +
+	                                   ", 판매자 ID : " + history.getSeller_id() +
+	                                   ", 게시글 ID : " + history.getPost_id() +
+	                                   ", 거래 날짜 : " + history.getTransaction_date());
 	            }
 	        }
 			return Command.USER_HOME;
