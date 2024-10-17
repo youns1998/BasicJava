@@ -321,7 +321,7 @@ public class PostController {
 			post.setPrice(price);
 			post.setCategory_id(category);
 			post.setContent(content);
-			post.setCondition("판매중");
+			post.setCondition(1);
 			post.setUser_id(loginUserVo.getUser_id());
 		}
 		int result = postService.insertPost(post);
