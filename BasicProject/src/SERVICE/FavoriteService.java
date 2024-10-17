@@ -30,8 +30,8 @@ public class FavoriteService {
        }
        
        // 관리자가 사용자의 관심 상품 목록 조회
-       public List<FavoriteVo> getFavoritesByUser(String userId) {
-    	   return favoriteDAO.getFavoritesByUser();
+       public List<FavoriteVo> getFavoritesList(String userId) {
+    	   return favoriteDAO.getFavoritesList(userId);
        }
 
        // 관심 상품 삭제

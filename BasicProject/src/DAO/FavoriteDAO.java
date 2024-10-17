@@ -28,7 +28,7 @@ public class FavoriteDAO {
    
    
    
-   //관심 상품 추가
+   //관심 상품 추가 
    public int addFavorite(FavoriteVo favorite) {
 	    int cnt = 0;
 	    String sql = "INSERT INTO FAVORITE (USER_ID, POST_ID, POST_TITLE) VALUES (?, ?, ?)";
@@ -53,15 +53,13 @@ public class FavoriteDAO {
 // 사용자의 관심 상품 목록 조회
 	public List<FavoriteVo> getFavoritesByUser() {
 		 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-		 if (loginUserVo == null) {
-		        return new ArrayList<>(); // 또는 null 반환
-		    }
 		 
 		 List<FavoriteVo> favorites = new ArrayList<>();
         String sql = "SELECT f.USER_ID, f.POST_ID, p.TITLE, p.USER_ID AS AUTHOR "
                 	+ "FROM FAVORITE f "
                 	+ "JOIN POST p ON f.POST_ID = p.POST_ID "
                 	+ "WHERE f.USER_ID = ?";
+        
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, loginUserVo.getUser_id());
@@ -79,6 +77,33 @@ public class FavoriteDAO {
         }
         return favorites;
     }
+	// 관리자의 사용자 관심 상품 목록 조회
+		public List<FavoriteVo> getFavoritesList(String userid) {
+			 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+			 
+			 List<FavoriteVo> favorites = new ArrayList<>();
+	        String sql = "SELECT f.USER_ID, f.POST_ID, p.TITLE, p.USER_ID AS AUTHOR "
+	                	+ "FROM FAVORITE f "
+	                	+ "JOIN POST p ON f.POST_ID = p.POST_ID "
+	                	+ "WHERE f.USER_ID = ?";
+	        
+	        try (Connection conn = DBUtil.getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, userid);
+	            ResultSet rs = pstmt.executeQuery();
+	            while (rs.next()) {
+	                FavoriteVo favorite = new FavoriteVo();
+	                favorite.setUser_id(rs.getString("USER_ID"));
+	                favorite.setPost_id(rs.getInt("POST_ID"));
+	                favorite.setPost_title(rs.getString("TITLE")); // 게시글 제목 설정
+	                favorite.setAuthor(rs.getString("AUTHOR")); // 작성자 설정 (USER_ID)
+	                favorites.add(favorite);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return favorites;
+	    }
 // 관심 상품 삭제
 	   public boolean deleteFavorite(String userId, int postId) {
 	        String sql = "DELETE FROM FAVORITE WHERE USER_ID = ? AND POST_ID = ?";

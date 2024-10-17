@@ -11,7 +11,6 @@ import VO.UsersVo;
 
 
 public class MainController {
-	
 	public static Map<String, Object> sessionMap = new HashMap<>();   
     public static final String ANSI_BROWN = "\033[38;5;136m";
     public static final String ANSI_RESET = "\u001B[0m";
@@ -89,7 +88,7 @@ public class MainController {
 //				 관심 물품 보기
 				case FAVORITE_LIST: cmd = favoriteController.viewFavorites(); break;
 				case FAVORITE_DELETE: cmd = favoriteController.displayMenu(); break;
-				case USER_FAVORITE: cmd = favoriteController.viewFavorites(); break;
+				case USER_FAVORITE: cmd = favoriteController.adminviewFavorites(); break;
 				case FAVORITE_INSERT:
 				    Integer postId = (Integer) MainController.sessionMap.get("currentPostId");
 				    if (postId != null) {
@@ -113,17 +112,18 @@ public class MainController {
 		}
 	}
 	private Command home() {
-		System.out.println(ANSI_BROWN + "           ■■■■■■■■    ■       ■  ");
-        System.out.println("           ■       ■   ■■     ■■  ");
-        System.out.println("           ■■■■■■■■    ■  ■ ■  ■  ");
-        System.out.println("           ■           ■   ■   ■  ");
-        System.out.println("           ■   eanut   ■       ■  arket" + ANSI_RESET);
+		
+		System.out.println(ANSI_BROWN+"      ■■■■■■■■    ■       ■  ");
+        System.out.println("            ■       ■   ■■     ■■  ");
+        System.out.println("            ■■■■■■■■    ■  ■ ■  ■  ");
+        System.out.println("            ■           ■   ■   ■  ");
+        System.out.println("            ■   eanut   ■       ■ arket" +ANSI_RESET);
 
 	    System.out.println("------------------------------------------------");
 	    System.out.println("  1.로그인  2.회원가입  3.ID찾기  4.비밀번호찾기  0.나가기 ");
 	    System.out.println("------------------------------------------------");
 	    System.out.println();
-	    int input = ScanUtil.nextInt("메뉴 선택 >> ");
+	    int input = ScanUtil.nextInt("선택 >> ");
 	    System.out.println();
 	    switch (input) {
 	        case 1: return Command.LOGIN;
@@ -148,12 +148,16 @@ public class MainController {
 		if(loginUserVo.getRole()!=0)
 			return Command.ADMIN_HOME;
 		System.out.println();
-		System.out.print(loginUserVo.getUsername() + "님 반가워요 ");
-		System.out.println("아래 메뉴에서 작업할 번호를 선택하세요.");
+		System.out.println(loginUserVo.getUsername() + "님 반가워요 ");
+		System.out.println("╭◜◝ ͡ ◜◝╮    몽실   ╭◜◝ ͡ ◜◝╮\r\n"
+				+ " ( •ㅅ•    ) 몽실몽실 (   •ㅅ•  )\r\n"
+				+ " ╰◟◞ ͜ ╭◜◝ ͡ ◜◝╮몽실몽실 ͜ ◟◞╯\r\n"
+				+ "  몽몽실(  •ㅅ•   ) 몽실\r\n"
+				+ " 몽실몽 ╰◟◞ ◟◞╯몽실몽실");
 		System.out.println("-----------------------------------------------------------------------");
-		System.out.println("1.중고장터보기\t2.내정보보기\t3.관심상품보기\t4.나의거래내역\t0.로그아웃");
+		System.out.println("1.PM 장터 보기\t2.내 정보 보기\t3.찜한 상품 보기\t4.나의 거래 내역\t0.로그 아웃");
 		System.out.println("-----------------------------------------------------------------------");
-		int input = ScanUtil.nextInt("메뉴 선택 >> ");
+		int input = ScanUtil.nextInt("선택 >> ");
 		
 		switch (input) {
 			case 1: return Command.POST_LIST;
@@ -173,8 +177,12 @@ public class MainController {
 		if(loginUserVo==null) {
 			return Command.HOME;
 		}
-		System.out.println(loginUserVo.getUsername() + "님은 관리자 메뉴를 이용할 수 있습니다");
-		System.out.println("아래 메뉴에서 작업할 번호를 선택하세요.");
+		System.out.println(loginUserVo.getUsername() + " 님이 관리자로 로그인 하셨습니다");
+		System.out.println("╭◜◝ ͡ ◜◝╮    몽실   ╭◜◝ ͡ ◜◝╮\r\n"
+				+ " ( •ㅅ•    ) 몽실몽실 (   •ㅅ•  )\r\n"
+				+ " ╰◟◞ ͜ ╭◜◝ ͡ ◜◝╮몽실몽실 ͜ ◟◞╯\r\n"
+				+ "  몽몽실(  •ㅅ•   ) 몽실\r\n"
+				+ " 몽실몽 ╰◟◞ ◟◞╯몽실몽실");
 		System.out.println("-------------------------------------------------------------");
 		System.out.println("1.회원정보관리\t2.중고장터관리\t3.댓글관리\t4.카테고리관리\t0.로그아웃");
 		System.out.println("-------------------------------------------------------------");

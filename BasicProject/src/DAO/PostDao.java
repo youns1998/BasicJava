@@ -152,7 +152,38 @@ try {
 }
 		return postvo;
 }
-	
+	//게시글 상세 조회 (USER_ID를 받아와서 조회)
+		public PostVo getPostuser(String userid) {
+			  PostVo postvo = new PostVo();
+			String sql = "SELECT *FROM POST WHERE USER_ID = ?";
+			
+	try {
+		con=DBUtil.getConnection();
+		ps=con.prepareStatement(sql);
+		ps.setString(1, userid);
+		rs=ps.executeQuery();
+		
+		 if (rs.next()) {
+			 //	postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+			//	postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+				postvo.setPost_id(rs.getInt("POST_ID"));
+				postvo.setTitle(rs.getNString("TITLE"));
+				postvo.setUser_id(rs.getString("USER_ID"));
+				postvo.setPrice(rs.getInt("PRICE"));
+				postvo.setContent(rs.getString("CONTENT"));
+				postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
+				postvo.setCondition(rs.getString("CONDITION"));
+		 }	else {
+				System.out.println("해당 게시물이 존재하지 않습니다");
+				}
+		 
+		 } catch (Exception e) {
+		e.printStackTrace();
+	}	finally {
+		disConnect();
+	}
+			return postvo;
+	}
 	//게시글 전체 정보 수정
 	 public int updatePost(PostVo postvo) {
 	        int cnt = 0;

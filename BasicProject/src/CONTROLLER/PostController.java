@@ -90,7 +90,7 @@ public class PostController {
 		case 3:
 			return commentController.deleteComment(postId);
 		case 4:
-			return favoriteController.addFavorite(postId); // 현재 보고 있는 게시물 번호 전달
+			return favoriteController.addFavorite(postId); 
 		case 0:
 			return returnToPostList();
 		default:

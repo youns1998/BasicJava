@@ -52,14 +52,11 @@ public enum Command {
 	COMMENT_INSERT,	// 댓글 추가
 	COMMENT_UPDATE,	// 댓글 수정
 	COMMENT_DELETE,	// 댓글 삭제
-<<<<<<< HEAD
 	COMMENT_ADMIN, 	// 관리자가 회원이 쓴 댓글 보기
-	COMMENT_SELF	// 내가 쓴 댓글 보기
-=======
+	COMMENT_SELF,	// 내가 쓴 댓글 보기
 	
 	
     VERIFY_CODE //인증 코드
 	
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 }
 

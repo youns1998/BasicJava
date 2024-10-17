@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import SERVICE.FavoriteService;
 import SERVICE.PostService;
+import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
 import VO.FavoriteVo;
@@ -29,9 +30,19 @@ public class FavoriteController {
    public Command addFavorite(int postId) {
 	    FavoriteVo favorite = new FavoriteVo();
 	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-
+	    String currentuserid = (String) MainController.sessionMap.get("currentUserid");
+	    
+	    PostService postService = PostService.getInstance();
+	    PostVo postvo = postService.getPost(postId); 	//게시글 조회
+	    System.out.println(postvo.getUser_id());
+	    
+	    if (loginUserVo.getUser_id().equals(postvo.getUser_id())) {
+	        System.out.println("자기 게시글은 찜할 수 없습니다.");
+	        return Command.POST_DETAIL; // 상세보기로 돌아가기
+	    }
 	    favorite.setUser_id(loginUserVo.getUser_id());
 	    favorite.setPost_id(postId);
+	    
 
 	    if (favoriteService.isFavoriteExists(loginUserVo.getUser_id(), postId)) {
 	        System.out.println("이미 찜한 상품입니다.");
@@ -50,7 +61,7 @@ public class FavoriteController {
         List<FavoriteVo> favorites = favoriteService.getFavoritesByUser();
         UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
         if(loginUserVo.getRole()!=0) {
-        	String userId = ScanUtil.nextLine("찜 리스트를 조회할 회원 ID>>");
+        	return Command.USER_FAVORITE;
         }
         System.out.println("찜 목록:" + favorites.size()+"개의 게시물을 찜했습니다");
          
@@ -58,36 +69,39 @@ public class FavoriteController {
             System.out.println("관심 상품이 없습니다.");
             
         } else {
-        	System.out.printf("%-15s %-30s %-10s%n", "게시글 번호", "게시글 제목", "작성자");
+        	System.out.printf("%-15s %-30s %-10s%n", "게시글 번호", "게시글 제목", "작성 시간");
             System.out.println("-------------------------------------------------------------");
              
             for (FavoriteVo favorite : favorites) {
                 System.out.printf("%-20d %-30s %-10s%n", 
                                   favorite.getPost_id(), 
                                   favorite.getPost_title(), 
-                                  favorite.getAuthor());
+                                  favorite.getCreated_at());
             }
         }
         System.out.println("-------------------------------------------------------------");
         return Command.FAVORITE_DELETE; 
     }
     //관리자가 회원 ID로 조회하는 사용자의 찜목록
-    public Command viewFavorites(String userId) {
-        List<FavoriteVo> favorites = favoriteService.getFavoritesByUser();
-        
-        System.out.println("관심 상품 목록:" + favorites.size());
+    public Command adminviewFavorites() {
+        FavoriteService favoriteservice = FavoriteService.getInstance();
+        String userId = ScanUtil.nextLine("찜 목록을 조회할 회원 ID>>");
+        List<FavoriteVo> favorites =  favoriteservice.getFavoritesList(userId);
+        System.out.println();
+        System.out.println("찜한 게시글 갯수:  " + favorites.size()+"개");
          
-        if (favorites.isEmpty()) {
+        if (favorites.isEmpty() || favorites==null) {
             System.out.println("관심 상품이 없습니다.");
             
         } else {
-        	System.out.printf("%-15s %-30s %-10s%n", "게시글 번호", "게시글 제목");
+        	System.out.printf("%-20s %-25s %-10s%n", "게시글 번호", "게시글 제목", "작성자");
             System.out.println("-------------------------------------------------------------");
              
             for (FavoriteVo favorite : favorites) {
-                System.out.printf("%-20d %-30s %-10s%n", 
+                System.out.printf("%-15d %-25s %-10s%n", 
                                   favorite.getPost_id(), 
-                                  favorite.getPost_title());
+                                  favorite.getPost_title(), 
+                                  favorite.getAuthor());
             }
         }
         System.out.println("-------------------------------------------------------------");
