@@ -45,7 +45,7 @@ private void disConnect() {
 			ps.setInt(3, PostVo.getCategory_id());
 			ps.setString(4, PostVo.getTitle());
 			ps.setString(5, PostVo.getContent());
-			ps.setString(6, PostVo.getCondition());
+			ps.setInt(6, PostVo.getCondition());
 //			ps.setTimestamp(5, Timestamp.valueOf(PostVo.getCreated_at()));
 //			ps.setTimestamp(6, Timestamp.valueOf(PostVo.getUpdated_at())); 
 			cnt = ps.executeUpdate();
@@ -77,7 +77,7 @@ try {
 		postvo.setTitle(rs.getNString("TITLE"));
 		postvo.setContent(rs.getString("CONTENT"));
 		postvo.setPrice(rs.getInt("PRICE"));
-		postvo.setCondition(rs.getString("CONDITION"));
+		postvo.setCondition(rs.getInt("CONDITION"));
 		postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
 		postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
 		postlist.add(postvo);
@@ -108,7 +108,7 @@ try {
 		postvo.setTitle(rs.getNString("TITLE"));
 		postvo.setContent(rs.getString("CONTENT"));
 		postvo.setPrice(rs.getInt("PRICE"));
-		postvo.setCondition(rs.getString("CONDITION"));
+		postvo.setCondition(rs.getInt("CONDITION"));
 		postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
 		postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
 		postlist.add(postvo);
@@ -141,7 +141,7 @@ try {
 			postvo.setPrice(rs.getInt("PRICE"));
 			postvo.setContent(rs.getString("CONTENT"));
 			postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
-			postvo.setCondition(rs.getString("CONDITION"));
+			postvo.setCondition(rs.getInt("CONDITION"));
 	 }	else {
 			System.out.println("해당 게시물이 존재하지 않습니다");
 			}
@@ -173,7 +173,7 @@ try {
 				postvo.setPrice(rs.getInt("PRICE"));
 				postvo.setContent(rs.getString("CONTENT"));
 				postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
-				postvo.setCondition(rs.getString("CONDITION"));
+				postvo.setCondition(rs.getInt("CONDITION"));
 		 }	else {
 				System.out.println("해당 게시물이 존재하지 않습니다");
 				}
@@ -197,7 +197,7 @@ try {
 	            ps.setString(1, postvo.getTitle());
 	            ps.setString(2, postvo.getContent());
 	            ps.setInt(3, postvo.getPrice());
-	            ps.setString(4, postvo.getCondition());
+	            ps.setInt(4, postvo.getCondition());
 	            ps.setInt(5, postvo.getCategory_id());
 	            ps.setInt(6, postvo.getPost_id());
 
@@ -219,23 +219,22 @@ try {
 	            int choice = ScanUtil.nextInt();
 	            switch (choice) {
 	                case 1:
-	                    System.out.print("새 제목을 입력하세요: ");
+	                    System.out.print("변경할 제목을 입력하세요: ");
 	                    String newTitle = ScanUtil.nextLine();
 	                    postvo.setTitle(newTitle);
 	                    break;
 	                case 2:
-	                    System.out.print("새 내용을 입력하세요: ");
+	                    System.out.print("변경할 내용을 입력하세요: ");
 	                    String newContent = ScanUtil.nextLine();
 	                    postvo.setContent(newContent);
 	                    break;
 	                case 3:
-	                    System.out.print("새 가격을 입력하세요: ");
+	                    System.out.print("변경할 가격을 입력하세요: ");
 	                    int newPrice = ScanUtil.nextInt();
 	                    postvo.setPrice(newPrice);
 	                    break;
 	                case 4:
-	                    System.out.print("새 상태를 입력하세요: ");
-	                    String newCondition = ScanUtil.nextLine();
+	                    int newCondition = ScanUtil.nextInt("변경할 상태를 입력하세요 \n 1.판매중\t2.예약중\t3.판매완료");
 	                    postvo.setCondition(newCondition);
 	                    break;
 	                case 0:

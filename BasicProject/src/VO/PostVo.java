@@ -11,8 +11,8 @@ public class PostVo {
 	private String title;
 	private String content;
 	private int price;
-	private String condition;
-	private LocalDateTime created_at;
+	private int condition;
+	private LocalDateTime created_at; 
 	private LocalDateTime updated_at;
 	private boolean isNotice;	//공지사항 여부
 	
@@ -64,10 +64,11 @@ public class PostVo {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public String getCondition() {
+	public int getCondition() {
 		return condition;
 	}
-	public void setCondition(String condition) {
+	public void setCondition(int condition) {
+		
 		this.condition = condition;
 	}
 	public LocalDateTime getCreated_at() {

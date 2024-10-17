@@ -12,8 +12,8 @@ import VO.UsersVo;
 
 public class MainController {
 	public static Map<String, Object> sessionMap = new HashMap<>();   
-    public static final String ANSI_BROWN = "\033[38;5;136m";
     public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BROWN = "\033[38;5;136m";
 
 	private UsersController usersController;
 	private CategoryController categoryController;
@@ -112,8 +112,8 @@ public class MainController {
 		}
 	}
 	private Command home() {
-		
-		System.out.println(ANSI_BROWN+"      ■■■■■■■■    ■       ■  ");
+		 
+		System.out.println(ANSI_BROWN+"            ■■■■■■■■    ■       ■  ");
         System.out.println("            ■       ■   ■■     ■■  ");
         System.out.println("            ■■■■■■■■    ■  ■ ■  ■  ");
         System.out.println("            ■           ■   ■   ■  ");
