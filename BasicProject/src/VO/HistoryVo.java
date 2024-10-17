@@ -11,6 +11,19 @@ public class HistoryVo {
 	private int post_id;
 	private Date transaction_date;
 	
+	 // 기본 생성자
+    public HistoryVo() {}
+    
+    // 모든 필드를 포함하는 생성자
+    public HistoryVo(int transactionId, String buyerId, String sellerId, int postId, Date transactionDate) {
+        this.transaction_id = transactionId;
+        this.buyer_id = buyerId;
+        this.seller_id = sellerId;
+        this.post_id = postId;
+        this.transaction_date = transactionDate;
+    }
+	
+	
 	public int getTransaction_id() {
 		return transaction_id;
 	}

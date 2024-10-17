@@ -92,8 +92,8 @@ public class MainController {
 				    }
 				    break;
 
-//				// 거래 기록 보기
-//				case HISTORY_LIST: cmd = historyController.historyList(); break;
+				// 거래 기록 보기
+				case HISTORY_LIST: cmd = historyController.viewTransactionHistory(); break;
 				
 				case END:
 					System.out.println("프로그램이 종료되었습니다.");
@@ -147,6 +147,7 @@ public class MainController {
 			case 1: return Command.POST_LIST;
 			case 2: return Command.MYPAGE;
 			case 3: return Command.FAVORITE_LIST;
+			case 4: return Command.HISTORY_LIST;
 			case 0:
 				// ProjectMain의 정적변수인 sessionMap에 저장된 모든 자료를 삭제한다.
 				MainController.sessionMap.clear();;

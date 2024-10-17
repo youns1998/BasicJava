@@ -228,6 +228,20 @@ public int deletePost(int post_id) {
 	}
 		return cnt;
  }
+
+// 거래상태 업데이트 
+public void updatePostConditionInDatabase(int postId, String newCondition) {
+    String sql = "UPDATE POST SET CONDITION = ? WHERE ID = ?";
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+         
+        ps.setString(1, newCondition);
+        ps.setInt(2, postId);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
 }
 
 
