@@ -10,48 +10,38 @@ import VO.FavoriteVo;
 import VO.UsersVo;
 
 public class UsersController {
-    private UsersService userService; // 사용자 서비스 객체 선언
-    private static UsersController instance; // 싱글톤 패턴을 위한 인스턴스 선언
+    private UsersService userService;
+    private static UsersController instance;
 
-    // 생성자: 싱글톤 패턴 적용
     private UsersController() {
-        userService = UsersService.getInstance(); // UsersService 인스턴스 초기화
+        userService = UsersService.getInstance();
     }
 
-    // 싱글톤 인스턴스 반환 메서드
     public static UsersController getInstance() {
         if (instance == null)
             instance = new UsersController();
         return instance;
     }
 
-    // 전체 회원 목록 출력 (관리자용)
+    // 전체 회원 출력 (관리자용) tw
     public Command userList() {
-        List<UsersVo> users = userService.getPostList(); // 전체 사용자 목록 가져오기
+        List<UsersVo> users = userService.getPostList();
         if (users.isEmpty()) {
             System.out.println("등록된 유저가 없습니다.");
-            return Command.USER_HOME; // 사용자 홈으로 돌아가기
+            return Command.USER_HOME;
         }
+
         
-<<<<<<< HEAD
         return Command.ADMIN_USERDETAIL;
     }	
-    //회원관리 - 관리자용 /  조회할 회원 ID 입력 후 나타나는 화면
-=======
-        return Command.ADMIN_USERDETAIL; // 회원 상세 관리 메뉴로 이동
-    }
-
-    // 회원 관리 - 사용자 상세 메뉴 (관리자용)
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
+    //회원관리 - 관리자용 /  조회할 회원 ID 입력 후 나타나는 화면 tw
     public Command userdetail() {
-        System.out.println("전체 유저 리스트");
-        List<UsersVo> users = userService.getPostList(); // 전체 사용자 목록 가져오기
-        for (UsersVo user : users) {
-            // 각 사용자 정보 출력
-            System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername() 
+    	 System.out.println("전체 유저 리스트");
+    	 List<UsersVo> users = userService.getPostList();
+         for (UsersVo user : users) {
+             System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername() 
              + ", 주소: " + user.getAddress() + ", 전화번호: " + user.getPhone_number() 
              + ", 이메일: " + user.getEmail() + ", 관리자: " + user.getRole());
-<<<<<<< HEAD
          }
          System.out.println("======================================================");
     	int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.찜 목록 조회 5.쓴 게시물 조회 6.쓴 댓글 조회 0.뒤로가기");
@@ -67,7 +57,7 @@ public class UsersController {
     	
     	return Command.USER_HOME;
     }
-    //내 정보 관리 - 사용자용
+    //내 정보 관리 - 사용자용 tw
     public Command userSelf() {
     	int choice = ScanUtil.nextInt("1. 개인 정보 수정 2.내가 쓴 글 보기 3.내가 쓴 댓글 보기 4.회원 탈퇴 0.돌아가기");
     	switch(choice) {
@@ -78,7 +68,7 @@ public class UsersController {
     	}
     	return Command.USER_HOME;
     }
-    //개인정보 수정 - 사용자용
+    //개인정보 수정 - 사용자용tw
     public Command userSelfUpdate() {
    	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
         String choice = loginUserVo.getUser_id();
@@ -87,14 +77,12 @@ public class UsersController {
         userService.updateUser(uservo);
         System.out.println("회원 수정이 끝났습니다");
         
-        // 사용자 권한 확인
         if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-            // 수정 진행
         } 
    	
    	return Command.USER_HOME;
    }
-   //회원 탈퇴 - 사용자용
+   //회원 탈퇴 - 사용자용 tw
    public Command userSelfDelete() {
    	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
         String choice = loginUserVo.getUser_id();
@@ -102,7 +90,6 @@ public class UsersController {
         
         UsersVo user = userService.getUserSelect(choice);
 
-        // 사용자 권한 확인
         if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
             // 자신이거나 관리자라면 삭제 가능
         	int choice1 = ScanUtil.nextInt("정말로 탈퇴하시겠습니까? \n 탈퇴하시려면 1 입력 \n 돌아가시려면 아무숫자 입력");
@@ -114,7 +101,7 @@ public class UsersController {
         System.out.println("좋은 생각입니다 더 좋은 서비스로 보답하겠습니다");
    	return Command.USER_HOME;
    }
-    //회원 수정 - 관리자용
+    //회원 수정 - 관리자용 tw
     public Command userUpdate() {
     	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
          String choice = ScanUtil.nextLine("수정할 회원 ID를 입력하세요: ");
@@ -126,16 +113,16 @@ public class UsersController {
              return Command.UESR_LIST; 
          }
          
-         // 사용자 권한 확인
+         // 사용자 권한 확인 tw
          if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-             // 수정 진행
+             // 수정 진행 tw
              userService.updateUser(uservo);
              System.out.println("선택한 회원이 수정되었습니다");
          } 
     	
     	return Command.ADMIN_USERDETAIL;
     }
-    //회원 삭제 - 관리자용
+    //회원 삭제 - 관리자용 tw
     public Command userDelete() {
     	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
          String choice = ScanUtil.nextLine("삭제할 회원 ID를 입력하세요: ");
@@ -147,26 +134,17 @@ public class UsersController {
              System.out.println("해당 유저를 찾을 수 없습니다.");
              return Command.ADMIN_USERDETAIL;
          }
-=======
-        }
-        System.out.println("======================================================");
-        int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.찜 목록 조회 5.쓴 게시물 조회 6.쓴 댓글 조회 0.뒤로가기");
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 
-        // 선택한 번호에 따라 명령어 반환
-        switch(input) {
-            case 1: return Command.ADMIN_USER;
-            case 2: return Command.USER_UPDATE;
-            case 3: return Command.USER_DELETE;
-            case 4: // 관심 목록 조회 추가 예정
-            case 5: // 게시물 조회 추가 예정
-            case 6: // 댓글 조회 추가 예정
-            case 0: // 뒤로가기
-        }
-        return Command.USER_HOME; // 사용자 홈으로 이동
+         // 사용자 권한 확인 tw
+         if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+             // 자신이거나 관리자라면 삭제 가능
+             userService.deleteUser(user);
+             System.out.println("선택한 회원이 삭제 되었습니다");
+         } 
+    	
+    	return Command.ADMIN_USERDETAIL;
     }
-<<<<<<< HEAD
-    // 회원 찜목록 상세보기 - 관리자용
+    // 회원 찜목록 상세보기 - 관리자용 tw
     public Command userFavorites() {
     	 String userId = ScanUtil.nextLine("찜 목록을 볼 회원 ID를 입력하세요: ");
          UsersVo user = userService.getUserSelect(userId);
@@ -177,57 +155,12 @@ public class UsersController {
          }
     	return Command.USER_FAVORITE;
     }
-    // 회원별 게시물 리스트 보기 
+    // 회원별 게시물 리스트 보기  tw
     
-    // 회원 상세보기
-=======
-
-    // 회원 수정 (관리자용)
-    public Command userUpdate() {
-        UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-        String choice = ScanUtil.nextLine("수정할 회원 ID를 입력하세요: ");
-        
-        // 수정할 사용자 선택
-        UsersVo uservo = userService.getUserSelect(choice);
-        if (uservo == null) {
-            System.out.println("해당 회원을 찾을 수 없습니다.");
-            return Command.UESR_LIST; // 사용자 목록으로 돌아가기
-        }
-        
-        // 권한 확인 후 수정 진행
-        if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-            userService.updateUser(uservo);
-            System.out.println("선택한 회원이 수정되었습니다");
-        }
-        return Command.ADMIN_USERDETAIL; // 사용자 상세 관리 메뉴로 돌아가기
-    }
-
-    // 회원 삭제 (관리자용)
-    public Command userDelete() {
-        UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-        String choice = ScanUtil.nextLine("삭제할 회원 ID를 입력하세요: ");
-        
-        // 삭제할 사용자 선택
-        UsersVo user = userService.getUserSelect(choice);
-        if (user == null) {
-            System.out.println("해당 유저를 찾을 수 없습니다.");
-            return Command.ADMIN_USERDETAIL; // 사용자 상세 관리 메뉴로 돌아가기
-        }
-
-        // 권한 확인 후 삭제 진행
-        if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-            userService.deleteUser(user);
-            System.out.println("선택한 회원이 삭제 되었습니다");
-        }
-        return Command.ADMIN_USERDETAIL; // 사용자 상세 관리 메뉴로 돌아가기
-    }
-
-    // 회원 상세보기 (관리자용)
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
+    // 회원 상세보기 tw
     public Command userSelect() {
         String userId = ScanUtil.nextLine("조회할 회원 ID를 입력하세요: ");
-        UsersVo user = userService.getUserSelect(userId); // 사용자 정보 조회
-
+        UsersVo user = userService.getUserSelect(userId);
         if (user != null) {
             System.out.println("ID: " + user.getUser_id());
             System.out.println("이름: " + user.getUsername());
@@ -238,26 +171,28 @@ public class UsersController {
           
         } else {
             System.out.println("해당 회원을 찾을 수 없습니다.");
+            System.out.println();
         }
-        return Command.ADMIN_USERDETAIL; // 사용자 상세 관리 메뉴로 돌아가기
+        return Command.ADMIN_USERDETAIL;
     }
 
-    // 아이디 중복 확인 메서드
+    // 아이디 중복 확인 메서드t w
     private boolean isUserIdDuplicated(String userId) {
         return userService.getUserSelect(userId) != null;
     }
 
-    // 아이디 형식 검증 메서드
+    // 아이디 및 비밀번호 형식 검증 메서드 tw
     private boolean validateUserId(String userId) {
         return userId.matches("^[a-zA-Z0-9]{4,12}$");
     }
 
-    // 비밀번호 형식 검증 메서드
+ // 비밀번호 형식 검증 메서드 tw
     private boolean validatePassword(String password) {
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$");
     }
 
-    // 회원가입
+
+    // 회원가입 tw
     public Command join() {
         System.out.println("=========== 회원가입 =============");
         System.out.println("아이디는 영문자와 숫자로 이루어져야 하며, 길이는 4~12자여야 합니다.");
@@ -298,39 +233,40 @@ public class UsersController {
         int result = userService.addUser(userVo);
 
         System.out.println(result > 0 ? "회원가입 성공!!" : "회원가입 실패!!");
-        return Command.HOME; // 홈 화면으로 돌아가기
+        return Command.HOME;
     }
-
-    // 비밀번호 찾기
+    
+    // 비번 찾기 tw
     public Command findUserPass() {
         String userId = ScanUtil.nextLine("아이디를 입력하세요 : ");
         String name = ScanUtil.nextLine("이름을 입력하세요 : ");
         String email = ScanUtil.nextLine("이메일을 입력하세요 : ");
         
-        UsersVo user = userService.findUserPass(userId, name, email);
+        UsersVo user = userService.findUserPass(userId, name, email );
+        
         if (user != null) {
-            System.out.println("찾은 비밀번호: " + user.getUser_pass());
-        } else {
-            System.out.println("해당 정보로 비밀번호를 찾을 수 없습니다.");
-        }		
-        return Command.HOME; // 홈 화면으로 돌아가기
+    		System.out.println("찾은 비밀번호: " + user.getUser_pass());
+    	} else {
+    		System.out.println("해당 정보로 비밀번호를 찾을 수 없습니다.");
+    	}		
+    	return Command.HOME;
     }
-
-    // 아이디 찾기 
+    
+    // 아이디 찾기 tw
     public Command findUserId() {
-        String name = ScanUtil.nextLine("이름을 입력하세요 : ");
-        String email = ScanUtil.nextLine("이메일을 입력하세요 : ");
+    	String name = ScanUtil.nextLine("이름을 입력하세요 : ");
+    	String email = ScanUtil.nextLine("이메일을 입력하세요 : ");
 
-        UsersVo user = userService.findUserId(name, email);
-        if (user != null) {
-            System.out.println("찾은 아이디: " + user.getUser_id());
-        } else {
-            System.out.println("해당 정보로 아이디를 찾을 수 없습니다.");
-        }		
-        return Command.HOME; // 홈 화면으로 돌아가기
-    }
-
-    // 로그인
+    	UsersVo user = userService.findUserId(name, email);
+    
+    	if (user != null) {
+    		System.out.println("찾은 아이디: " + user.getUser_id());
+    	} else {
+    		System.out.println("해당 정보로 아이디를 찾을 수 없습니다.");
+    	}		
+    	return Command.HOME;
+}
+    // 로그인 tw
     public Command login() {
         System.out.println("============== 로그인 ===============");
 
@@ -348,31 +284,19 @@ public class UsersController {
             return Command.LOGIN;
         }
 
-        MainController.sessionMap.put("loginUser", loginUserVo); // 로그인 세션 설정
+        MainController.sessionMap.put("loginUser", loginUserVo);
         System.out.println(loginUserVo.getRole() != 0 ? "관리자 로그인 성공!! \n" : "일반 사용자 로그인 성공!!\n");
-        return Command.USER_HOME; // 사용자 홈으로 이동
+        return Command.USER_HOME;
     }
 
-    // 내 정보 (마이페이지)
+    // 내 정보 (마이페이지) -tw
     public Command myPage() {
         UsersVo loginUser = (UsersVo) MainController.sessionMap.get("loginUser");
         if (loginUser == null) {
             System.out.println("로그인이 필요합니다.");
             return Command.LOGIN;
         }
-        System.out.println();
-        System.out.println("==================== MY PAGE =============================");
-        System.out.print("ID: " + loginUser.getUser_id() +"\t");
-        System.out.print("이름: " + loginUser.getUsername()+"\t");
-        System.out.print("전화번호: " + loginUser.getPhone_number()+"\t");
-        System.out.print("주소: " + loginUser.getAddress()+"\t");
-        System.out.print("E-MAIL: " + loginUser.getEmail()+"\n");
-        System.out.println("==========================================================");
-        
 
-<<<<<<< HEAD
-        return Command.USER_SELF;
-=======
         // 인터페이스 출력
         System.out.println("+==============================+");
         System.out.println("|           MY PAGE            |");
@@ -390,16 +314,10 @@ public class UsersController {
         
         System.out.println("+==============================+");
 
-        return Command.USER_HOME;
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
+        
+
+        return Command.USER_SELF;
     }
 
-
-
-
-    
-
-
-
-
+	
 }
