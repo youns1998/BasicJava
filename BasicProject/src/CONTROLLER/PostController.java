@@ -13,7 +13,7 @@ import UTIL.ScanUtil;
 import VO.*;
 
 public class PostController {
-
+    
 	private static final String ANSI_LIGHT_RED = "\033[38;5;203m"; // 덜한 빨간색
 	private static final String ANSI_BOLD = "\033[1m";
 	private static final String ANSI_RESET = "\033[0m";
@@ -34,7 +34,7 @@ public class PostController {
 			instance = new PostController();
 		return instance;
 	}
-
+	
 	// 상세 게시글 보기
 	public Command detailPost() {
 		int postId = ScanUtil.nextInt("보고싶은 글 번호를 입력하세요: ");
@@ -322,6 +322,7 @@ public class PostController {
 			post.setCategory_id(category);
 			post.setContent(content);
 			post.setCondition(1);
+			
 			post.setUser_id(loginUserVo.getUser_id());
 		}
 		int result = postService.insertPost(post);

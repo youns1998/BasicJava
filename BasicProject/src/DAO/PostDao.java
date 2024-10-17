@@ -14,6 +14,9 @@ import VO.HistoryVo;
 import VO.PostVo;
 
 public class PostDao {
+	public static final int CONDITION_SALE = 1; // 판매중
+    public static final int CONDITION_RESERVED = 2; // 예약중
+    public static final int CONDITION_SOLD_OUT = 3; // 판매완료
 	private Connection con = null;
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
@@ -28,7 +31,6 @@ private void disConnect() {
 		if(ps != null) try { ps.close(); } catch(Exception e) {}
 		if(con != null) try { con.close(); } catch(Exception e) {}
 	}
-
 
 //게시글추가
 	public int insertPost(PostVo PostVo) {

@@ -3,7 +3,7 @@ package VO;
 import java.time.LocalDateTime;
 
 public class PostVo {
-	
+	    
 	private int post_id;
 	private String user_id;
 	private String username;
