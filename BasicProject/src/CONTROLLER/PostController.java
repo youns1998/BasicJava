@@ -368,4 +368,10 @@ public class PostController {
 		}
 		return Command.POST_LIST;
 	}
+	
+	public void updatePostCondition(int postId, String newCondition, String buyerId, String sellerId) {
+        PostService.updatePostCondition(postId, newCondition, buyerId, sellerId);
+        System.out.println("게시물 상태가 업데이트되었습니다.");
+    }
+	
 }

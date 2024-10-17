@@ -6,12 +6,13 @@ import java.util.List;
 
 import UTIL.DBUtil;
 import VO.HistoryVo;
+import DAO.*;
 
 public class HistoryDAO {
 	private Connection con = null;
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
-	
+	private PostDao postdao;
 	private void disConnect() {
 		if(rs != null) try { rs.close(); } catch(Exception e) {}
 		if(ps != null) try { ps.close(); } catch(Exception e) {}
@@ -20,7 +21,7 @@ public class HistoryDAO {
 	
 	//거래 내역 추가
 	public void addTransaction(HistoryVo history) {
-		 String sql = "INSERT INTO TRANSACTION_HISTORY (buyer_id, seller_id, post_id, transaction_date) VALUES (?, ?, ?, ?)";
+		 String sql = "INSERT INTO TRANSACTION (buyer_id, seller_id, post_id, transaction_date) VALUES (?, ?, ?, ?)";
 
 	       try (Connection con = DBUtil.getConnection();
 	            PreparedStatement ps = con.prepareStatement(sql)) {
@@ -39,12 +40,10 @@ public class HistoryDAO {
     }
 	
 	
-	
 	//거래 내역 조회
 	public List<HistoryVo> getTransactionHistory(String userId) {
         List<HistoryVo> historyList = new ArrayList<>();
-        String sql = "SELECT * FROM TRANSACTION_HISTORY WHERE buyer_id = ? OR seller_id = ?";
-
+        String sql = "SELECT * FROM TRANSACTION WHERE AND buyer_id = ? OR seller_id = ?";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
              
@@ -63,10 +62,17 @@ public class HistoryDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+        postdao.checkPostConditionAndAddTransaction(0, userId, userId);
         }
-
         return historyList;
     }
+	
+	
+	
+	
+	
+	
 	//특정 사용자 거래 조회
 	//거래 내역 수정(상태 변경)
 	//거래 내역 삭제

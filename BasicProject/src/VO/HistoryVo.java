@@ -51,8 +51,8 @@ public class HistoryVo {
 	public Date getTransaction_date() {
 		return transaction_date;
 	}
-	public void setTransaction_date(Date transaction_date) {
-		this.transaction_date = transaction_date;
+	public void setTransaction_date(java.util.Date date) {
+		this.transaction_date = (Date) date;
 	}
 	
 	@Override
