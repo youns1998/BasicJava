@@ -55,7 +55,11 @@ public Command categoryInsert() {
     if (result > 0) {
         System.out.println("카테고리 등록 성공.");
     } else {
-        System.out.println("카테고리 등록 실패.");
+    	System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+    			+ "████▌▄▌▄▐▐▌█████\r\n"
+    			+ "████▌▄▌▄▐▐▌▀████\r\n"
+    			+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+    			+ "");
     }
 	return Command.CATEGORY_LIST;
 		
@@ -92,8 +96,11 @@ public Command categoryUpdate() {
 	        System.out.println("카테고리 수정 성공.");
 	        System.out.println();
 	    } else {
-	        System.out.println("카테고리 수정 실패.");
-	        System.out.println();
+	        System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+	        		+ "████▌▄▌▄▐▐▌█████\r\n"
+	        		+ "████▌▄▌▄▐▐▌▀████\r\n"
+	        		+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+	        		+ "");
 	    }
 	    return Command.CATEGORY_LIST;
 	}
@@ -114,8 +121,11 @@ public Command categoryDelete() {
 	        System.out.println("카테고리 삭제 성공.");
 	        System.out.println();
 	    } else {
-	        System.out.println("카테고리 삭제 실패.");
-	        System.out.println();
+	    	System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+	    			+ "████▌▄▌▄▐▐▌█████\r\n"
+	    			+ "████▌▄▌▄▐▐▌▀████\r\n"
+	    			+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+	    			+ "");
 	    }
 	return Command.CATEGORY_LIST;
 	

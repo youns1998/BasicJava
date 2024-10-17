@@ -343,7 +343,11 @@ public class PostController {
 		if (result > 0) {
 			System.out.println("게시글이 성공적으로 등록되었습니다.");
 		} else {
-			System.out.println("게시글 등록에 실패했습니다.");
+			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+					+ "████▌▄▌▄▐▐▌█████\r\n"
+					+ "████▌▄▌▄▐▐▌▀████\r\n"
+					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+					+ "");
 		}
 		return Command.POST_LIST;
 	}

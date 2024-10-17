@@ -105,14 +105,37 @@ public class UsersController {
 
 		if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
 			// 자신이거나 관리자라면 삭제 가능
-			int choice1 = ScanUtil.nextInt("정말로 탈퇴하시겠습니까? \n 탈퇴하시려면 1 입력 \n 돌아가시려면 아무숫자 입력 \n 선택 >> ");
+			System.out.println(".　　　_＿＿＿_\r\n"
+					+ "　　／　　　　＼　\r\n"
+					+ "　／　  _ノ 　ヽ_＼\r\n"
+					+ " ／   　（●）（●）＼\r\n"
+					+ " |　    ///（_人_）///| 참내..\r\n"
+					+ " ＼   　　　 　　    ／\r\n"
+					+ "／　 　　　 　    　＼\r\n"
+					+ "");
+			int choice1 = ScanUtil.nextInt("진짜루?? \n 탈퇴하시려면 1 입력 \n 돌아가시려면 아무숫자 입력 \n 선택 >> ");
+			
 			if (choice1 == 1) {
 				userService.deleteUser(user);
-				System.out.println("회원탈퇴가 정상적으로 되었습니다");
+				System.out.println("............./´¯/)...............(\\¯`\\\r\n"
+						+ "............/....//..............\\\\....\\\r\n"
+						+ ".........../....//................\\\\....\\\r\n"
+						+ "...../´¯/..../´¯\\............./¯`\\....\\¯`\\..\r\n"
+						+ ".././.../..../..../.\\......_|.\\....\\....\\---\\.\\..\r\n"
+						+ "(.(....(....(..../.)...)....(..(.\\....)....)----.).)\r\n"
+						+ ".\\................\\/.../....\\...\\/................/\r\n"
+						+ "..\\................. /........\\................../\r\n"
+						+ "....\\..............(............)............../\r\n"
+						+ "......\\.............\\.........../............./\r\n"
+						+ ".......|..............|..........|..............|\r\n"
+						+ "");
+			}else {
+			System.out.println("좋은 생각입니다 더 좋은 서비스로 보답하겠습니다");
+			
+			return Command.USER_HOME;
 			}
 		}
-		System.out.println("좋은 생각입니다 더 좋은 서비스로 보답하겠습니다");
-		return Command.USER_HOME;
+		return Command.HOME;
 	}
 
 	// 회원 수정 - 관리자용 tw
@@ -124,6 +147,11 @@ public class UsersController {
 		UsersVo uservo = userService.getUserSelect(choice);
 		if (uservo == null) {
 			System.out.println("해당 회원을 찾을 수 없습니다.");
+			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+		+ "████▌▄▌▄▐▐▌█████\r\n"
+		+ "████▌▄▌▄▐▐▌▀████\r\n"
+		+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+		+ "");
 			return Command.UESR_LIST;
 		}
 
@@ -146,6 +174,11 @@ public class UsersController {
 		UsersVo user = userService.getUserSelect(choice);
 		if (user == null) {
 			System.out.println("해당 유저를 찾을 수 없습니다.");
+			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+					+ "████▌▄▌▄▐▐▌█████\r\n"
+					+ "████▌▄▌▄▐▐▌▀████\r\n"
+					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+					+ "");
 			return Command.ADMIN_USERDETAIL;
 		}
 
@@ -188,6 +221,11 @@ public class UsersController {
 
 		} else {
 			System.out.println("해당 회원을 찾을 수 없습니다.");
+			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+					+ "████▌▄▌▄▐▐▌█████\r\n"
+					+ "████▌▄▌▄▐▐▌▀████\r\n"
+					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+					+ "");
 			System.out.println();
 		}
 		return Command.ADMIN_USERDETAIL;
@@ -219,6 +257,11 @@ public class UsersController {
 			userId = ScanUtil.nextLine("아이디 >> ");
 			if (!validateUserId(userId)) {
 				System.out.println("아이디 형식이 올바르지 않습니다. 다시 입력해 주세요.");
+				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+						+ "████▌▄▌▄▐▐▌█████\r\n"
+						+ "████▌▄▌▄▐▐▌▀████\r\n"
+						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+						+ "");
 				continue;
 			}
 			if (isUserIdDuplicated(userId)) {
@@ -233,11 +276,21 @@ public class UsersController {
 			password = ScanUtil.nextLine("비밀번호 >> ");
 			if (!validatePassword(password)) {
 				System.out.println("비밀번호 형식이 올바르지 않습니다. 다시 입력해 주세요.");
+				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+						+ "████▌▄▌▄▐▐▌█████\r\n"
+						+ "████▌▄▌▄▐▐▌▀████\r\n"
+						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+						+ "");
 				continue;
 			}
 			passwordConfirm = ScanUtil.nextLine("비밀번호 확인 >> ");
 			if (!password.equals(passwordConfirm)) {
 				System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해 주세요.");
+				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+						+ "████▌▄▌▄▐▐▌█████\r\n"
+						+ "████▌▄▌▄▐▐▌▀████\r\n"
+						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+						+ "");
 			}
 		} while (!validatePassword(password) || !password.equals(passwordConfirm));
 
@@ -254,6 +307,11 @@ public class UsersController {
 				break;
 			} else {
 				System.out.println("잘못된 인증 코드입니다. 다시 입력하세요.");
+				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+						+ "████▌▄▌▄▐▐▌█████\r\n"
+						+ "████▌▄▌▄▐▐▌▀████\r\n"
+						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+						+ "");
 			}
 		}
 
@@ -303,7 +361,11 @@ public class UsersController {
 				
 				if(count<=0) {
 					
-					System.out.println("인증 실패");
+					System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+							+ "████▌▄▌▄▐▐▌█████\r\n"
+							+ "████▌▄▌▄▐▐▌▀████\r\n"
+							+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+							+ "");
 					return Command.HOME;
 
 				}			
@@ -349,7 +411,11 @@ public class UsersController {
 				
 				if(count<=0) {
 					
-					System.out.println("인증 실패");
+					System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+							+ "████▌▄▌▄▐▐▌█████\r\n"
+							+ "████▌▄▌▄▐▐▌▀████\r\n"
+							+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
+							+ "");
 					return Command.HOME;
 
 				}			
