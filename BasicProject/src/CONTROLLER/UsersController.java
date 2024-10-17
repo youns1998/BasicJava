@@ -194,10 +194,10 @@ public class UsersController {
 
     // 회원가입 tw
     public Command join() {
-
         System.out.println("==================== 회원가입 ======================");
         System.out.println("아이디는 영문자와 숫자로 이루어져야 하며, 길이는 4~12자여야 합니다.");
 
+        // 아이디 입력 및 유효성 검사
         String userId;
         do {
             userId = ScanUtil.nextLine("아이디 >> ");
@@ -210,8 +210,9 @@ public class UsersController {
             }
         } while (!validateUserId(userId) || isUserIdDuplicated(userId));
 
+        // 비밀번호 입력 및 유효성 검사
         System.out.println("비밀번호는 영문자와 숫자로 이루어져야 하며, 길이는 8~20자여야 합니다.");
-        String password, passwordConfirm = null;
+        String password, passwordConfirm=null;
         do {
             password = ScanUtil.nextLine("비밀번호 >> ");
             if (!validatePassword(password)) {
@@ -224,18 +225,36 @@ public class UsersController {
             }
         } while (!validatePassword(password) || !password.equals(passwordConfirm));
 
-        String userName = ScanUtil.nextLine("이름 >> ");
-        System.out.println("이메일을 추후 ID와 PW를 찾을때 필요하니 본인 이메일로 가입해주세요");
+        // 이메일 입력 및 인증 처리
         String email = ScanUtil.nextLine("이메일 >> ");
+        VerificationController verificationController = VerificationController.getInstance();
+        verificationController.sendVerificationCode(email);
+
+        // 인증 코드 입력 및 확인
+        while (true) {
+            String code = ScanUtil.nextLine("인증 코드 >> ");
+            if (verificationController.verifyCode(email, code)) {
+                System.out.println("이메일 인증에 성공했습니다.");
+                break;
+            } else {
+                System.out.println("잘못된 인증 코드입니다. 다시 입력하세요.");
+            }
+        }
+
+        // 나머지 회원가입 정보 입력
+        String userName = ScanUtil.nextLine("이름 >> ");
         String phoneNumber = ScanUtil.nextLine("전화번호 >> ");
         String address = ScanUtil.nextLine("주소 >> ");
 
+        // 사용자 객체 생성 및 회원가입 처리
         UsersVo userVo = new UsersVo(userId, password, userName, address, email, phoneNumber);
         int result = userService.addUser(userVo);
 
+        // 회원가입 성공 여부 출력
         System.out.println(result > 0 ? "회원가입 성공!!" : "회원가입 실패!!");
         return Command.HOME;
     }
+
     
     // 비번 찾기 tw
     public Command findUserPass() {

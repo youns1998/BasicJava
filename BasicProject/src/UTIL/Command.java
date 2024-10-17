@@ -49,7 +49,10 @@ public enum Command {
 	// 댓글 
 	COMMENT_INSERT,	// 댓글 추가
 	COMMENT_UPDATE,	// 댓글 수정
-	COMMENT_DELETE	// 댓글 삭제
+	COMMENT_DELETE,	// 댓글 삭제
+	
+	
+    VERIFY_CODE //인증 코드
 	
 }
 
