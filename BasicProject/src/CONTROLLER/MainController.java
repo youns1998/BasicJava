@@ -112,8 +112,8 @@ public class MainController {
 		}
 	}
 	private Command home() {
-		
-		System.out.println(ANSI_BROWN+"      ■■■■■■■■    ■       ■  ");
+		 
+		System.out.println(ANSI_BROWN+"            ■■■■■■■■    ■       ■  ");
         System.out.println("            ■       ■   ■■     ■■  ");
         System.out.println("            ■■■■■■■■    ■  ■ ■  ■  ");
         System.out.println("            ■           ■   ■   ■  ");
