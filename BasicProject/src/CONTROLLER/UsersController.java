@@ -44,7 +44,7 @@ public class UsersController {
              + ", 이메일: " + user.getEmail() + ", 관리자: " + user.getRole());
          }
          System.out.println("======================================================");
-    	int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.찜 목록 조회 5.쓴 게시물 조회 6.쓴 댓글 조회 0.뒤로가기");
+    	int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.찜 목록 조회 5.쓴 게시물 조회 6.쓴 댓글 조회 0.뒤로가기\n메뉴 선택 >> ");
     	switch(input) {
     	case 1: return Command.ADMIN_USER;
     	case 2: return Command.USER_UPDATE;
@@ -59,7 +59,7 @@ public class UsersController {
     }
     //내 정보 관리 - 사용자용 tw
     public Command userSelf() {
-    	int choice = ScanUtil.nextInt("1. 개인 정보 수정 2.내가 쓴 글 보기 3.내가 쓴 댓글 보기 4.회원 탈퇴 0.돌아가기");
+    	int choice = ScanUtil.nextInt("1. 개인 정보 수정 2.내가 쓴 글 보기 3.내가 쓴 댓글 보기 4.회원 탈퇴 0.돌아가기\n메뉴 선택 >> ");
     	switch(choice) {
     	case 1: return Command.USER_SELFUPDATE;
     	case 2: return Command.POST_SELF;
@@ -92,7 +92,7 @@ public class UsersController {
 
         if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
             // 자신이거나 관리자라면 삭제 가능
-        	int choice1 = ScanUtil.nextInt("정말로 탈퇴하시겠습니까? \n 탈퇴하시려면 1 입력 \n 돌아가시려면 아무숫자 입력");
+        	int choice1 = ScanUtil.nextInt("정말로 탈퇴하시겠습니까? \n 탈퇴하시려면 1 입력 \n 돌아가시려면 아무숫자 입력 \n 선택 >> ");
         	if(choice1==1) {
         		userService.deleteUser(user);
         		System.out.println("회원탈퇴가 정상적으로 되었습니다");
