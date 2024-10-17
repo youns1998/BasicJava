@@ -10,6 +10,7 @@ import java.util.List;
 import UTIL.Command;
 import UTIL.DBUtil;
 import UTIL.ScanUtil;
+import VO.HistoryVo;
 import VO.PostVo;
 
 public class PostDao {
@@ -260,15 +261,52 @@ public int deletePost(int post_id) {
 		return cnt;
  }
 
+// 특정 게시물의 상태를 확인하고 거래 완료 시 거래 내역 추가
+public void checkPostConditionAndAddTransaction(int postId, String buyerId, String sellerId) {
+    String sql = "SELECT CONDITION FROM POST WHERE post_id = ?";
+    String condition = null;
+
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+         
+        ps.setInt(1, postId);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            condition = rs.getString("CONDITION");
+        }
+
+        if ("거래완료".equals(condition)) {
+            HistoryVo history = new HistoryVo();
+            history.setBuyer_id(buyerId);
+            history.setSeller_id(sellerId);
+            history.setPost_id(postId);
+            history.setTransaction_date(new java.util.Date()); // 현재 시간
+
+            HistoryDAO historyDAO = new HistoryDAO();
+            historyDAO.addTransaction(history);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
 // 거래상태 업데이트 
-public void updatePostConditionInDatabase(int postId, String newCondition) {
-    String sql = "UPDATE POST SET CONDITION = ? WHERE ID = ?";
+public static void updatePostCondition(int postId, String newCondition, String buyerId, String sellerId) {
+    String sql = "UPDATE POST SET CONDITION = ? WHERE post_id = ?";
+    
     try (Connection con = DBUtil.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
          
         ps.setString(1, newCondition);
         ps.setInt(2, postId);
         ps.executeUpdate();
+
+        // 상태 변경 후 거래 내역 추가 확인
+        PostDao postDAO = new PostDao();
+        postDAO.checkPostConditionAndAddTransaction(postId, buyerId, sellerId);
+
     } catch (SQLException e) {
         e.printStackTrace();
     }

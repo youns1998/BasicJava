@@ -26,9 +26,9 @@ public class PostService {
 		}
 	//-----------------------------------------------------------
 	
-	// 거래 상태 업데이트 메서드
-	  public void updatePostCondition(int postId, String newCondition, String buyerId, String sellerId) {
-	       dao.updatePostConditionInDatabase(postId, newCondition);
+		 // 게시물 상태 업데이트
+	    public static void updatePostCondition(int postId, String newCondition, String buyerId, String sellerId) {
+	        PostDao.updatePostCondition(postId, newCondition, buyerId, sellerId);
 	       
 	// 거래 상태가 "거래완료"인 경우 거래 내역 추가
 	   if ("거래완료".equals(newCondition)) {
