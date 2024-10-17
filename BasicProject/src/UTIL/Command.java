@@ -15,11 +15,16 @@ public enum Command {
 	UESR_LIST,		// 회원 리스트 화면 
 	LOGIN,			// 로그인
 	JOIN,   		// 회원가입
-	MYPAGE, 		// 내 정보 수정
+	MYPAGE, 		// 내 정보 보기
 	S_ID,			// ID 찾기
 	S_PW,			// PW 찾기
-	USER_UPDATE,	//회원 정보 수정
-	USER_DELETE,	//회원 정보 삭제
+	USER_SELF,		// 회원 정보 수정 화면 - 사용자용
+	USER_UPDATE,	// 회원 정보 수정 -관리자용
+	USER_DELETE,	// 회원 정보 삭제 - 관리자용
+	
+	USER_SELFUPDATE, // 사용자의 회원 정보 수정 - 사용자용
+	USER_SELFDELETE, // 사용자의 회원 탈퇴 - 사용자용
+	USER_FAVORITE,  // 회원의 찜목록 보기
 	// 카테고리 관련
 	CATEGORY_LIST,		// 카테고리
 	CATEGORY_INSERT, 	// 카테고리 추가

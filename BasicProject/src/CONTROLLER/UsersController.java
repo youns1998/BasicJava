@@ -2,9 +2,11 @@ package CONTROLLER;
 
 import java.util.List;
 
+import SERVICE.FavoriteService;
 import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
+import VO.FavoriteVo;
 import VO.UsersVo;
 
 public class UsersController {
@@ -21,7 +23,7 @@ public class UsersController {
         return instance;
     }
 
-    // 전체 회원 출력 (관리자용)
+    // 전체 회원 출력 (관리자용) tw
     public Command userList() {
         List<UsersVo> users = userService.getPostList();
         if (users.isEmpty()) {
@@ -32,7 +34,7 @@ public class UsersController {
         
         return Command.ADMIN_USERDETAIL;
     }	
-    //회원관리 - 조회할 회원 ID 입력 후 나타나는 화면
+    //회원관리 - 관리자용 /  조회할 회원 ID 입력 후 나타나는 화면 tw
     public Command userdetail() {
     	 System.out.println("전체 유저 리스트");
     	 List<UsersVo> users = userService.getPostList();
@@ -47,7 +49,7 @@ public class UsersController {
     	case 1: return Command.ADMIN_USER;
     	case 2: return Command.USER_UPDATE;
     	case 3: return Command.USER_DELETE;
-    	case 4:
+    	case 4: return Command.USER_FAVORITE;
     	case 5:
     	case 6:
     	case 0:
@@ -55,7 +57,51 @@ public class UsersController {
     	
     	return Command.USER_HOME;
     }
-    //회원 수정
+    //내 정보 관리 - 사용자용 tw
+    public Command userSelf() {
+    	int choice = ScanUtil.nextInt("1. 개인 정보 수정 2.내가 쓴 글 보기 3.내가 쓴 댓글 보기 4.회원 탈퇴 0.돌아가기");
+    	switch(choice) {
+    	case 1: return Command.USER_SELFUPDATE;
+//    	case 2: return
+//    	case 3: return 
+    	case 4: return Command.USER_SELFDELETE;
+    	}
+    	return Command.USER_HOME;
+    }
+    //개인정보 수정 - 사용자용tw
+    public Command userSelfUpdate() {
+   	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+        String choice = loginUserVo.getUser_id();
+        UsersService userService = UsersService.getInstance();
+        UsersVo uservo = userService.getUserSelect(choice); 
+        userService.updateUser(uservo);
+        System.out.println("회원 수정이 끝났습니다");
+        
+        if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+        } 
+   	
+   	return Command.USER_HOME;
+   }
+   //회원 탈퇴 - 사용자용 tw
+   public Command userSelfDelete() {
+   	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+        String choice = loginUserVo.getUser_id();
+        UsersService userService = UsersService.getInstance();
+        
+        UsersVo user = userService.getUserSelect(choice);
+
+        if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+            // 자신이거나 관리자라면 삭제 가능
+        	int choice1 = ScanUtil.nextInt("정말로 탈퇴하시겠습니까? \n 탈퇴하시려면 1 입력 \n 돌아가시려면 아무숫자 입력");
+        	if(choice1==1) {
+        		userService.deleteUser(user);
+        		System.out.println("회원탈퇴가 정상적으로 되었습니다");
+        	}
+        } 
+        System.out.println("좋은 생각입니다 더 좋은 서비스로 보답하겠습니다");
+   	return Command.USER_HOME;
+   }
+    //회원 수정 - 관리자용 tw
     public Command userUpdate() {
     	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
          String choice = ScanUtil.nextLine("수정할 회원 ID를 입력하세요: ");
@@ -67,16 +113,16 @@ public class UsersController {
              return Command.UESR_LIST; 
          }
          
-         // 사용자 권한 확인
+         // 사용자 권한 확인 tw
          if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-             // 수정 진행
+             // 수정 진행 tw
              userService.updateUser(uservo);
              System.out.println("선택한 회원이 수정되었습니다");
          } 
     	
     	return Command.ADMIN_USERDETAIL;
     }
-    //회원 삭제
+    //회원 삭제 - 관리자용 tw
     public Command userDelete() {
     	 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
          String choice = ScanUtil.nextLine("삭제할 회원 ID를 입력하세요: ");
@@ -89,7 +135,7 @@ public class UsersController {
              return Command.ADMIN_USERDETAIL;
          }
 
-         // 사용자 권한 확인
+         // 사용자 권한 확인 tw
          if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
              // 자신이거나 관리자라면 삭제 가능
              userService.deleteUser(user);
@@ -98,7 +144,20 @@ public class UsersController {
     	
     	return Command.ADMIN_USERDETAIL;
     }
-    // 회원 상세보기
+    // 회원 찜목록 상세보기 - 관리자용 tw
+    public Command userFavorites() {
+    	 String userId = ScanUtil.nextLine("찜 목록을 볼 회원 ID를 입력하세요: ");
+         UsersVo user = userService.getUserSelect(userId);
+         if (user != null) {
+        	 System.out.println("회원 ID: " + user.getUser_id());
+        	 System.out.println("찜 목록:");
+        	return Command.USER_FAVORITE;
+         }
+    	return Command.USER_FAVORITE;
+    }
+    // 회원별 게시물 리스트 보기  tw
+    
+    // 회원 상세보기 tw
     public Command userSelect() {
         String userId = ScanUtil.nextLine("조회할 회원 ID를 입력하세요: ");
         UsersVo user = userService.getUserSelect(userId);
@@ -109,6 +168,7 @@ public class UsersController {
             System.out.println("전화번호: " + user.getPhone_number());
             System.out.println("이메일: " + user.getEmail());
             System.out.println();
+          
         } else {
             System.out.println("해당 회원을 찾을 수 없습니다.");
             System.out.println();
@@ -116,26 +176,26 @@ public class UsersController {
         return Command.ADMIN_USERDETAIL;
     }
 
-    // 아이디 중복 확인 메서드
+    // 아이디 중복 확인 메서드t w
     private boolean isUserIdDuplicated(String userId) {
         return userService.getUserSelect(userId) != null;
     }
 
-    // 아이디 및 비밀번호 형식 검증 메서드
+    // 아이디 및 비밀번호 형식 검증 메서드 tw
     private boolean validateUserId(String userId) {
         return userId.matches("^[a-zA-Z0-9]{4,12}$");
     }
 
- // 비밀번호 형식 검증 메서드
+ // 비밀번호 형식 검증 메서드 tw
     private boolean validatePassword(String password) {
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$");
     }
 
 
-    // 회원가입
- // 회원가입 메서드
+    // 회원가입 tw
     public Command join() {
-        System.out.println("=========== 회원가입 =============");
+
+        System.out.println("==================== 회원가입 ======================");
         System.out.println("아이디는 영문자와 숫자로 이루어져야 하며, 길이는 4~12자여야 합니다.");
 
         String userId;
@@ -165,6 +225,7 @@ public class UsersController {
         } while (!validatePassword(password) || !password.equals(passwordConfirm));
 
         String userName = ScanUtil.nextLine("이름 >> ");
+        System.out.println("이메일을 추후 ID와 PW를 찾을때 필요하니 본인 이메일로 가입해주세요");
         String email = ScanUtil.nextLine("이메일 >> ");
         String phoneNumber = ScanUtil.nextLine("전화번호 >> ");
         String address = ScanUtil.nextLine("주소 >> ");
@@ -176,7 +237,7 @@ public class UsersController {
         return Command.HOME;
     }
     
-    // 비번 찾기
+    // 비번 찾기 tw
     public Command findUserPass() {
         String userId = ScanUtil.nextLine("아이디를 입력하세요 : ");
         String name = ScanUtil.nextLine("이름을 입력하세요 : ");
@@ -192,7 +253,7 @@ public class UsersController {
     	return Command.HOME;
     }
     
-    // 아이디 찾기 
+    // 아이디 찾기 tw
     public Command findUserId() {
     	String name = ScanUtil.nextLine("이름을 입력하세요 : ");
     	String email = ScanUtil.nextLine("이메일을 입력하세요 : ");
@@ -206,9 +267,9 @@ public class UsersController {
     	}		
     	return Command.HOME;
 }
-    // 로그인
+    // 로그인 tw
     public Command login() {
-        System.out.println("============== 로그인 ===============");
+        System.out.println("==================== 로그인 ======================");
 
         if (MainController.sessionMap.get("loginUser") != null) {
             System.out.println("이미 로그인된 상태입니다.");
@@ -225,11 +286,12 @@ public class UsersController {
         }
 
         MainController.sessionMap.put("loginUser", loginUserVo);
-        System.out.println(loginUserVo.getRole() != 0 ? "관리자 로그인 성공!! \n" : "일반 사용자 로그인 성공!!\n");
+        System.out.println();
+        System.out.println(loginUserVo.getRole() != 0 ? "#관리자 로그인 성공!!# " : "#일반 사용자 로그인 성공!!#");
         return Command.USER_HOME;
     }
 
-    // 내 정보 (마이페이지)
+    // 내 정보 (마이페이지) -tw
     public Command myPage() {
         UsersVo loginUser = (UsersVo) MainController.sessionMap.get("loginUser");
         if (loginUser == null) {
@@ -237,14 +299,26 @@ public class UsersController {
             return Command.LOGIN;
         }
 
-        System.out.println("============== MY PAGE ====================");
-        System.out.println("ID: " + loginUser.getUser_id());
-        System.out.println("이름: " + loginUser.getUsername());
-        System.out.println("E-MAIL: " + loginUser.getEmail());
-        System.out.println("전화번호: " + loginUser.getPhone_number());
-        System.out.println("주소: " + loginUser.getAddress());
+        // 인터페이스 출력
+        System.out.println("+==============================+");
+        System.out.println("|           MY PAGE            |");
+        System.out.println("+------------------------------+");
+        
+        System.out.printf("   %-8s         %-15s \n", "ID", loginUser.getUser_id());
+        System.out.println("|-----------|------------------|");
+        System.out.printf("   %-8s         %-15s \n", "이름", loginUser.getUsername());
+        System.out.println("|-----------|------------------|");
+        System.out.printf("   %-8s         %-15s \n", "E-MAIL", loginUser.getEmail());
+        System.out.println("|-----------|------------------|");
+        System.out.printf("   %-8s         %-15s \n", "전화번호", loginUser.getPhone_number());
+        System.out.println("|-----------|------------------|");
+        System.out.printf("   %-8s         %-15s \n", "주소", loginUser.getAddress());
+        
+        System.out.println("+==============================+");
 
-        return Command.USER_HOME;
+        
+
+        return Command.USER_SELF;
     }
 
 	

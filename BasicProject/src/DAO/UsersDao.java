@@ -62,8 +62,8 @@ public class UsersDao {
 	}
 	 // 선택 수정 메서드
     public void updateUserSelect(UsersVo uservo) {
-    	
-        while (true) {
+    	boolean exit = true;
+        while (exit) {
         	System.out.println();
             System.out.println("수정할 항목을 선택하세요 >>");
             System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 0.뒤로가기");
@@ -94,13 +94,15 @@ public class UsersDao {
                     String newemail = ScanUtil.nextLine();	
                     uservo.setEmail(newemail);
                     return;
+                case 0:
+                	break;
                 default:
                     System.out.println("잘못된 선택입니다. 다시 시도하세요.");
                     continue;
             }
 
             // 수정된 내용을 데이터베이스에 반영
-            try {
+            if(choice!=0){try {
                 int result = updateUser(uservo); // 게시물 업데이트
                 if (result > 0) {
                     System.out.println("회원 정보가 수정되었습니다.\n "
@@ -112,9 +114,12 @@ public class UsersDao {
                 } else {
                     System.out.println("회원정보 수정에 실패했습니다.");
                 }
-            } catch (Exception e) {
+            } 
+            catch (Exception e) {
                 e.printStackTrace();
             }
+            }
+            exit = false;
         }
     }
 	// 로그인 

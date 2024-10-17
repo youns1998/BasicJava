@@ -13,6 +13,8 @@ import VO.UsersVo;
 public class MainController {
 	
 	public static Map<String, Object> sessionMap = new HashMap<>();   
+    public static final String ANSI_BROWN = "\033[38;5;136m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
 	private UsersController usersController;
 	private CategoryController categoryController;
@@ -46,8 +48,11 @@ public class MainController {
 				case UESR_LIST: cmd =usersController.userList(); break;
 				case ADMIN_USER: cmd = usersController.userSelect(); break;
 				case ADMIN_USERDETAIL: cmd = usersController.userdetail(); break;
-				case USER_UPDATE: cmd =usersController.userUpdate(); break;
-				case USER_DELETE: cmd = usersController.userDelete(); break;
+				case USER_UPDATE: cmd =usersController.userUpdate(); break; //관리자용
+				case USER_DELETE: cmd = usersController.userDelete(); break; //관리자용
+				case USER_SELF: cmd = usersController.userSelf(); break;
+				case USER_SELFUPDATE: cmd =usersController.userSelfUpdate(); break; //사용자용
+				case USER_SELFDELETE: cmd = usersController.userSelfDelete(); break; //사용자용
 				case S_ID: cmd = usersController.findUserId(); break;
 				case S_PW: cmd = usersController.findUserPass(); break;
 				// 로그인 후
@@ -81,7 +86,9 @@ public class MainController {
 				case CATEGORY_DELETE: cmd = categoryController.categoryDelete(); break;
 
 //				 관심 물품 보기
-				case FAVORITE_LIST: cmd = favoriteController.displayMenu(); break;
+				case FAVORITE_LIST: cmd = favoriteController.viewFavorites(); break;
+				case FAVORITE_DELETE: cmd = favoriteController.displayMenu(); break;
+				case USER_FAVORITE: cmd = favoriteController.viewFavorites(); break;
 				case FAVORITE_INSERT:
 				    Integer postId = (Integer) MainController.sessionMap.get("currentPostId");
 				    if (postId != null) {
@@ -105,26 +112,30 @@ public class MainController {
 		}
 	}
 	private Command home() {
-		System.out.println("##############################################");
-		System.out.println("#     땅 콩 마 켓 에 오 신 것 을 환 영 합 니 다     # ");
-		System.out.println("##############################################");
+		System.out.println(ANSI_BROWN + "           ■■■■■■■■    ■       ■  ");
+        System.out.println("           ■       ■   ■■     ■■  ");
+        System.out.println("           ■■■■■■■■    ■  ■ ■  ■  ");
+        System.out.println("           ■           ■   ■   ■  ");
+        System.out.println("           ■   eanut   ■       ■  arket" + ANSI_RESET);
 
-		System.out.println("1.로그인  2.회원가입  3.ID찾기  4.비밀번호찾기 0.나가기 ");
-		System.out.println("----------------------------------------------");
-		System.out.println();
-		int input = ScanUtil.nextInt("메뉴 선택 >>");
-		System.out.println();
-		switch (input) {
-			case 1: return Command.LOGIN;
-			case 2: return Command.JOIN;
-			case 3: return Command.S_ID;
-			case 4: return Command.S_PW;
-			case 0: return Command.END;
-			default:
-				System.out.println("잘못된 입력입니다. 다시 선택해 주세요.");
-				return Command.HOME;
-		}
+	    System.out.println("------------------------------------------------");
+	    System.out.println("  1.로그인  2.회원가입  3.ID찾기  4.비밀번호찾기  0.나가기 ");
+	    System.out.println("------------------------------------------------");
+	    System.out.println();
+	    int input = ScanUtil.nextInt("메뉴 선택 >> ");
+	    System.out.println();
+	    switch (input) {
+	        case 1: return Command.LOGIN;
+	        case 2: return Command.JOIN;
+	        case 3: return Command.S_ID;
+	        case 4: return Command.S_PW;
+	        case 0: return Command.END;
+	        default:
+	            System.out.println("잘못된 입력입니다. 다시 선택해 주세요.");
+	            return Command.HOME;
+	    }
 	}
+
 		
 	
 	
@@ -136,7 +147,7 @@ public class MainController {
 		if(loginUserVo.getRole()!=0)
 			return Command.ADMIN_HOME;
 		System.out.println();
-		System.out.print(loginUserVo.getUsername() + "님 반가워요");
+		System.out.print(loginUserVo.getUsername() + "님 반가워요 ");
 		System.out.println("아래 메뉴에서 작업할 번호를 선택하세요.");
 		System.out.println("-----------------------------------------------------------------------");
 		System.out.println("1.중고장터보기\t2.내정보보기\t3.관심상품보기\t4.나의거래내역\t0.로그아웃");

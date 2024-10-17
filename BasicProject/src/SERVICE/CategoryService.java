@@ -5,7 +5,6 @@ import java.util.List;
 
 import DAO.CategoryDAO;
 import VO.CategoryVo;
-import VO.UsersVo;
 
 public class CategoryService {
 private CategoryDAO dao;
@@ -37,8 +36,9 @@ private CategoryDAO dao;
 		     return dao.getCategory(category_Id);
 	    }
 		 
-		public int UpdateCategory(CategoryVo cate) {
-			return dao.UpdateCategory(cate);
+		public int UpdateCategory(CategoryVo cate, int newid) {
+			
+			return dao.UpdateCategory(cate,newid);
 		}
 		
 		public int DeleteCategory(CategoryVo cate) {

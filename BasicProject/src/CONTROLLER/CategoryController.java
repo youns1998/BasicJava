@@ -34,8 +34,12 @@ public Command categoryList() {
 	 if(choice==2)
 		 return Command.CATEGORY_UPDATE;
 	 if(choice==3)
-		 return Command.COMMENT_DELETE;
+		 return Command.CATEGORY_DELETE;
 	return Command.USER_HOME;
+}
+public Command categoryDetail() {
+	
+	return Command.CATEGORY_LIST;
 }
 	//카테고리 추가
 public Command categoryInsert() {
@@ -67,25 +71,28 @@ public Command categoryUpdate() {
 	        System.out.println("해당 분류번호는 없습니다. 다시 선택하세요");
 	        return Command.CATEGORY_UPDATE;
 	    }
+	    System.out.println("현재 카테고리 ID : " + cate.getCategory_id());
 	    int newid = ScanUtil.nextInt("새로운 분류번호 입력 >>");
+	    
 	    if (newid == cate.getCategory_id()) {
 	        System.out.println("입력한 분류번호가 현재 카테고리 번호와 같습니다. 다시 선택하세요");
 	        return Command.CATEGORY_UPDATE;
 	    }
+	    System.out.println(cateservice.isCategoryIdExists(newid));
 	    if (cateservice.isCategoryIdExists(newid)) {
 	        System.out.println("이미 다른 카테고리에서 사용 중인 분류번호입니다. 다시 선택하세요.");
 	        return Command.CATEGORY_UPDATE;
 	    }
+	    
 	    String newname = ScanUtil.nextLine("새로운 카테고리 이름 입력 >>");
-	    cate.setCategory_id(newid);
 	    cate.setCategory_name(newname);
 	    
-	    int result = cateservice.UpdateCategory(cate);
+	    int result = cateservice.UpdateCategory(cate,newid);
 	    if (result > 0) {
-	        System.out.println("카테고리가 수정 성공.");
+	        System.out.println("카테고리 수정 성공.");
 	        System.out.println();
 	    } else {
-	        System.out.println("카테고리 수정에 실패.");
+	        System.out.println("카테고리 수정 실패.");
 	        System.out.println();
 	    }
 	    return Command.CATEGORY_LIST;
@@ -94,7 +101,22 @@ public Command categoryUpdate() {
 	//카테고리 삭제
 public Command categoryDelete() {
 	 CategoryService cateservice = CategoryService.getInstance();
-	 
+	  System.out.println("카테고리 수정 화면");
+	    int id = ScanUtil.nextInt("삭제 할 분류번호 입력 >>");
+	    CategoryVo cate = cateservice.getCategorySelect(id);
+	    
+	    if (cate==null) { 
+	        System.out.println("해당 분류번호는 없습니다. 다시 선택하세요");
+	        return Command.CATEGORY_UPDATE;
+	    }
+	    int result = cateservice.DeleteCategory(cate);
+	    if (result > 0) {
+	        System.out.println("카테고리 삭제 성공.");
+	        System.out.println();
+	    } else {
+	        System.out.println("카테고리 삭제 실패.");
+	        System.out.println();
+	    }
 	return Command.CATEGORY_LIST;
 	
 }
