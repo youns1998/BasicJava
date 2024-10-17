@@ -335,9 +335,9 @@ public class UsersController {
 		String userId = ScanUtil.nextLine("비밀번호를 찾을 계정의 아이디를 입력하세요 >> ");
 		String email = ScanUtil.nextLine("등록된 이메일 주소를 입력해 주세요 >> ");
 		boolean istrue = userService.iDisMatch(userId, email);// 등록된 메일이 존재하는지
-		int count=3;
+		int count = 3;
 
-		if (istrue&&(count>0)) {
+		if (istrue && (count > 0)) {
 			VerificationController verificationController = VerificationController.getInstance();
 			verificationController.sendVerificationCode(email);
 
@@ -345,39 +345,40 @@ public class UsersController {
 				String code = ScanUtil.nextLine("인증 코드 >> ");
 				if (verificationController.verifyCode(email, code)) {
 					System.out.println("이메일 인증에 성공했습니다.");
-					
+
 					UsersVo user = userService.findUserPass(userId, email);
 					if (user != null) {
-			    		System.out.println("찾은 비밀번호: " + user.getUser_pass());
-			    	} else {
-			    		System.out.println("해당 정보로 비밀번호를 찾을 수 없습니다.");
-			    	}	
-					
+						System.out.println("찾은 비밀번호: " + user.getUser_pass());
+					} else {
+						System.out.println("해당 정보로 비밀번호를 찾을 수 없습니다.");
+					}
+
 					break;
 				} else {
 					count--;
-					System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 "+count+"회\n");
+					System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 " + count + "회\n");
 				}
-				
-				if(count<=0) {
-					
+
+				if (count <= 0) {
 					System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
 							+ "████▌▄▌▄▐▐▌█████\r\n"
 							+ "████▌▄▌▄▐▐▌▀████\r\n"
 							+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
 							+ "");
-					return Command.HOME;
-
-				}			
+					String retry = ScanUtil.nextLine("다시 인증하시겠습니까? (y/n) >> ");
+					if (retry.equalsIgnoreCase("y")) {
+						count = 3; // 기회를 다시 초기화
+						verificationController.sendVerificationCode(email); // 재전송
+					} else {
+						return Command.HOME; // HOME으로 이동
+					}
+				}
 			}
-		} 
-		else {
+		} else {
 			System.out.println("동록된 이메일이 아닙니다.");
 			return Command.HOME;
 		}
 
- 
-        	
 		return Command.HOME;
 	}
 
@@ -385,9 +386,9 @@ public class UsersController {
 	public Command findUserId() {
 		String email = ScanUtil.nextLine("찾고싶은 계정의 이메일 주소를 입력해 주세요 >> ");
 		boolean istrue = userService.EmailisMatch(email);
-		int count=3;
+		int count = 3;
 
-		if (istrue&&(count>0)) {
+		if (istrue && (count > 0)) {
 			VerificationController verificationController = VerificationController.getInstance();
 			verificationController.sendVerificationCode(email);
 
@@ -395,37 +396,41 @@ public class UsersController {
 				String code = ScanUtil.nextLine("인증 코드 >> ");
 				if (verificationController.verifyCode(email, code)) {
 					System.out.println("이메일 인증에 성공했습니다.");
-					
+
 					UsersVo user = userService.findUserId(email);
 					if (user != null) {
-			    		System.out.println("찾은 아이디: " + user.getUser_id());
-			    	} else {
-			    		System.out.println("해당 정보로 아이디를 찾을 수 없습니다.");
-			    	}	
-					
+						System.out.println("찾은 아이디: " + user.getUser_id());
+					} else {
+						System.out.println("해당 정보로 아이디를 찾을 수 없습니다.");
+					}
+
 					break;
 				} else {
 					count--;
-					System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 "+count+"회\n");
+					System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 " + count + "회\n");
 				}
-				
-				if(count<=0) {
-					
+
+				if (count <= 0) {
 					System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
 							+ "████▌▄▌▄▐▐▌█████\r\n"
 							+ "████▌▄▌▄▐▐▌▀████\r\n"
 							+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
 							+ "");
-					return Command.HOME;
-
-				}			
+					String retry = ScanUtil.nextLine("다시 인증하시겠습니까? (y/n) >> ");
+					if (retry.equalsIgnoreCase("y")) {
+						count = 3; // 기회를 다시 초기화
+						verificationController.sendVerificationCode(email); // 재전송
+					} else {
+						return Command.HOME; // HOME으로 이동
+					}
+				}
 			}
-		} 
-	
+		}
+
 		else {
 			System.out.println("등록된 이메일이 아닙니다.");
 			return Command.HOME;
-	    }
+		}
 		return Command.HOME;
 	}
 
