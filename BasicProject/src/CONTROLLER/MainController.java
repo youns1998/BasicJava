@@ -68,7 +68,7 @@ public class MainController {
 				        cmd = postController.detailPost(currentPostId); // 이미 보고 있는 게시글 ID로 이동
 				    } else {
 				        cmd = postController.detailPost(); // 처음 접근 시 글 번호를 입력받아야 함
-				    }ㅇ
+				    }
 				    break;
 				case POST_SELF: cmd = postController.userPost(); break; //내가 쓴 게시글 보기
 				case POST_ADMIN: cmd = postController.adminPost(); break; //관리자가 회원이 쓴 게시글 보기
