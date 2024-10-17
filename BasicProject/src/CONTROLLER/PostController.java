@@ -40,6 +40,10 @@ public class PostController {
 		return detailPost(postId);
 	}
 
+	
+	
+	
+	
 	public Command detailPost(int postId) {
 		PostService postService = PostService.getInstance();
 		CommentsService commentsService = CommentsService.getInstance();
@@ -76,27 +80,51 @@ public class PostController {
 		return commentMenu(postId);
 	}
 
+	
+	
+	
+	
+	
+	
 	// 댓글 메뉴 메서드
 	private Command commentMenu(int postId) {
-		System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
-		int choice = ScanUtil.nextInt();
+	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	    PostService postService = PostService.getInstance();
+	    PostVo post = postService.getPost(postId);
 
-		switch (choice) {
-		case 1:
-			return commentController.insertComment(postId);
-		case 2:
-			return commentController.updateComment(postId);
-		case 3:
-			return commentController.deleteComment(postId);
-		case 4:
-			return favoriteController.addFavorite(postId); 
-		case 0:
-			return returnToPostList();
-		default:
-			System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-			return commentMenu(postId);
-		}
+	    System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
+
+	    if (post.getUser_id().equals(loginUserVo.getUser_id())) {
+	        System.out.println("5. 판매글 수정");
+	    }
+
+	    int choice = ScanUtil.nextInt();
+
+	    switch (choice) {
+	    case 1:
+	        return commentController.insertComment(postId);
+	    case 2:
+	        return commentController.updateComment(postId);
+	    case 3:
+	        return commentController.deleteComment(postId);
+	    case 4:
+	        return favoriteController.addFavorite(postId);
+	    case 5:
+	        if (post.getUser_id().equals(loginUserVo.getUser_id())) {
+	            return postUpdate(postId); // 게시물 ID를 자동으로 전달하여 수정 화면으로 이동
+	        } else {
+	            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+	        }
+	        return commentMenu(postId);
+	    case 0:
+	        return returnToPostList();
+	    default:
+	        System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+	        return commentMenu(postId);
+	    }
 	}
+
+
 
 	// 댓글, 수정, 삭제 기능을 유지
 	private Command viewComments(int postId) {
@@ -294,12 +322,11 @@ public class PostController {
 		            case 0: return Command.USER_HOME;
 		        }
 		    } else {
-		        int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 \n 메뉴 선택 >> ");
+		        int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3.상세 보기 0.내 화면으로 \n 메뉴 선택 >> ");
 		        switch (input) {
 		            case 1: return Command.POST_INSERT;
 		            case 2: return Command.POST_DELETE;
-		            case 3: return Command.POST_UPDATE;
-		            case 4:
+		            case 3:
 		                MainController.sessionMap.remove("currentPostId");
 		                return Command.POST_DETAIL;
 		            case 0: return Command.USER_HOME;
@@ -353,22 +380,41 @@ public class PostController {
 	}
 
 	// 게시글 수정 메서드
+	// 기존 postUpdate: 사용자가 글 번호를 입력하는 방식
 	public Command postUpdate() {
-		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-		int choice = ScanUtil.nextInt("수정할 내 글 번호를 입력하세요: ");
-		PostService postService = PostService.getInstance();
-		PostVo post = postService.getPost(choice);
-		if (post == null) {
-			System.out.println("해당 게시물을 찾을 수 없습니다.");
-			return Command.POST_LIST;
-		}
-		if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-			postService.updatePostSelect(post); 
-		} else {
-			System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
-		}
-		return Command.POST_LIST;
+	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	    int choice = ScanUtil.nextInt("수정할 내 글 번호를 입력하세요: ");
+	    PostService postService = PostService.getInstance();
+	    PostVo post = postService.getPost(choice);
+	    if (post == null) {
+	        System.out.println("해당 게시물을 찾을 수 없습니다.");
+	        return Command.POST_LIST;
+	    }
+	    if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+	        postService.updatePostSelect(post); 
+	    } else {
+	        System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
+	    }
+	    return Command.POST_LIST;
 	}
+
+	// 새로운 postUpdate: 이미 글 번호를 알고 있는 경우
+	public Command postUpdate(int postId) {
+	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	    PostService postService = PostService.getInstance();
+	    PostVo post = postService.getPost(postId);
+	    if (post == null) {
+	        System.out.println("해당 게시물을 찾을 수 없습니다.");
+	        return Command.POST_LIST;
+	    }
+	    if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+	        postService.updatePostSelect(post); 
+	    } else {
+	        System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
+	    }
+	    return Command.POST_LIST;
+	}
+
 
 	// 게시글 삭제 메서드
 	public Command postDelete() {
