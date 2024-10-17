@@ -157,20 +157,21 @@ public class UsersDao {
 	}
 	
 	// 비번 찾기
-	public UsersVo findUserPass(String userId, String name, String email) {
-		 String sql = "SELECT user_pass FROM USERS WHERE user_id = ? AND username = ? AND email = ? ";
+	public UsersVo findUserPass(String userId, String email) {
+		 String sql = "SELECT user_pass FROM USERS WHERE user_id = ? AND email = ? ";
 		 
 		 try (Connection conn = DBUtil.getConnection();
 	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	            
 			 	pstmt.setString(1, userId);
-			 	pstmt.setString(2, name);
-	            pstmt.setString(3, email);
+	            pstmt.setString(2, email);
 	            ResultSet rs = pstmt.executeQuery();
 
 	            if (rs.next()) {
 	                String userPass = rs.getString("user_pass");
-	                return new UsersVo(userId, name, email, userPass); // 반환할 VO 생성
+	          
+
+	                return new UsersVo(userId,  email, userPass, true); // 반환할 VO 생성
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
@@ -178,6 +179,29 @@ public class UsersDao {
 
 	        return null; // 사용자를 찾지 못한 경우
 	    }
+	
+	
+	
+	public boolean iDisMatch(String userId, String email)
+	{
+		String sql = "SELECT user_id FROM USERS WHERE user_id = ? AND email = ? ";
+		 
+		 try (Connection conn = DBUtil.getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            
+			 	pstmt.setString(1, userId);
+			 	pstmt.setString(2, email);
+	            ResultSet rs = pstmt.executeQuery();
+
+	            if (rs.next()) {
+	                return true; // 반환할 VO 생성
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		
+		return false;
+	}
 	
 	
 	// 아이디 찾기
