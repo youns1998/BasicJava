@@ -190,7 +190,7 @@ public class PostController {
 			PostService postService = PostService.getInstance();
 			UsersService usersService = UsersService.getInstance();
 			UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-			String userId = ScanUtil.nextLine("게시물 리스트를 조회할 회원 ID>>");
+			String userId = ScanUtil.nextLine("게시물 리스트를 조회할 회원 ID >> ");
 			List<PostVo> posts = postService.getPost(userId);
 			if (posts.isEmpty()) {
 		        System.out.println("작성된 게시물이 없습니다.");
@@ -262,7 +262,7 @@ public class PostController {
 
 		// 메뉴 선택
 		if (loginUserVo.getRole() != 0) {
-			int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 >> ");
+			int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 \n 메뉴 선택 >> ");
 			switch (input) {
 			case 1:
 				return Command.POST_INSERT;
@@ -277,7 +277,7 @@ public class PostController {
 				return Command.USER_HOME;
 			}
 		} else {
-			int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 >> ");
+			int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 \n 메뉴 선택 >> ");
 			switch (input) {
 			case 1:
 				return Command.POST_INSERT;
