@@ -12,7 +12,7 @@ import UTIL.*;
 import VO.*;
 
 public class PostController {
-    
+
 	private static final String ANSI_LIGHT_RED = "\033[38;5;203m"; // 덜한 빨간색
 	private static final String ANSI_BOLD = "\033[1m";
 	private static final String ANSI_RESET = "\033[0m";
@@ -26,14 +26,15 @@ public class PostController {
 		return postController.postList();
 	}
 
-	private PostController() {}
+	private PostController() {
+	}
 
 	public static PostController getInstance() {
 		if (instance == null)
 			instance = new PostController();
 		return instance;
 	}
-	
+
 	// 상세 게시글 보기
 	public Command detailPost() {
 		int postId = ScanUtil.nextInt("보고싶은 글 번호를 입력하세요: ");
@@ -55,22 +56,21 @@ public class PostController {
 
 		// 댓글 출력 부분
 		List<CommentsVo> comments = commentsService.getComments(selectedPost.getPost_id());
-		
+
 		if (comments.isEmpty()) {
-		    System.out.println("댓글이 없습니다.");
-		} else { 
-		    System.out.println("+:::::::::::::::::::::::::::::::::: 댓글 목록 :::::::::::::::::::::::::::::::::::+");
-		    
-		    for (CommentsVo comment : comments) {
-		        String createdAt = comment.getFormattedCreatedAt(); // 작성 시간에서 분까지만 추출
-		        System.out.println("+------------------------------------------------------------------------------+");
-		        System.out.printf("| %-3s | 작성자: %-5s | 내용: %-10s | 작성 시간: %-8s \n", 
-		                          comment.getComment_id(), comment.getUser_id(), comment.getContent(), createdAt);
-		        System.out.println("+------------------------------------------------------------------------------+");
+			System.out.println("댓글이 없습니다.");
+		} else {
+			System.out.println("+:::::::::::::::::::::::::::::::::: 댓글 목록 :::::::::::::::::::::::::::::::::::+");
 
-		    }
+			for (CommentsVo comment : comments) {
+				String createdAt = comment.getFormattedCreatedAt(); // 작성 시간에서 분까지만 추출
+				System.out.println("+------------------------------------------------------------------------------+");
+				System.out.printf("| %-3s | 작성자: %-5s | 내용: %-10s | 작성 시간: %-8s \n", comment.getComment_id(),
+						comment.getUser_id(), comment.getContent(), createdAt);
+				System.out.println("+------------------------------------------------------------------------------+");
+
+			}
 		}
-
 
 		MainController.sessionMap.put("currentPostId", postId);
 		return commentMenu(postId);
@@ -89,7 +89,7 @@ public class PostController {
 		case 3:
 			return commentController.deleteComment(postId);
 		case 4:
-			return favoriteController.addFavorite(postId); 
+			return favoriteController.addFavorite(postId);
 		case 0:
 			return returnToPostList();
 		default:
@@ -124,12 +124,8 @@ public class PostController {
 		System.out.println(borderLine);
 
 		// 직접 출력으로 변경
-		System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s %s\n", 
-			post.getUser_id(), 
-			post.getTitle(), 
-			post.getPrice() + "원", 
-			post.getCondition(),
-			isFavorite ? "♡ 찜한 상품" : " ");
+		System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s %s\n", post.getUser_id(), post.getTitle(),
+				post.getPrice() + "원", post.getCondition(), isFavorite ? "♡ 찜한 상품" : " ");
 		System.out.println(borderLine);
 
 		// 내용 출력
@@ -164,164 +160,175 @@ public class PostController {
 		UsersService usersService = UsersService.getInstance();
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 		List<PostVo> posts = postService.getPost(loginUserVo.getUser_id());
-		if(loginUserVo.getRole()!=0) {
-    		return Command.POST_ADMIN;
-    	}
+		if (loginUserVo.getRole() != 0) {
+			return Command.POST_ADMIN;
+		}
 		if (posts.isEmpty()) {
-	        System.out.println("작성된 게시물이 없습니다.");
-	    } else {
-	        for (PostVo post : posts) {
-	            System.out.println("게시물 번호: " + post.getPost_id());
-	            System.out.println("제목: " + post.getTitle());
-	            System.out.println("내용: " + post.getContent());
-	            System.out.println("가격: " +post.getPrice());
-	            System.out.println("작성일: " + post.getCreated_at());
-	            System.out.println("수정일: "+post.getUpdated_at());
-	            System.out.println("현재 상태: " +post.getCondition());
-	            System.out.println("------------------------------");
-	        }
-	    }
-		return Command.MYPAGE; 
+			System.out.println("작성된 게시물이 없습니다.");
+		} else {
+			for (PostVo post : posts) {
+				System.out.println("게시물 번호: " + post.getPost_id());
+				System.out.println("제목: " + post.getTitle());
+				System.out.println("내용: " + post.getContent());
+				System.out.println("가격: " + post.getPrice());
+				System.out.println("작성일: " + post.getCreated_at());
+				System.out.println("수정일: " + post.getUpdated_at());
+				System.out.println("현재 상태: " + post.getCondition());
+				System.out.println("------------------------------");
+			}
+		}
+		return Command.MYPAGE;
 	}
-	
+
 	// 관리자가 회원별 쓴 게시물 보기
-		public Command adminPost() {
-			PostService postService = PostService.getInstance();
-			UsersService usersService = UsersService.getInstance();
-			UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-			String userId = ScanUtil.nextLine("게시물 리스트를 조회할 회원 ID >> ");
-			List<PostVo> posts = postService.getPost(userId);
-			if (posts.isEmpty()) {
-		        System.out.println("작성된 게시물이 없습니다.");
-		    } else {
-		        for (PostVo post : posts) {
-		            System.out.println("게시물 번호: " + post.getPost_id());
-		            System.out.println("제목: " + post.getTitle());
-		            System.out.println("내용: " + post.getContent());
-		            System.out.println("가격: " +post.getPrice());
-		            System.out.println("작성일: " + post.getCreated_at());
-		            System.out.println("수정일: "+post.getUpdated_at());
-		            System.out.println("현재 상태: " +post.getCondition());
-		            System.out.println("------------------------------");
-		        }
-		    }
-			return Command.ADMIN_USERDETAIL;
+	public Command adminPost() {
+		PostService postService = PostService.getInstance();
+		UsersService usersService = UsersService.getInstance();
+		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+		String userId = ScanUtil.nextLine("게시물 리스트를 조회할 회원 ID >> ");
+		List<PostVo> posts = postService.getPost(userId);
+		if (posts.isEmpty()) {
+			System.out.println("작성된 게시물이 없습니다.");
+		} else {
+			for (PostVo post : posts) {
+				System.out.println("게시물 번호: " + post.getPost_id());
+				System.out.println("제목: " + post.getTitle());
+				System.out.println("내용: " + post.getContent());
+				System.out.println("가격: " + post.getPrice());
+				System.out.println("작성일: " + post.getCreated_at());
+				System.out.println("수정일: " + post.getUpdated_at());
+				System.out.println("현재 상태: " + post.getCondition());
+				System.out.println("------------------------------");
+			}
 		}
-		
+		return Command.ADMIN_USERDETAIL;
+	}
+
 	// 게시물 목록 출력
-		public Command postList() {
-		    int width = 80;
-		    System.out.println("+" + "=".repeat(width - 2) + "+");
+	public Command postList() {
+		int width = 80;
+		System.out.println("+" + "=".repeat(width - 2) + "+");
 
-		    PostService postService = PostService.getInstance();
-		    UsersService usersService = UsersService.getInstance();
-		    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-		    List<PostVo> posts = postService.getPostList();
+		PostService postService = PostService.getInstance();
+		UsersService usersService = UsersService.getInstance();
+		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+		List<PostVo> posts = postService.getPostList();
 
-		    if (posts == null || posts.isEmpty()) {
-		        System.out.println("작성된 게시물이 없습니다");
-		    } else {
-		        List<PostVo> adminPosts = new ArrayList<>();
-		        List<PostVo> salePosts = new ArrayList<>();    // 상태 1: 판매 중
-		        List<PostVo> reservedPosts = new ArrayList<>(); // 상태 2: 예약 중
-		        List<PostVo> completedPosts = new ArrayList<>(); // 상태 3: 거래 완료
+		if (posts == null || posts.isEmpty()) {
+			System.out.println("작성된 게시물이 없습니다");
+		} else {
+			List<PostVo> adminPosts = new ArrayList<>();
+			List<PostVo> salePosts = new ArrayList<>(); // 상태 1: 판매 중
+			List<PostVo> reservedPosts = new ArrayList<>(); // 상태 2: 예약 중
+			List<PostVo> completedPosts = new ArrayList<>(); // 상태 3: 거래 완료
 
-		        for (PostVo post : posts) {
-		            UsersVo user = usersService.getUserSelect(post.getUser_id());
-		            if (user != null && user.getRole() == 1) {
-		                adminPosts.add(post);
-		            } else {
-		                switch (post.getCondition()) {
-		                    case 1: salePosts.add(post); break;
-		                    case 2: reservedPosts.add(post); break;
-		                    case 3: completedPosts.add(post); break;
-		                }
-		            }
-		        }
+			for (PostVo post : posts) {
+				UsersVo user = usersService.getUserSelect(post.getUser_id());
+				if (user != null && user.getRole() == 1) {
+					adminPosts.add(post);
+				} else {
+					switch (post.getCondition()) {
+					case 1:
+						salePosts.add(post);
+						break;
+					case 2:
+						reservedPosts.add(post);
+						break;
+					case 3:
+						completedPosts.add(post);
+						break;
+					}
+				}
+			}
 
-		        // 공지사항 출력
-		        for (PostVo post : adminPosts) {
-		            String content = "# 공지사항 : " + post.getTitle() + " #";
-		            System.out.println(ColorUtil.RED + content + ColorUtil.RESET);
-		        }
+			// 공지사항 출력
+			for (PostVo post : adminPosts) {
+				String content = "# 공지사항 : " + post.getTitle() + " #";
+				System.out.println(ColorUtil.RED + content + ColorUtil.RESET);
+			}
 
-		        // 판매 중 게시물 출력
-		        for (PostVo post : salePosts) {
-		            String content = String.format(
-		                "%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", 
-		                post.getPost_id(), post.getTitle(), post.getPrice(),
-		                post.getUser_id(), "판매중");
-		            printAsciiArtBox(content, false);
-		        }
+			// 판매 중 게시물 출력
+			for (PostVo post : salePosts) {
+				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
+						post.getTitle(), post.getPrice(), post.getUser_id(), "판매중");
+				printAsciiArtBox(content, false);
+			}
 
-		        // 예약 중 게시물 출력 (초록색)
-		        for (PostVo post : reservedPosts) {
-		            String content = String.format(
-		                "%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", 
-		                post.getPost_id(), post.getTitle(), post.getPrice(),
-		                post.getUser_id(), "예약중");
-		            System.out.print(ColorUtil.GREEN);
-		            printAsciiArtBox(content, false);
-		            System.out.print(ColorUtil.RESET);
-		        }
+			// 예약 중 게시물 출력 (초록색)
+			for (PostVo post : reservedPosts) {
+				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
+						post.getTitle(), post.getPrice(), post.getUser_id(), "예약중");
+				System.out.print(ColorUtil.GREEN);
+				printAsciiArtBox(content, false);
+				System.out.print(ColorUtil.RESET);
+			}
 
-		        // 거래 완료 게시물 출력 (회색)
-		        for (PostVo post : completedPosts) {
-		            String content = String.format(
-		                "%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", 
-		                post.getPost_id(), post.getTitle(), post.getPrice(),
-		                post.getUser_id(), "거래 완료");
-		            System.out.print(ColorUtil.GRAY);
-		            printAsciiArtBox(content, true);
-		            System.out.print(ColorUtil.RESET);
-		        }
-		    }
-
-		    System.out.println("+" + "=".repeat(width - 2) + "+");
-		    System.out.print("\033[H\033[2J");
-		    System.out.flush();
-
-		    // 메뉴 선택
-		    if (loginUserVo.getRole() != 0) {
-		        int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 0.관리자 화면으로 \n 메뉴 선택 >> ");
-		        switch (input) {
-		            case 1: return Command.POST_INSERT;
-		            case 2: return Command.POST_DELETE;
-		            case 3: return Command.POST_UPDATE;
-		            case 4:
-		                MainController.sessionMap.remove("currentPostId");
-		                return Command.POST_DETAIL;
-		            case 0: return Command.USER_HOME;
-		        }
-		    } else {
-		        int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 0.내 화면으로 \n 메뉴 선택 >> ");
-		        switch (input) {
-		            case 1: return Command.POST_INSERT;
-		            case 2: return Command.POST_DELETE;
-		            case 3: return Command.POST_UPDATE;
-		            case 4:
-		                MainController.sessionMap.remove("currentPostId");
-		                return Command.POST_DETAIL;
-		            case 0: return Command.USER_HOME;
-		        }
-		    }
-		    return Command.USER_HOME;
+			// 거래 완료 게시물 출력 (회색)
+			for (PostVo post : completedPosts) {
+				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
+						post.getTitle(), post.getPrice(), post.getUser_id(), "거래 완료");
+				System.out.print(ColorUtil.GRAY);
+				printAsciiArtBox(content, true);
+				System.out.print(ColorUtil.RESET);
+			}
 		}
 
+		System.out.println("+" + "=".repeat(width - 2) + "+");
+		System.out.print("\033[H\033[2J");
+		System.out.flush();
+
+		// 메뉴 선택
+		if (loginUserVo.getRole() != 0) {
+			int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 5.검색 0.관리자 화면으로 \n 메뉴 선택 >> ");
+			switch (input) {
+			case 1:
+				return Command.POST_INSERT;
+			case 2:
+				return Command.POST_DELETE;
+			case 3:
+				return Command.POST_UPDATE;
+			case 4:
+				MainController.sessionMap.remove("currentPostId");
+				return Command.POST_DETAIL;
+			case 5:
+				return postSearch(); // 검색 기능 추가
+			case 0:
+				return Command.USER_HOME;
+			}
+		} else {
+			int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3. 게시물 수정 4.상세 보기 5.검색 0.내 화면으로 \n 메뉴 선택 >> ");
+			switch (input) {
+			case 1:
+				return Command.POST_INSERT;
+			case 2:
+				return Command.POST_DELETE;
+			case 3:
+				return Command.POST_UPDATE;
+			case 4:
+				MainController.sessionMap.remove("currentPostId");
+				return Command.POST_DETAIL;
+			case 5:
+				return postSearch(); // 검색 기능 추가
+			case 0:
+				return Command.USER_HOME;
+			}
+		}
+		return Command.USER_HOME;
+	}
 
 	// 게시글 추가 메서드
 	public Command postInsert() {
 		PostService postService = PostService.getInstance();
 		PostVo post = new PostVo();
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-		if (loginUserVo.getRole() != 0) { 				// 관리자의 공지 추가
+		if (loginUserVo.getRole() != 0) { // 관리자의 공지 추가
 			System.out.println("공지사항 쓰기");
 			String title = ScanUtil.nextLine("제목 >> ");
 			String content = ScanUtil.nextLine("내용 >> ");
 			post.setTitle(title);
 			post.setContent(content);
-			post.setUser_id(loginUserVo.getUser_id()); 
-		} else { 										// 사용자의 게시글 추가
+			post.setUser_id(loginUserVo.getUser_id());
+		} else { // 사용자의 게시글 추가
 			String Title = ScanUtil.nextLine("글 제목 >> ");
 			int price = ScanUtil.nextInt("가격 >> ");
 			CategoryService cateservice = CategoryService.getInstance();
@@ -336,18 +343,15 @@ public class PostController {
 			post.setCategory_id(category);
 			post.setContent(content);
 			post.setCondition(1);
-			
+
 			post.setUser_id(loginUserVo.getUser_id());
 		}
 		int result = postService.insertPost(post);
 		if (result > 0) {
 			System.out.println("게시글이 성공적으로 등록되었습니다.");
 		} else {
-			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-					+ "████▌▄▌▄▐▐▌█████\r\n"
-					+ "████▌▄▌▄▐▐▌▀████\r\n"
-					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-					+ "");
+			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
 		}
 		return Command.POST_LIST;
 	}
@@ -363,7 +367,7 @@ public class PostController {
 			return Command.POST_LIST;
 		}
 		if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-			postService.updatePostSelect(post); 
+			postService.updatePostSelect(post);
 		} else {
 			System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
 		}
@@ -375,7 +379,7 @@ public class PostController {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 		int choice = ScanUtil.nextInt("삭제할 글 번호를 입력하세요: ");
 		PostService postService = PostService.getInstance();
-		PostVo post = postService.getPost(choice); 
+		PostVo post = postService.getPost(choice);
 		if (post == null) {
 			System.out.println("해당 게시물을 찾을 수 없습니다.");
 			return Command.POST_LIST;
@@ -387,10 +391,26 @@ public class PostController {
 		}
 		return Command.POST_LIST;
 	}
-	
+
 	public void updatePostCondition(int postId, String newCondition, String buyerId, String sellerId) {
-        PostService.updatePostCondition(postId, newCondition, buyerId, sellerId);
-        System.out.println("게시물 상태가 업데이트되었습니다.");
-    }
-	
+		PostService.updatePostCondition(postId, newCondition, buyerId, sellerId);
+		System.out.println("게시물 상태가 업데이트되었습니다.");
+	}
+
+	// 게시글 검색 메서드
+	public Command postSearch() {
+		String keyword = ScanUtil.nextLine("검색할 키워드를 입력하세요: ");
+		PostService postService = PostService.getInstance();
+		List<PostVo> results = postService.searchPosts(keyword);
+
+		if (results.isEmpty()) {
+			System.out.println("검색 결과가 없습니다.");
+		} else {
+			for (PostVo post : results) {
+				System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %s\n", post.getPost_id(), post.getTitle(),
+						post.getPrice(), "판매중");
+			}
+		}
+		return Command.POST_LIST; // 검색 후 게시물 목록으로 돌아감
+	}
 }

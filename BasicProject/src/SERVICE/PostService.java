@@ -108,6 +108,11 @@ public class PostService {
 	        }
 	        return dao.deletePost(post_id);
 	    }
-
+		
+		// 검색기능 메서드
+		public List<PostVo> searchPosts(String keyword) {
+		    PostDao postDao = PostDao.getInstance();
+		    return postDao.searchPosts(keyword);
+		}
 		
 	}
