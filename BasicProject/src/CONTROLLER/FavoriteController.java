@@ -66,11 +66,33 @@ public class FavoriteController {
             }
         }
         System.out.println("-------------------------------------------------------------");
+        return Command.FAVORITE_DELETE; 
+    }
+    //관리자가 회원 ID로 조회하는 사용자의 찜목록
+    public Command viewFavorites(String userId) {
+        List<FavoriteVo> favorites = favoriteService.getFavoritesByUser();
+        
+        System.out.println("관심 상품 목록:" + favorites.size());
+         
+        if (favorites.isEmpty()) {
+            System.out.println("관심 상품이 없습니다.");
+            
+        } else {
+        	System.out.printf("%-15s %-30s %-10s%n", "게시글 번호", "게시글 제목");
+            System.out.println("-------------------------------------------------------------");
+             
+            for (FavoriteVo favorite : favorites) {
+                System.out.printf("%-20d %-30s %-10s%n", 
+                                  favorite.getPost_id(), 
+                                  favorite.getPost_title());
+            }
+        }
+        System.out.println("-------------------------------------------------------------");
         return Command.USER_HOME; // 게시물 목록으로 돌아가기
     }
 
     // 관심 상품 삭제
-    public void deleteFavorite() {
+    public Command deleteFavorite() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("삭제할 게시글 번호 입력: ");
         int postId = scanner.nextInt();
@@ -83,9 +105,11 @@ public class FavoriteController {
         
         if (isDeleted) {
             System.out.println("관심 상품 삭제 완료.");
-        } else {
+            return Command.USER_HOME;
+        } else 
             System.out.println("해당 게시글의 관심 상품이 존재하지 않거나 삭제할 수 없습니다.");
-        }
+        
+        return Command.USER_HOME;
     }
 
     // 특정 사용자가 특정 게시글을 즐겨찾기 했는지 확인
@@ -106,22 +130,13 @@ public class FavoriteController {
     
     // 관심 상품 관리 메뉴 표시
     public Command displayMenu() {
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println();
-        	System.out.println("1. 관심 상품 보기");
-        	System.out.println("2. 관심 상품 삭제");
-            System.out.println("0. 종료");
-            System.out.print("선택: ");
-            int choice = scanner.nextInt();
-
+            int choice = ScanUtil.nextInt("1.관심 상품 삭제 0.돌아가기 >>");
             switch (choice) {
             	case 1:
-            		viewFavorites();
+            		 deleteFavorite();
             		break;
-            	case 2:
-                    deleteFavorite();
-                    break;
                 case 0:
                     System.out.println("종료합니다.");
                     return Command.USER_HOME;

@@ -99,17 +99,20 @@ public CategoryVo getCategory(int category_id) {
 	}
 	
 //카테고리 수정
-	public int UpdateCategory(CategoryVo cate) {
+	public int UpdateCategory(CategoryVo cate, int newid) {
 		int cnt= 0;
-		String sql = "UPDATE CATEGORY SET CATEGORY_NAME = ? WHERE CATEGORY_ID = ?";
+		String sql = "UPDATE CATEGORY "
+				+ "SET CATEGORY_ID = ? , CATEGORY_NAME = ? "
+				+ "WHERE CATEGORY_ID = ?";
 		
 		try {
 			con = DBUtil.getConnection();
 			ps = con.prepareStatement(sql);
-			ps.setString(1, cate.getCategory_name()); 
-			ps.setInt(2, cate.getCategory_id());      
+				ps.setInt(1, newid);  // 새로운 ID
+		        ps.setString(2, cate.getCategory_name()); // 카테고리 이름
+		        ps.setInt(3, cate.getCategory_id());      // 기존 ID
+
 			cnt = ps.executeUpdate();
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -144,7 +147,6 @@ public CategoryVo getCategory(int category_id) {
 			con = DBUtil.getConnection();
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, cate.getCategory_id());      
-			ps.setString(2, cate.getCategory_name()); 
 			cnt = ps.executeUpdate();
 			
 		} catch (SQLException e) {

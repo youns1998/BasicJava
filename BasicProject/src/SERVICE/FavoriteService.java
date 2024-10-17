@@ -24,8 +24,13 @@ public class FavoriteService {
            favoriteDAO.addFavorite(favorite);
        }
 
-       // 사용자의 관심 상품 목록 조회
+       // 사용자가 본인의 관심 상품 목록 조회
        public List<FavoriteVo> getFavoritesByUser() {
+    	   return favoriteDAO.getFavoritesByUser();
+       }
+       
+       // 관리자가 사용자의 관심 상품 목록 조회
+       public List<FavoriteVo> getFavoritesByUser(String userId) {
     	   return favoriteDAO.getFavoritesByUser();
        }
 

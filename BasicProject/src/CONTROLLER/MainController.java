@@ -46,8 +46,11 @@ public class MainController {
 				case UESR_LIST: cmd =usersController.userList(); break;
 				case ADMIN_USER: cmd = usersController.userSelect(); break;
 				case ADMIN_USERDETAIL: cmd = usersController.userdetail(); break;
-				case USER_UPDATE: cmd =usersController.userUpdate(); break;
-				case USER_DELETE: cmd = usersController.userDelete(); break;
+				case USER_UPDATE: cmd =usersController.userUpdate(); break; //관리자용
+				case USER_DELETE: cmd = usersController.userDelete(); break; //관리자용
+				case USER_SELF: cmd = usersController.userSelf(); break;
+				case USER_SELFUPDATE: cmd =usersController.userSelfUpdate(); break; //사용자용
+				case USER_SELFDELETE: cmd = usersController.userSelfDelete(); break; //사용자용
 				case S_ID: cmd = usersController.findUserId(); break;
 				case S_PW: cmd = usersController.findUserPass(); break;
 				// 로그인 후
@@ -81,7 +84,9 @@ public class MainController {
 				case CATEGORY_DELETE: cmd = categoryController.categoryDelete(); break;
 
 //				 관심 물품 보기
-				case FAVORITE_LIST: cmd = favoriteController.displayMenu(); break;
+				case FAVORITE_LIST: cmd = favoriteController.viewFavorites(); break;
+				case FAVORITE_DELETE: cmd = favoriteController.displayMenu(); break;
+				case USER_FAVORITE: cmd = favoriteController.viewFavorites(); break;
 				case FAVORITE_INSERT:
 				    Integer postId = (Integer) MainController.sessionMap.get("currentPostId");
 				    if (postId != null) {
