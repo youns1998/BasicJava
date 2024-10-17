@@ -162,7 +162,7 @@ public class MainController {
 			case 4: return Command.HISTORY_LIST;
 			case 0:
 				// ProjectMain의 정적변수인 sessionMap에 저장된 모든 자료를 삭제한다.
-				MainController.sessionMap.clear();;
+				MainController.sessionMap.clear();
 				return Command.HOME;
 		}
 		return Command.USER_HOME;
