@@ -22,9 +22,53 @@ public class CommentController {
             instance = new CommentController();
         return instance;
     }
-
+    //내가 쓴 댓글 보기
+    public Command CommentList() {
+    	CommentsService commentservice = CommentsService.getInstance();
+    	UsersService usersService = UsersService.getInstance();
+    	UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+    	List<CommentsVo> comvo = commentservice.getComment(loginUserVo.getUser_id());
+    	if(loginUserVo.getRole()!=0) {
+    		return Command.COMMENT_ADMIN;
+    	}
+    	if (comvo.isEmpty()) {
+	        System.out.println("작성된 댓글이 없습니다.");
+    	} else { 
+    		for (CommentsVo cvo : comvo) {
+    		System.out.print("게시물 번호: "+cvo.getPost_id()+"\t");
+    		System.out.println("댓글 번호: " + cvo.getComment_id());
+            System.out.println("댓글 내용: " + cvo.getContent());
+            System.out.println();
+            System.out.println("작성일: " + cvo.getCreated_at());
+            System.out.println("------------------------------");
+    		
+    		}
+    	}
+    	return Command.USER_SELF;
+    }
+    //관리자용 회원ID별 쓴 댓글 보기
+    public Command adminCommentList() {
+    	CommentsService commentservice = CommentsService.getInstance();
+    	UsersService usersService = UsersService.getInstance();
+    	UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+    	String userId = ScanUtil.nextLine("댓글 리스트를 조회할 회원 ID>>");
+    	List<CommentsVo> comvo = commentservice.getComment(userId);
+    	if (comvo.isEmpty()) {
+	        System.out.println("작성된 댓글이 없습니다.");
+    	} else { 
+    		for (CommentsVo cvo : comvo) {
+    		System.out.print("게시물 번호: "+cvo.getPost_id()+"\t");
+    		System.out.println("댓글 번호: " + cvo.getComment_id());
+            System.out.println("댓글 내용: " + cvo.getContent());
+            System.out.println();
+            System.out.println("작성일: " + cvo.getCreated_at());
+            System.out.println("------------------------------");
+    		
+    		}
+    	}
+    	return Command.ADMIN_USERDETAIL;
+    }
     // 댓글 작성 메서드
-    
     public Command insertComment(int postId) {
         String commentText = ScanUtil.nextLine("댓글을 입력하세요: ");
         UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
@@ -50,7 +94,7 @@ public class CommentController {
         
         return returnToPostDetail(postId); // 댓글 추가 후 상세 보기로 돌아가기
     }
-
+    //댓글 수정
     public Command updateComment(int postId) {
         int commentId = ScanUtil.nextInt("수정할 댓글 번호를 입력하세요: ");
         ScanUtil.nextLine();
@@ -75,7 +119,7 @@ public class CommentController {
 
         return returnToPostDetail(postId); // 댓글 수정 후 상세 보기로 돌아가기
     }
-
+    //댓글 삭제
     public Command deleteComment(int postId) {
         int commentId = ScanUtil.nextInt("삭제할 댓글 번호를 입력하세요: ");
         CommentsVo comment = CommentsService.getInstance().getComment(commentId);

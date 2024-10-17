@@ -45,11 +45,14 @@ public enum Command {
 	POST_INSERT,	// 글 추가
 	POST_UPDATE,	// 글 수정
 	POST_DELETE,	// 글 삭제
-
+	POST_ADMIN,		// 관리자가 회원이 쓴 글 보기
+	POST_SELF, 		// 내가 쓴 글 보기
+	
 	// 댓글 
 	COMMENT_INSERT,	// 댓글 추가
 	COMMENT_UPDATE,	// 댓글 수정
-	COMMENT_DELETE	// 댓글 삭제
-	
+	COMMENT_DELETE,	// 댓글 삭제
+	COMMENT_ADMIN, 	// 관리자가 회원이 쓴 댓글 보기
+	COMMENT_SELF	// 내가 쓴 댓글 보기
 }
 

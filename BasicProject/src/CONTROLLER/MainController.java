@@ -70,13 +70,14 @@ public class MainController {
 				        cmd = postController.detailPost(); // 처음 접근 시 글 번호를 입력받아야 함
 				    }
 				    break;
-
-
+				case POST_SELF: cmd = postController.userPost(); break; //내가 쓴 게시글 보기
+				case POST_ADMIN: cmd = postController.adminPost(); break; //관리자가 회원이 쓴 게시글 보기
+				
 //				// 댓글 관리
 //				case COMMENT_DELETE: cmd = commentController.commentDelete(); break;
-//				case COMMENT_LIST: cmd = commentController.commentList(); break;
+				case COMMENT_SELF: cmd = commentController.CommentList(); break;	//내가 쓴 댓글 보기
+				case COMMENT_ADMIN: cmd =commentController.adminCommentList(); break;	//관리자가 회원이 쓴 댓글 보기
 //				case COMMENT_UPDATE: cmd = commentController.commentUpdate(); break;
-//				
 //				// 카테고리 보기 
 				case CATEGORY_LIST: cmd = categoryController.categoryList(); break;
 				case CATEGORY_INSERT: cmd = categoryController.categoryInsert(); break;

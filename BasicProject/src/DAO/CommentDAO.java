@@ -18,7 +18,7 @@ public class CommentDAO {
 			instance = new CommentDAO();
 		return instance;
 	}
-
+	// 댓글 추가
 	public int insertComment(CommentsVo comment) {
 	    String sql = "INSERT INTO comments (comment_id, post_id, user_id, content, created_at) VALUES (comment_seq.NEXTVAL, ?, ?, ?, ?)";
 	    try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -32,6 +32,7 @@ public class CommentDAO {
 	    }
 	    return 0;
 	}
+	//게시물 번호로 댓글 수 찾기
 	 public int getCommentCount(int postId) {
 	        String sql = "SELECT COUNT(*) FROM comments WHERE post_id = ?";
 	        try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -47,7 +48,7 @@ public class CommentDAO {
 	        return 0;
 	    }
 
-
+	 //게시글 번호로 전체 댓글 보기
 	public List<CommentsVo> selectCommentsByPostId(int postId) {
 		String sql = "SELECT * FROM comments WHERE post_id = ?";
 		List<CommentsVo> commentsList = new ArrayList<>();
@@ -69,7 +70,27 @@ public class CommentDAO {
 		}
 		return commentsList;
 	}
-
+	 //내가 쓴 댓글 전체 보기
+		public List<CommentsVo> userCommentsList(String userId) {
+			String sql = "SELECT * FROM comments WHERE USER_ID = ?";
+			List<CommentsVo> commentsList = new ArrayList<>();
+			try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+				pstmt.setString(1, userId);
+				try (ResultSet rs = pstmt.executeQuery()) {
+					while (rs.next()) {
+						CommentsVo comment = new CommentsVo();
+						comment.setPost_id(rs.getInt("post_id"));
+						comment.setContent(rs.getString("content"));
+						comment.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
+						commentsList.add(comment);
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return commentsList;
+		}
+	//댓글 번호로 댓글 검색
 	public CommentsVo selectCommentById(int commentId) {
 		String sql = "SELECT * FROM comments WHERE comment_id = ?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -90,7 +111,7 @@ public class CommentDAO {
 		}
 		return null;
 	}
-
+	//댓글 수정
 	public int updateComment(CommentsVo comment) {
 		String sql = "UPDATE comments SET content = ? WHERE comment_id = ?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -102,7 +123,7 @@ public class CommentDAO {
 		}
 		return 0;
 	}
-
+	//댓글 삭제
 	public int deleteComment(int commentId) {
 		String sql = "DELETE FROM comments WHERE comment_id = ?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {

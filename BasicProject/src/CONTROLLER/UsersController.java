@@ -50,9 +50,9 @@ public class UsersController {
     	case 2: return Command.USER_UPDATE;
     	case 3: return Command.USER_DELETE;
     	case 4: return Command.USER_FAVORITE;
-    	case 5:
-    	case 6:
-    	case 0:
+    	case 5: return Command.POST_ADMIN;
+    	case 6: return Command.COMMENT_ADMIN;
+    	case 0: return Command.USER_HOME; 
     	}
     	
     	return Command.USER_HOME;
@@ -62,8 +62,8 @@ public class UsersController {
     	int choice = ScanUtil.nextInt("1. 개인 정보 수정 2.내가 쓴 글 보기 3.내가 쓴 댓글 보기 4.회원 탈퇴 0.돌아가기");
     	switch(choice) {
     	case 1: return Command.USER_SELFUPDATE;
-//    	case 2: return
-//    	case 3: return 
+    	case 2: return Command.POST_SELF;
+    	case 3: return Command.COMMENT_SELF;
     	case 4: return Command.USER_SELFDELETE;
     	}
     	return Command.USER_HOME;
@@ -155,7 +155,9 @@ public class UsersController {
          }
     	return Command.USER_FAVORITE;
     }
-    // 회원별 게시물 리스트 보기  tw
+    // 회원의 게시물 리스트 보기  tw
+    
+    // 회원의 댓글 리스트 보기
     
     // 회원 상세보기 tw
     public Command userSelect() {

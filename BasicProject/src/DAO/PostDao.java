@@ -88,7 +88,37 @@ try {
 }
 		return postlist;
 	}
-	
+//내가 쓴글 전체 조회
+	public List<PostVo> getAllPosts(String userid) {
+List<PostVo> postlist = new ArrayList<PostVo>();
+
+String sql = "SELECT * FROM POST WHERE USER_ID = ? ";
+
+try {
+	con = DBUtil.getConnection();
+	ps=con.prepareStatement(sql);
+	ps.setString(1, userid);
+	rs = ps.executeQuery();
+	while(rs.next()) {
+		PostVo  postvo = new PostVo();
+		postvo.setPost_id(rs.getInt("POST_ID"));
+		postvo.setUser_id(rs.getString("USER_ID"));
+		postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
+		postvo.setTitle(rs.getNString("TITLE"));
+		postvo.setContent(rs.getString("CONTENT"));
+		postvo.setPrice(rs.getInt("PRICE"));
+		postvo.setCondition(rs.getString("CONDITION"));
+		postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+		postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+		postlist.add(postvo);
+	}
+} catch (Exception e) {
+	e.printStackTrace();
+}finally {
+	disConnect();
+}
+		return postlist;
+	}
 	
 //게시글 상세 조회 (POST ID를 받아와서 조회)
 	public PostVo getPost(int post_id) {
@@ -122,7 +152,8 @@ try {
 }
 		return postvo;
 }
-	//게시글 전체 조회
+	
+	//게시글 전체 정보 수정
 	 public int updatePost(PostVo postvo) {
 	        int cnt = 0;
 

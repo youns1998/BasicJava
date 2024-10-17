@@ -60,7 +60,7 @@ public class PostController {
 		if (comments.isEmpty()) {
 		    System.out.println("댓글이 없습니다.");
 		} else { 
-		    System.out.println("==== 댓글 목록 ====");
+		    System.out.println("+:::::::::::::::::::::::::::::::::: 댓글 목록 :::::::::::::::::::::::::::::::::::+");
 		    
 		    for (CommentsVo comment : comments) {
 		        String createdAt = comment.getFormattedCreatedAt(); // 작성 시간에서 분까지만 추출
@@ -159,11 +159,61 @@ public class PostController {
 		}
 	}
 
+	// 내가 쓴 게시물 보기
+	public Command userPost() {
+		PostService postService = PostService.getInstance();
+		UsersService usersService = UsersService.getInstance();
+		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+		List<PostVo> posts = postService.getPost(loginUserVo.getUser_id());
+		if(loginUserVo.getRole()!=0) {
+    		return Command.POST_ADMIN;
+    	}
+		if (posts.isEmpty()) {
+	        System.out.println("작성된 게시물이 없습니다.");
+	    } else {
+	        for (PostVo post : posts) {
+	            System.out.println("게시물 번호: " + post.getPost_id());
+	            System.out.println("제목: " + post.getTitle());
+	            System.out.println("내용: " + post.getContent());
+	            System.out.println("가격: " +post.getPrice());
+	            System.out.println("작성일: " + post.getCreated_at());
+	            System.out.println("수정일: "+post.getUpdated_at());
+	            System.out.println("현재 상태: " +post.getCondition());
+	            System.out.println("------------------------------");
+	        }
+	    }
+		return Command.ADMIN_USER; //여기 숮어해야함 << 점심먹고와서
+	}
+	
+	// 관리자가 회원별 쓴 게시물 보기
+		public Command adminPost() {
+			PostService postService = PostService.getInstance();
+			UsersService usersService = UsersService.getInstance();
+			UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+			String userId = ScanUtil.nextLine("게시물 리스트를 조회할 회원 ID>>");
+			List<PostVo> posts = postService.getPost(userId);
+			if (posts.isEmpty()) {
+		        System.out.println("작성된 게시물이 없습니다.");
+		    } else {
+		        for (PostVo post : posts) {
+		            System.out.println("게시물 번호: " + post.getPost_id());
+		            System.out.println("제목: " + post.getTitle());
+		            System.out.println("내용: " + post.getContent());
+		            System.out.println("가격: " +post.getPrice());
+		            System.out.println("작성일: " + post.getCreated_at());
+		            System.out.println("수정일: "+post.getUpdated_at());
+		            System.out.println("현재 상태: " +post.getCondition());
+		            System.out.println("------------------------------");
+		        }
+		    }
+			return Command.USER_SELF;
+		}
+		
+	// 게시물 목록 출력
 	public Command postList() {
 		int width = 80;
 		System.out.println("+" + "=".repeat(width - 2) + "+");
 
-		// 게시물 목록 출력
 		PostService postService = PostService.getInstance();
 		UsersService usersService = UsersService.getInstance();
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
@@ -250,14 +300,14 @@ public class PostController {
 		PostService postService = PostService.getInstance();
 		PostVo post = new PostVo();
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-		if (loginUserVo.getRole() != 0) { // 관리자의 공지 추가
+		if (loginUserVo.getRole() != 0) { 				// 관리자의 공지 추가
 			System.out.println("공지사항 쓰기");
 			String title = ScanUtil.nextLine("제목 >> ");
 			String content = ScanUtil.nextLine("내용 >> ");
 			post.setTitle(title);
 			post.setContent(content);
 			post.setUser_id(loginUserVo.getUser_id()); 
-		} else { // 사용자의 게시글 추가
+		} else { 										// 사용자의 게시글 추가
 			String Title = ScanUtil.nextLine("글 제목 >> ");
 			int price = ScanUtil.nextInt("가격 >> ");
 			CategoryService cateservice = CategoryService.getInstance();
@@ -288,7 +338,7 @@ public class PostController {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 		int choice = ScanUtil.nextInt("수정할 내 글 번호를 입력하세요: ");
 		PostService postService = PostService.getInstance();
-		PostVo post = postService.getPost(choice); 
+		PostVo post = postService.getPost(choice);
 		if (post == null) {
 			System.out.println("해당 게시물을 찾을 수 없습니다.");
 			return Command.POST_LIST;

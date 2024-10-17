@@ -4,6 +4,7 @@ import java.util.List;
 
 import DAO.CommentDAO;
 import VO.CommentsVo;
+import VO.PostVo;
 
 public class CommentsService {
     private static CommentsService instance;
@@ -21,7 +22,10 @@ public class CommentsService {
     public int addComment(CommentsVo comment) {
         return commentDAO.insertComment(comment);
     }
-
+ // 회원 ID를 받아서 해당 ID가 쓴 게시물을 다 불러오는 서비스
+	public List<CommentsVo> getComment(String userid) {
+        return commentDAO.userCommentsList(userid);
+    }
     public List<CommentsVo> getComments(int postId) {
         return commentDAO.selectCommentsByPostId(postId);
     }
