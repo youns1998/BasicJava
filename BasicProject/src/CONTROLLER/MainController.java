@@ -13,6 +13,8 @@ import VO.UsersVo;
 public class MainController {
 	
 	public static Map<String, Object> sessionMap = new HashMap<>();   
+    public static final String ANSI_BROWN = "\033[38;5;136m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
 	private UsersController usersController;
 	private CategoryController categoryController;
@@ -110,26 +112,30 @@ public class MainController {
 		}
 	}
 	private Command home() {
-		System.out.println("##############################################");
-		System.out.println("#     땅 콩 마 켓 에 오 신 것 을 환 영 합 니 다     # ");
-		System.out.println("##############################################");
+		System.out.println(ANSI_BROWN + "           ■■■■■■■■    ■       ■  ");
+        System.out.println("           ■       ■   ■■     ■■  ");
+        System.out.println("           ■■■■■■■■    ■  ■ ■  ■  ");
+        System.out.println("           ■           ■   ■   ■  ");
+        System.out.println("           ■   eanut   ■       ■  arket" + ANSI_RESET);
 
-		System.out.println("1.로그인  2.회원가입  3.ID찾기  4.비밀번호찾기 0.나가기 ");
-		System.out.println("----------------------------------------------");
-		System.out.println();
-		int input = ScanUtil.nextInt("메뉴 선택 >>");
-		System.out.println();
-		switch (input) {
-			case 1: return Command.LOGIN;
-			case 2: return Command.JOIN;
-			case 3: return Command.S_ID;
-			case 4: return Command.S_PW;
-			case 0: return Command.END;
-			default:
-				System.out.println("잘못된 입력입니다. 다시 선택해 주세요.");
-				return Command.HOME;
-		}
+	    System.out.println("------------------------------------------------");
+	    System.out.println("  1.로그인  2.회원가입  3.ID찾기  4.비밀번호찾기  0.나가기 ");
+	    System.out.println("------------------------------------------------");
+	    System.out.println();
+	    int input = ScanUtil.nextInt("메뉴 선택 >> ");
+	    System.out.println();
+	    switch (input) {
+	        case 1: return Command.LOGIN;
+	        case 2: return Command.JOIN;
+	        case 3: return Command.S_ID;
+	        case 4: return Command.S_PW;
+	        case 0: return Command.END;
+	        default:
+	            System.out.println("잘못된 입력입니다. 다시 선택해 주세요.");
+	            return Command.HOME;
+	    }
 	}
+
 		
 	
 	
@@ -141,7 +147,7 @@ public class MainController {
 		if(loginUserVo.getRole()!=0)
 			return Command.ADMIN_HOME;
 		System.out.println();
-		System.out.print(loginUserVo.getUsername() + "님 반가워요");
+		System.out.print(loginUserVo.getUsername() + "님 반가워요 ");
 		System.out.println("아래 메뉴에서 작업할 번호를 선택하세요.");
 		System.out.println("-----------------------------------------------------------------------");
 		System.out.println("1.중고장터보기\t2.내정보보기\t3.관심상품보기\t4.나의거래내역\t0.로그아웃");

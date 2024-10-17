@@ -194,7 +194,8 @@ public class UsersController {
 
     // 회원가입 tw
     public Command join() {
-        System.out.println("=========== 회원가입 =============");
+
+        System.out.println("==================== 회원가입 ======================");
         System.out.println("아이디는 영문자와 숫자로 이루어져야 하며, 길이는 4~12자여야 합니다.");
 
         String userId;
@@ -268,7 +269,7 @@ public class UsersController {
 }
     // 로그인 tw
     public Command login() {
-        System.out.println("============== 로그인 ===============");
+        System.out.println("==================== 로그인 ======================");
 
         if (MainController.sessionMap.get("loginUser") != null) {
             System.out.println("이미 로그인된 상태입니다.");
@@ -285,7 +286,8 @@ public class UsersController {
         }
 
         MainController.sessionMap.put("loginUser", loginUserVo);
-        System.out.println(loginUserVo.getRole() != 0 ? "관리자 로그인 성공!! \n" : "일반 사용자 로그인 성공!!\n");
+        System.out.println();
+        System.out.println(loginUserVo.getRole() != 0 ? "#관리자 로그인 성공!!# " : "#일반 사용자 로그인 성공!!#");
         return Command.USER_HOME;
     }
 
