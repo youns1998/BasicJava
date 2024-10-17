@@ -1,9 +1,8 @@
 package UTIL;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-
+import java.sql.DriverManager;
 public class DBUtil {
     private static final String DB_URL = "jdbc:oracle:thin:@192.168.142.37:1588/FREEPDB1";
     private static final String DB_USER = "PEANUT";

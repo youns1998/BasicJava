@@ -310,7 +310,7 @@ public class UsersController {
 			}
 		} 
 		else {
-			System.out.println("해당되는 이메일이 아닙니다.");
+			System.out.println("동록된 이메일이 아닙니다.");
 			return Command.HOME;
 		}
 
@@ -321,16 +321,45 @@ public class UsersController {
 
 	// 아이디 찾기 tw
 	public Command findUserId() {
-		String name = ScanUtil.nextLine("이름을 입력하세요 : ");
-		String email = ScanUtil.nextLine("이메일을 입력하세요 : ");
+		String email = ScanUtil.nextLine("찾고싶은 계정의 이메일 주소를 입력해 주세요 >> ");
+		boolean istrue = userService.EmailisMatch(email);
+		int count=3;
 
-		UsersVo user = userService.findUserId(name, email);
+		if (istrue&&(count>0)) {
+			VerificationController verificationController = VerificationController.getInstance();
+			verificationController.sendVerificationCode(email);
 
-		if (user != null) {
-			System.out.println("찾은 아이디: " + user.getUser_id());
-		} else {
-			System.out.println("해당 정보로 아이디를 찾을 수 없습니다.");
-		}
+			while (true) {
+				String code = ScanUtil.nextLine("인증 코드 >> ");
+				if (verificationController.verifyCode(email, code)) {
+					System.out.println("이메일 인증에 성공했습니다.");
+					
+					UsersVo user = userService.findUserId(email);
+					if (user != null) {
+			    		System.out.println("찾은 아이디: " + user.getUser_id());
+			    	} else {
+			    		System.out.println("해당 정보로 아이디를 찾을 수 없습니다.");
+			    	}	
+					
+					break;
+				} else {
+					count--;
+					System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 "+count+"회\n");
+				}
+				
+				if(count<=0) {
+					
+					System.out.println("인증 실패");
+					return Command.HOME;
+
+				}			
+			}
+		} 
+	
+		else {
+			System.out.println("등록된 이메일이 아닙니다.");
+			return Command.HOME;
+	    }
 		return Command.HOME;
 	}
 
