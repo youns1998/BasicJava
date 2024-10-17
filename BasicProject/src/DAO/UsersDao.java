@@ -205,18 +205,17 @@ public class UsersDao {
 	
 	
 	// 아이디 찾기
-	 public UsersVo findUserId(String name, String email) {
-	        String sql = "SELECT user_id FROM USERS WHERE username = ? AND email = ? ";
+	 public UsersVo findUserId(String email) {
+	        String sql = "SELECT user_id FROM USERS WHERE email = ? ";
 	        
 	        try (Connection conn = DBUtil.getConnection();
 	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	            pstmt.setString(1, name);
-	            pstmt.setString(2, email);
+	            pstmt.setString(1, email);
 	            ResultSet rs = pstmt.executeQuery();
 
 	            if (rs.next()) {
 	                String userId = rs.getString("user_id");
-	                return new UsersVo(userId, name, email); // 반환할 VO 생성
+	                return new UsersVo(userId,email); // 반환할 VO 생성
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
@@ -225,6 +224,24 @@ public class UsersDao {
 	        return null; // 사용자를 찾지 못한 경우
 	    }
 	
+	 public boolean EmailisMatch(String email) {
+		 String sql = "SELECT user_id FROM USERS WHERE email = ? ";
+		 
+		 try (Connection conn = DBUtil.getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            
+			 	pstmt.setString(1, email);
+	            ResultSet rs = pstmt.executeQuery();
+	            
+	            if (rs.next()) {
+	                return true; // 반환할 VO 생성
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		
+		return false;
+	 }
 	
 	
 	//사용자 상세보기

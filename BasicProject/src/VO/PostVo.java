@@ -12,7 +12,7 @@ public class PostVo {
 	private String content;
 	private int price;
 	private int condition;
-	private LocalDateTime created_at;
+	private LocalDateTime created_at; 
 	private LocalDateTime updated_at;
 	private boolean isNotice;	//공지사항 여부
 	

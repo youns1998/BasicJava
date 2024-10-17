@@ -52,8 +52,8 @@ public class UsersService{
 			return getMemberCount(user_id);
 		}
 		
-		public UsersVo findUserId(String name, String email) {
-		        return dao.findUserId(name, email);
+		public UsersVo findUserId(String email) {
+		        return dao.findUserId(email);
 		    }
 		
 		
@@ -63,6 +63,10 @@ public class UsersService{
 		
 		public boolean iDisMatch(String userId, String email) {
 	        return dao.iDisMatch(userId, email);
+	    }
+		
+		public boolean EmailisMatch(String email) {
+	        return dao.EmailisMatch(email);
 	    }
 		 
 }
