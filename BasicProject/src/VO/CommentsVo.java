@@ -1,6 +1,7 @@
 package VO;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CommentsVo {
 	private int comment_id;
@@ -36,6 +37,10 @@ public class CommentsVo {
 	public LocalDateTime getCreated_at() {
 		return created_at;
 	}
+	  public String getFormattedCreatedAt() {
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	        return created_at.format(formatter); // 분 단위까지 포맷하여 반환
+	    }
 	public void setCreated_at(LocalDateTime created_at) {
 		this.created_at = created_at;
 	}
