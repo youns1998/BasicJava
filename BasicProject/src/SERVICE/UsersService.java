@@ -56,8 +56,13 @@ public class UsersService{
 		        return dao.findUserId(name, email);
 		    }
 		
-		public UsersVo findUserPass(String userId, String name, String email) {
-	        return dao.findUserPass(userId, name, email);
+		
+		public UsersVo findUserPass(String userId,  String email) {
+	        return dao.findUserPass(userId, email);
+	    }
+		
+		public boolean iDisMatch(String userId, String email) {
+	        return dao.iDisMatch(userId, email);
 	    }
 		 
 }
