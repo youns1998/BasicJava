@@ -26,9 +26,19 @@ public class PostService {
 		}
 	//-----------------------------------------------------------
 	
-	
+	// 거래 상태 업데이트 메서드
+	  public void updatePostCondition(int postId, String newCondition, String buyerId, String sellerId) {
+	       dao.updatePostConditionInDatabase(postId, newCondition);
+	       
+	// 거래 상태가 "거래완료"인 경우 거래 내역 추가
+	   if ("거래완료".equals(newCondition)) {
+	       HistoryService historyService = new HistoryService(); // 일반 인스턴스 생성
+	       historyService.processTransaction(buyerId, sellerId, postId);
+	   }
+	 }     
+	        
 
-	// 게시글 전체 목록을 가져와 List에 저장하여 반환하는 메서드
+		// 게시글 전체 목록을 가져와 List에 저장하여 반환하는 메서드
 		public List<PostVo> getPostList(){
 			 List<PostVo> postList = dao.getAllPosts();
 		        if (postList == null) {
