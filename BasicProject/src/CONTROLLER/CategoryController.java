@@ -28,7 +28,7 @@ public Command categoryList() {
 	        System.out.println("분류번호: " + category.getCategory_id() + ", 카테고리: " + category.getCategory_name());
 	    }
 	 System.out.println("======================================================================");
-	 int choice = ScanUtil.nextInt("1.카테고리 추가 2.카테고리 수정 3.카테고리 삭제 0.돌아가기");
+	 int choice = ScanUtil.nextInt("1.카테고리 추가 2.카테고리 수정 3.카테고리 삭제 0.돌아가기\n실행할 번호를 입력하세요. >> ");
 	 if(choice==1)
 		 return Command.CATEGORY_INSERT;
 	 if(choice==2)
@@ -83,16 +83,19 @@ public Command categoryUpdate() {
 	    int result = cateservice.UpdateCategory(cate);
 	    if (result > 0) {
 	        System.out.println("카테고리가 수정 성공.");
+	        System.out.println();
 	    } else {
 	        System.out.println("카테고리 수정에 실패.");
+	        System.out.println();
 	    }
 	    return Command.CATEGORY_LIST;
 	}
 
 	//카테고리 삭제
 public Command categoryDelete() {
-	
-	return Command.CATEGORY_DELETE;
+	 CategoryService cateservice = CategoryService.getInstance();
+	 
+	return Command.CATEGORY_LIST;
 	
 }
 }

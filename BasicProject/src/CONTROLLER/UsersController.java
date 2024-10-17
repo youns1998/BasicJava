@@ -182,7 +182,7 @@ public class UsersController {
         String name = ScanUtil.nextLine("이름을 입력하세요 : ");
         String email = ScanUtil.nextLine("이메일을 입력하세요 : ");
         
-        UsersVo user = userService.findUserPass(userId, name, email);
+        UsersVo user = userService.findUserPass(userId, name, email );
         
         if (user != null) {
     		System.out.println("찾은 비밀번호: " + user.getUser_pass());
