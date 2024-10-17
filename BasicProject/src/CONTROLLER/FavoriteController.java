@@ -48,8 +48,11 @@ public class FavoriteController {
     // 사용자의 관심 상품 목록 조회
     public Command viewFavorites() {
         List<FavoriteVo> favorites = favoriteService.getFavoritesByUser();
-        
-        System.out.println("관심 상품 목록:" + favorites.size());
+        UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+        if(loginUserVo.getRole()!=0) {
+        	String userId = ScanUtil.nextLine("찜 리스트를 조회할 회원 ID>>");
+        }
+        System.out.println("찜 목록:" + favorites.size()+"개의 게시물을 찜했습니다");
          
         if (favorites.isEmpty()) {
             System.out.println("관심 상품이 없습니다.");

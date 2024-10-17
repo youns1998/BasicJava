@@ -182,7 +182,7 @@ public class PostController {
 	            System.out.println("------------------------------");
 	        }
 	    }
-		return Command.ADMIN_USER; //여기 숮어해야함 << 점심먹고와서
+		return Command.MYPAGE; 
 	}
 	
 	// 관리자가 회원별 쓴 게시물 보기
@@ -206,7 +206,7 @@ public class PostController {
 		            System.out.println("------------------------------");
 		        }
 		    }
-			return Command.USER_SELF;
+			return Command.ADMIN_USERDETAIL;
 		}
 		
 	// 게시물 목록 출력
