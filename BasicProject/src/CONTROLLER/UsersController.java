@@ -202,9 +202,6 @@ public class UsersController {
 		}
 		return Command.USER_FAVORITE;
 	}
-	// 회원의 게시물 리스트 보기 tw
-
-	// 회원의 댓글 리스트 보기
 
 	// 회원 상세보기 tw
 	public Command userSelect() {
@@ -436,8 +433,15 @@ public class UsersController {
 	// 로그인 tw
 	public Command login() {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("==================== 로그인 ======================");
-
+		System.out.println(" __        ______     _______  __  .__   __. \r\n"
+				+ "|  |      /  __  \\   /  _____||  | |  \\ |  | \r\n"
+				+ "|  |     |  |  |  | |  |  __  |  | |   \\|  | \r\n"
+				+ "|  |     |  |  |  | |  | |_ | |  | |  . `  | \r\n"
+				+ "|  `----.|  `--'  | |  |__| | |  | |  |\\   | \r\n"
+				+ "|_______| \\______/   \\______| |__| |__| \\__| \r\n"
+				+ "                                             \r\n"
+				+ "");
+		
 		if (MainController.sessionMap.get("loginUser") != null) {
 			System.out.println("이미 로그인된 상태입니다.");
 			return Command.USER_HOME;
@@ -454,9 +458,8 @@ public class UsersController {
         // PW 입력 박스
         System.out.println("┌────────────────────────────┐");
         System.out.println("│       PW를 입력하세요         │");
-        System.out.print("│   >> "); 
+        System.out.print("│         >> "); 
         String password = scanner.nextLine();
-        System.out.printf("│   >> %s%s│%n", password, " ".repeat(27 - password.length())); // 길이에 맞춰 공백 추가
         System.out.println("└────────────────────────────┘");
 
 		UsersVo loginUserVo = userService.getUser(new UsersVo(userId, password));
