@@ -109,10 +109,11 @@ public class PostService {
 	        return dao.deletePost(post_id);
 	    }
 		
-		// 검색기능 메서드
-		public List<PostVo> searchPosts(String keyword) {
+		
+		// 검색에 카테고리로 찾기 기능 추가
+		public List<PostVo> searchPosts(String keyword, Integer categoryId) {
 		    PostDao postDao = PostDao.getInstance();
-		    return postDao.searchPosts(keyword);
+		    return postDao.searchPosts(keyword, categoryId);
 		}
 		
 	}

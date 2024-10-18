@@ -141,8 +141,21 @@ public class PostController {
 		int commentCount = commentsService.getCommentCount(post.getPost_id());
 		boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id());
 
+		// 카테고리 정보 추가
 		String borderLine = "+==============================================================================+";
 		System.out.println(borderLine);
+		
+		CategoryService categoryService = CategoryService.getInstance();
+	    String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
+
+	    System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s 카테고리: %-10s\n", 
+	        post.getUser_id(), 
+	        post.getTitle(), 
+	        post.getPrice() + "원", 
+	        post.getCondition(),
+	        categoryName); // 카테고리 이름 출력
+	    System.out.println(borderLine);
+
 
 		// 직접 출력으로 변경
 		System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s %s\n", post.getUser_id(), post.getTitle(),
@@ -155,7 +168,9 @@ public class PostController {
 		System.out.println(borderLine);
 
 		// 작성 시간 및 수정 시간 출력
-		System.out.printf("| 작성 시간: %-61s \n", post.getCreated_at());
+		System.out.printf("| 작성 시간: %-35s        카테고리: %s \n", 
+                (createdAt != null ? createdAt.format(formatter1) : "미정"), 
+                post.getCategory_id());
 		System.out.printf("| 수정 시간: %-61s \n", "(수정 시각 정보 미정)");
 		System.out.println(borderLine);
 
@@ -437,18 +452,51 @@ public class PostController {
 
 	// 게시글 검색 메서드
 	public Command postSearch() {
-		String keyword = ScanUtil.nextLine("검색할 키워드를 입력하세요: ");
-		PostService postService = PostService.getInstance();
-		List<PostVo> results = postService.searchPosts(keyword);
+		 System.out.println("검색 방법을 선택하세요:");
+		    System.out.println("1. 키워드로 검색");
+		    System.out.println("2. 카테고리로 검색");
+		    
+		    int choice = ScanUtil.nextInt("선택 >> ");
+		    
+		    PostService postService = PostService.getInstance();
+		    
+		    if (choice == 1) {
+		        String keyword = ScanUtil.nextLine("검색할 키워드를 입력하세요: ");
+		        List<PostVo> results = postService.searchPosts(keyword, null); // 카테고리는 null로 설정
 
-		if (results.isEmpty()) {
-			System.out.println("검색 결과가 없습니다.");
-		} else {
-			for (PostVo post : results) {
-				System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %s\n", post.getPost_id(), post.getTitle(),
-						post.getPrice(), "판매중");
-			}
-		}
-		return Command.POST_LIST; // 검색 후 게시물 목록으로 돌아감
+		        if (results.isEmpty()) {
+		            System.out.println("검색 결과가 없습니다.");
+		        } else {
+		            for (PostVo post : results) {
+		                System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %d\n",
+		                        post.getPost_id(), post.getTitle(), post.getPrice(), post.getCondition());
+		            }
+		        }
+		    } else if (choice == 2) {
+		        // 카테고리 목록 출력
+		        CategoryService categoryService = CategoryService.getInstance();
+		        List<CategoryVo> categories = categoryService.getCategoryList();
+		        
+		        System.out.println("카테고리 목록:");
+		        for (CategoryVo category : categories) {
+		            System.out.printf("ID: %d, 이름: %s\n", category.getCategory_id(), category.getCategory_name());
+		        }
+
+		        int categoryId = ScanUtil.nextInt("검색할 카테고리 ID를 입력하세요: ");
+		        List<PostVo> results = postService.searchPosts(null, categoryId); // 키워드는 null로 설정
+
+		        if (results.isEmpty()) {
+		            System.out.println("검색 결과가 없습니다.");
+		        } else {
+		            for (PostVo post : results) {
+		                System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %d\n",
+		                        post.getPost_id(), post.getTitle(), post.getPrice(), post.getCondition());
+		            }
+		        }
+		    } else {
+		        System.out.println("잘못된 선택입니다.");
+		    }
+		    
+		    return Command.POST_LIST; // 검색 후 게시물 목록으로 돌아감
 	}
 }
