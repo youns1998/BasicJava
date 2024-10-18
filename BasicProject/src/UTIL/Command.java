@@ -47,6 +47,7 @@ public enum Command {
 	POST_DELETE,	// 글 삭제
 	POST_ADMIN,		// 관리자가 회원이 쓴 글 보기
 	POST_SELF, 		// 내가 쓴 글 보기
+	POST_SEARCH,     // 검색 명령 추가
 	
 	// 댓글 
 	COMMENT_INSERT,	// 댓글 추가
