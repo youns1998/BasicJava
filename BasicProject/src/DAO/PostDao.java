@@ -10,6 +10,7 @@ import java.util.List;
 
 import UTIL.DBUtil;
 import UTIL.ScanUtil;
+import VO.CommentsVo;
 import VO.HistoryVo;
 import VO.PostVo;
 
@@ -341,25 +342,73 @@ public class PostDao {
 		}
 	}
 
-// 거래상태 업데이트 
-	public static void updatePostCondition(int postId, String newCondition, String buyerId, String sellerId) {
-		String sql = "UPDATE POST SET CONDITION = ? WHERE post_id = ?";
+	// 거래 상태 업데이트 로직 추가
+	 // 게시물 상태 업데이트
+	// 거래 상태 업데이트 로직 추가
+	public static void updatePostCondition(int postId, int newCondition, String buyerId, String sellerId, Integer commentId) {
+	    String checkTransactionSql = "SELECT COUNT(*) FROM TRANSACTION WHERE POST_ID = ?";
+	    String updateTransactionSql = "UPDATE TRANSACTION SET TRANSACTION_STATUS = ?, BUYER_ID = ? WHERE POST_ID = ?";
+	    String insertTransactionSql = "INSERT INTO TRANSACTION (TRANSACTION_ID, BUYER_ID, SELLER_ID, POST_ID, TRANSACTION_DATE, TRANSACTION_STATUS) "
+	                                + "VALUES ((SELECT NVL(MAX(TRANSACTION_ID), 0) + 1 FROM TRANSACTION), ?, ?, ?, SYSDATE, ?)";
 
-		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+	    try (Connection con = DBUtil.getConnection(); 
+	         PreparedStatement psCheck = con.prepareStatement(checkTransactionSql);
+	         PreparedStatement psUpdate = con.prepareStatement(updateTransactionSql);
+	         PreparedStatement psInsert = con.prepareStatement(insertTransactionSql)) {
 
-			ps.setString(1, newCondition);
-			ps.setInt(2, postId);
-			ps.executeUpdate();
+	        // 기존 트랜잭션 내역이 있는지 확인
+	        psCheck.setInt(1, postId);
+	        ResultSet rs = psCheck.executeQuery();
+	        rs.next();
+	        int transactionCount = rs.getInt(1);
 
-			// 상태 변경 후 거래 내역 추가 확인
-			PostDao postDAO = new PostDao();
-			postDAO.checkPostConditionAndAddTransaction(postId, buyerId, sellerId);
+	        // 게시물 상태 업데이트 (POST 테이블)
+	        updatePostStatus(postId, newCondition);
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	        if (transactionCount > 0) {
+	            // 기존 거래가 있는 경우
+	            if (newCondition == 3) {  // 거래 완료 시 구매자 정보 유지
+	                PreparedStatement psGetBuyer = con.prepareStatement("SELECT BUYER_ID FROM TRANSACTION WHERE POST_ID = ?");
+	                psGetBuyer.setInt(1, postId);
+	                ResultSet buyerResult = psGetBuyer.executeQuery();
+	                if (buyerResult.next()) {
+	                    buyerId = buyerResult.getString("BUYER_ID");  // 기존 구매자 ID 사용
+	                }
+	            }
+	            psUpdate.setInt(1, newCondition);
+	            psUpdate.setString(2, buyerId); // 예약/완료 중인 경우 구매자 정보 업데이트
+	            psUpdate.setInt(3, postId);
+	            psUpdate.executeUpdate();
+	            System.out.println("거래 상태가 업데이트되었습니다.");
+	        } else {
+	            // 거래 내역이 없으면 새로 추가
+	            psInsert.setString(1, buyerId);
+	            psInsert.setString(2, sellerId);
+	            psInsert.setInt(3, postId);
+	            psInsert.setInt(4, newCondition);
+	            psInsert.executeUpdate();
+	            System.out.println("새로운 거래 내역이 추가되었습니다.");
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
-	
+
+
+
+	private static void updatePostStatus(int postId, int newCondition) throws SQLException {
+	    String sql = "UPDATE POST SET CONDITION = ? WHERE POST_ID = ?";
+	    try (Connection con = DBUtil.getConnection(); PreparedStatement psPost = con.prepareStatement(sql)) {
+	        psPost.setInt(1, newCondition);
+	        psPost.setInt(2, postId);
+	        psPost.executeUpdate();
+	    }
+	}
+
+
+
+
 	// 게시글 검색 (거래 완료된 상품 제외)
 	public List<PostVo> searchPosts(String keyword, Integer categoryId) {
 	    List<PostVo> postlist = new ArrayList<PostVo>();

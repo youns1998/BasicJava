@@ -98,7 +98,7 @@ public class MainController {
 				        cmd = Command.POST_LIST; // 기본 게시물 목록으로 돌아가기
 				    }
 				    break;
-
+  
 				// 거래 기록 보기
 				case HISTORY_LIST: cmd = historyController.viewTransactionHistory(); break;
 				

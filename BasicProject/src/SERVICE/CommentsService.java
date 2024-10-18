@@ -18,6 +18,9 @@ public class CommentsService {
             instance = new CommentsService();
         return instance;
     }
+    public CommentsVo selectCommentById(int commentId) {
+        return commentDAO.selectCommentById(commentId);
+    }
 
     public int addComment(CommentsVo comment) {
         return commentDAO.insertComment(comment);
