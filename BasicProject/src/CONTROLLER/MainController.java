@@ -1,11 +1,9 @@
 package CONTROLLER;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
-import CONTROLLER.*;
-import SERVICE.UsersService;
-import UTIL.*;
+import UTIL.Command;
+import UTIL.ScanUtil;
 import VO.UsersVo;
 
 
@@ -110,9 +108,9 @@ public class MainController {
 					cmd = Command.HOME;
 			}
 		}
-	}
+	} 
+	
 	private Command home() {
-		 
 		System.out.println(ANSI_BROWN+"            ■■■■■■■■    ■       ■  ");
         System.out.println("            ■       ■   ■■     ■■  ");
         System.out.println("            ■■■■■■■■    ■  ■ ■  ■  ");
@@ -125,8 +123,9 @@ public class MainController {
 	    System.out.println();
 	    int input = ScanUtil.nextInt("선택 >> ");
 	    System.out.println();
+	    
 	    switch (input) {
-	        case 1: return Command.LOGIN;
+	        case 1:  return Command.LOGIN ;
 	        case 2: return Command.JOIN;
 	        case 3: return Command.S_ID;
 	        case 4: return Command.S_PW;
@@ -170,7 +169,6 @@ public class MainController {
 				return Command.HOME;
 		}
 		return Command.USER_HOME;
-		
 	}
 	public Command admin_home() {
 		UsersVo loginUserVo = (UsersVo)MainController.sessionMap.get("loginUser");
@@ -178,11 +176,10 @@ public class MainController {
 			return Command.HOME;
 		}
 		System.out.println(loginUserVo.getUsername() + " 님이 관리자로 로그인 하셨습니다");
-		System.out.println("╭◜◝ ͡ ◜◝╮    몽실   ╭◜◝ ͡ ◜◝╮\r\n"
-				+ " ( •ㅅ•    ) 몽실몽실 (   •ㅅ•  )\r\n"
-				+ " ╰◟◞ ͜ ╭◜◝ ͡ ◜◝╮몽실몽실 ͜ ◟◞╯\r\n"
-				+ "  몽몽실(  •ㅅ•   ) 몽실\r\n"
-				+ " 몽실몽 ╰◟◞ ◟◞╯몽실몽실");
+		System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
+				+ "█░░░░░░░░▀█▄▀▄▀██████░▀█▄▀▄▀██████░\r\n"
+				+ "░░░░░░░░░░░▀█▄█▄███▀░░░ ▀██▄█▄███▀░\r\n"
+				+ "");
 		System.out.println("-------------------------------------------------------------");
 		System.out.println("1.회원정보관리\t2.중고장터관리\t3.댓글관리\t4.카테고리관리\t0.로그아웃");
 		System.out.println("-------------------------------------------------------------");
@@ -191,15 +188,13 @@ public class MainController {
 		switch (input) {
 			case 1: return Command.UESR_LIST;
 			case 2: return Command.POST_LIST;
-//			case 3: return Command.MYPAGE;
+			case 3: return Command.COMMENT_ADMIN;			//사용자가 쓴 모든 댓글 불러오기 
 			case 4: return Command.CATEGORY_LIST;
-//			case 3: return Command.MYPAGE;
 			case 0:
 				// ProjectMain의 정적변수인 sessionMap에 저장된 모든 자료를 삭제한다.
 				MainController.sessionMap.clear();;
 				return Command.HOME;
 		}
 		return Command.USER_HOME;
-		
 	}
 }
