@@ -361,16 +361,25 @@ public class PostDao {
 	}
 	
 	// 게시글 검색 (거래 완료된 상품 제외)
-	public List<PostVo> searchPosts(String keyword) {
+	public List<PostVo> searchPosts(String keyword, Integer categoryId) {
 	    List<PostVo> postlist = new ArrayList<PostVo>();
-	    String sql = "SELECT * FROM POST WHERE (TITLE LIKE ? OR CONTENT LIKE ?) AND CONDITION <> ? ORDER BY CREATED_AT";
+	    StringBuilder sql = new StringBuilder("SELECT * FROM POST WHERE (TITLE LIKE ? OR CONTENT LIKE ?) AND CONDITION <> ?");
 
+	    if (categoryId != null) {
+	        sql.append(" AND CATEGORY_ID = ?");
+	    }
+	    sql.append(" ORDER BY CREATED_AT");
 	    try {
 	        con = DBUtil.getConnection();
-	        ps = con.prepareStatement(sql);
+	        ps = con.prepareStatement(sql.toString());
 	        ps.setString(1, "%" + keyword + "%"); // 제목 검색
 	        ps.setString(2, "%" + keyword + "%"); // 내용 검색
 	        ps.setInt(3, CONDITION_SOLD_OUT); // 거래 완료 상태 제외
+	        
+	        if (categoryId != null) {
+	            ps.setInt(4, categoryId); // 카테고리 검색
+	        }
+	        
 	        rs = ps.executeQuery();
 
 	        while (rs.next()) {

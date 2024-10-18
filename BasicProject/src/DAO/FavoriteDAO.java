@@ -134,4 +134,19 @@ public class FavoriteDAO {
 	        }
 	        return false;
 	    }
+	// 특정 게시물을 찜한 사람의 수를 확인
+	  public int countFavoritesForPost(int postId) {
+	      String sql = "SELECT COUNT(DISTINCT USER_ID) FROM FAVORITE WHERE POST_ID = ?";
+	      try (Connection conn = DBUtil.getConnection();
+	           PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	          pstmt.setInt(1, postId);
+	          ResultSet rs = pstmt.executeQuery();
+	          if (rs.next()) {
+	              return rs.getInt(1); // 찜한 사람의 수 반환
+	          }
+	      } catch (SQLException e) {
+	          e.printStackTrace();
+	      }
+	      return 0; // 찜한 사람이 없을 경우 0 반환
+	  }
 }
