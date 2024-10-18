@@ -1,5 +1,9 @@
 package CONTROLLER;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,15 +12,21 @@ import SERVICE.CommentsService;
 import SERVICE.FavoriteService;
 import SERVICE.PostService;
 import SERVICE.UsersService;
-import UTIL.*;
-import VO.*;
+import UTIL.ColorUtil;
+import UTIL.Command;
+import UTIL.ScanUtil;
+import VO.CategoryVo;
+import VO.CommentsVo;
+import VO.PostVo;
+import VO.UsersVo;
 
 public class PostController {
 
 	private static final String ANSI_LIGHT_RED = "\033[38;5;203m"; // 덜한 빨간색
 	private static final String ANSI_BOLD = "\033[1m";
 	private static final String ANSI_RESET = "\033[0m";
-
+	NumberFormat formatter = NumberFormat.getInstance();
+	DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	private static PostController instance;
 	private CommentController commentController = CommentController.getInstance();
 	private FavoriteController favoriteController = FavoriteController.getInstance();
@@ -132,52 +142,57 @@ public class PostController {
 		return Command.POST_LIST;
 	}
 
-	// 게시물 상세보기
-	private void displayPostDetails(PostVo post) {
-		CommentsService commentsService = CommentsService.getInstance();
-		FavoriteService favoriteService = FavoriteService.getInstance();
-		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	   // 게시물 상세보기
+	   private void displayPostDetails(PostVo post) {
+	      CommentsService commentsService = CommentsService.getInstance();
+	      FavoriteService favoriteService = FavoriteService.getInstance();
+	      UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	      PostService postService = PostService.getInstance();
+	      int commentCount = commentsService.getCommentCount(post.getPost_id());
+	      boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id());
 
-		int commentCount = commentsService.getCommentCount(post.getPost_id());
-		boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id());
+	      CategoryService categoryService = CategoryService.getInstance();
+	       String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
+	       
+	      String borderLine = "+==============================================================================+";
+	      System.out.println(borderLine);
 
-		// 카테고리 정보 추가
-		String borderLine = "+==============================================================================+";
-		System.out.println(borderLine);
-		
-		CategoryService categoryService = CategoryService.getInstance();
-	    String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
+	      // 직접 출력으로 변경
+	      String condition;
+	      switch (post.getCondition()) {
+	          case 1:
+	              condition = "판매중";
+	              break;
+	          case 2:
+	              condition = "예약중";
+	              break;
+	          case 3:
+	              condition = "거래완료";
+	              break;
+	          default:
+	              condition = "알 수 없음"; // 기본값 설정
+	      }
+	      System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-10s 상태: %s %s\n", post.getUser_id(), post.getTitle(),
+	            formatter.format(post.getPrice())+"원", condition, isFavorite ? "♡ 찜한 상품" : " ");
+	      System.out.println(borderLine);
 
-	    System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s 카테고리: %-10s\n", 
-	        post.getUser_id(), 
-	        post.getTitle(), 
-	        post.getPrice() + "원", 
-	        post.getCondition(),
-	        categoryName); // 카테고리 이름 출력
-	    System.out.println(borderLine);
+	      // 내용 출력
+	      System.out.printf("| 내용: %-72s \n", post.getContent());
+	      System.out.printf("| %-78s \n", "");
+	      System.out.println(borderLine);
+	      
+	      LocalDateTime createdAt = post.getCreated_at();
+	      LocalDateTime updatedAt = post.getUpdated_at();
+	      
+	      // 작성 시간 및 수정 시간 출력
+	      System.out.printf("| 작성 시간: %-35s        카테고리: %s \n", createdAt.format(formatter1),categoryName);
+	      System.out.printf("| 수정 시간: %-61s \n", updatedAt.format(formatter1));
+	      System.out.println(borderLine);
 
-
-		// 직접 출력으로 변경
-		System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s %s\n", post.getUser_id(), post.getTitle(),
-				post.getPrice() + "원", post.getCondition(), isFavorite ? "♡ 찜한 상품" : " ");
-		System.out.println(borderLine);
-
-		// 내용 출력
-		System.out.printf("| 내용: %-72s \n", post.getContent());
-		System.out.printf("| %-78s \n", "");
-		System.out.println(borderLine);
-
-		// 작성 시간 및 수정 시간 출력
-		System.out.printf("| 작성 시간: %-35s        카테고리: %s \n", 
-                (createdAt != null ? createdAt.format(formatter1) : "미정"), 
-                post.getCategory_id());
-		System.out.printf("| 수정 시간: %-61s \n", "(수정 시각 정보 미정)");
-		System.out.println(borderLine);
-
-		// 댓글 수와 찜한 사람 수 출력
-		System.out.printf("| 댓글 수: %-10d 찜한 사람 수: %-48s \n", commentCount, "(찜한 사람 수 미정)");
-		System.out.println(borderLine);
-	}
+	      // 댓글 수와 찜한 사람 수 출력
+	      System.out.printf("| 댓글 수: %-10d 찜한 사람 수: %-48s \n", commentCount, "(찜한 사람 수 미정)");
+	      System.out.println(borderLine);
+	   }
 
 	// 아스키 아트 박스 출력 함수
 	private void printAsciiArtBox(String content, boolean isLast) {
@@ -206,7 +221,7 @@ public class PostController {
 				System.out.println("게시물 번호: " + post.getPost_id());
 				System.out.println("제목: " + post.getTitle());
 				System.out.println("내용: " + post.getContent());
-				System.out.println("가격: " + post.getPrice());
+				System.out.println("가격: " + formatter.format(post.getPrice()) + "원");
 				System.out.println("작성일: " + post.getCreated_at());
 				System.out.println("수정일: " + post.getUpdated_at());
 				System.out.println("현재 상태: " + post.getCondition());
@@ -230,7 +245,7 @@ public class PostController {
 				System.out.println("게시물 번호: " + post.getPost_id());
 				System.out.println("제목: " + post.getTitle());
 				System.out.println("내용: " + post.getContent());
-				System.out.println("가격: " + post.getPrice());
+				System.out.println("가격: " + formatter.format(post.getPrice()) + "원");
 				System.out.println("작성일: " + post.getCreated_at());
 				System.out.println("수정일: " + post.getUpdated_at());
 				System.out.println("현재 상태: " + post.getCondition());
@@ -286,14 +301,14 @@ public class PostController {
 			// 판매 중 게시물 출력
 			for (PostVo post : salePosts) {
 				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), post.getPrice(), post.getUser_id(), "판매중");
+						post.getTitle(), formatter.format(post.getPrice())+"원", post.getUser_id(), "판매중");
 				printAsciiArtBox(content, false);
 			}
 
 			// 예약 중 게시물 출력 (초록색)
 			for (PostVo post : reservedPosts) {
 				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), post.getPrice(), post.getUser_id(), "예약중");
+						post.getTitle(), formatter.format(post.getPrice())+"원", post.getUser_id(), "예약중");
 				System.out.print(ColorUtil.GREEN);
 				printAsciiArtBox(content, false);
 				System.out.print(ColorUtil.RESET);
@@ -303,7 +318,7 @@ public class PostController {
 			// 거래 완료 게시물 출력 (회색)
 			for (PostVo post : completedPosts) {
 				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), post.getPrice(), post.getUser_id(), "거래 완료");
+						post.getTitle(), formatter.format(post.getPrice())+"원", post.getUser_id(), "거래 완료");
 				System.out.print(ColorUtil.GRAY);
 				printAsciiArtBox(content, true);
 				System.out.print(ColorUtil.RESET);
