@@ -105,10 +105,10 @@ public class PostController {
 	    System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
 
 	    if (post.getUser_id().equals(loginUserVo.getUser_id())) {
-	        System.out.print("5. 판매글 수정 \t");
-	        System.out.println("6. 판매글 삭제");
+	        System.out.println("5. 판매글 수정  6. 판매글 삭제");
 	    }
-
+	    
+	    System.out.print("메뉴 선택 >> ");
 	    int choice = ScanUtil.nextInt();
 
 	    switch (choice) {
