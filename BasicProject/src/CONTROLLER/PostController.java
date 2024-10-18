@@ -172,8 +172,8 @@ public class PostController {
 	          default:
 	              condition = "알 수 없음"; // 기본값 설정
 	      }
-	      System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-10s 상태: %s %s\n", post.getUser_id(), post.getTitle(),
-	            formatter.format(post.getPrice())+"원", condition, isFavorite ? "♡ 찜한 상품" : " ");
+	      System.out.printf("| 제목: %-20s 가격: %-20s 상태: %-10s \n| 작성자: %-50s  %s\n", post.getTitle(),
+	    		  formatter.format(post.getPrice())+"원",condition, post.getUser_id(),  isFavorite ? "♡ 찜한 상품" : " ");
 	      System.out.println(borderLine);
 
 	      // 내용 출력
