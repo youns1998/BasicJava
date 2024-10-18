@@ -33,7 +33,7 @@ public class HistoryController {
 
     // 거래 내역 출력 메서드
     public void printTransactionHistory(List<HistoryVo> historyList) {
-        System.out.println("======= 거래 내역 =======");
+      
         for (HistoryVo history : historyList) {
             String transactionStatus;
             switch (history.getTransaction_status()) {

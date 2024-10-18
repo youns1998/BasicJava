@@ -52,6 +52,7 @@ public class MainController {
 				case USER_SELFDELETE: cmd = usersController.userSelfDelete(); break; //사용자용
 				case S_ID: cmd = usersController.findUserId(); break;
 				case S_PW: cmd = usersController.findUserPass(); break;
+				
 				// 로그인 후
 				case USER_HOME: cmd = userHome(); break;
 				case ADMIN_HOME: cmd = admin_home(); break;
