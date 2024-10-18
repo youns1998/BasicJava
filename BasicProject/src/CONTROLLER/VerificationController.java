@@ -19,7 +19,7 @@ public class VerificationController {
     }
 
     public Command sendVerificationCode(String email) {
-        String code = String.valueOf((int) (Math.random() * 10000)); // 랜덤한 4자리 코드 생성
+        String code = String.format("%04d",(int) (Math.random() * 10000)); // 랜덤한 4자리 코드 생성
         verificationCodes.put(email, code);
         emailService.sendVerificationEmail(email, code);
         System.out.println("이메일로 전송된 인증 코드를 확인하세요.");
