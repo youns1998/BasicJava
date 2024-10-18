@@ -1,12 +1,11 @@
 package CONTROLLER;
 
 import java.util.List;
+import java.util.Scanner;
 
-import SERVICE.FavoriteService;
 import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
-import VO.FavoriteVo;
 import VO.UsersVo;
 
 public class UsersController {
@@ -203,9 +202,6 @@ public class UsersController {
 		}
 		return Command.USER_FAVORITE;
 	}
-	// 회원의 게시물 리스트 보기 tw
-
-	// 회원의 댓글 리스트 보기
 
 	// 회원 상세보기 tw
 	public Command userSelect() {
@@ -436,15 +432,36 @@ public class UsersController {
 
 	// 로그인 tw
 	public Command login() {
-		System.out.println("==================== 로그인 ======================");
-
+		Scanner scanner = new Scanner(System.in);
+		System.out.println(" __        ______     _______  __  .__   __. \r\n"
+				+ "|  |      /  __  \\   /  _____||  | |  \\ |  | \r\n"
+				+ "|  |     |  |  |  | |  |  __  |  | |   \\|  | \r\n"
+				+ "|  |     |  |  |  | |  | |_ | |  | |  . `  | \r\n"
+				+ "|  `----.|  `--'  | |  |__| | |  | |  |\\   | \r\n"
+				+ "|_______| \\______/   \\______| |__| |__| \\__| \r\n"
+				+ "                                             \r\n"
+				+ "");
+		
 		if (MainController.sessionMap.get("loginUser") != null) {
 			System.out.println("이미 로그인된 상태입니다.");
 			return Command.USER_HOME;
 		}
 
-		String userId = ScanUtil.nextLine("ID를 입력하세요 >> ");
-		String password = ScanUtil.nextLine("PW를 입력하세요 >> ");
+		  // ID 입력 박스
+        System.out.println("┌────────────────────────────┐");
+        System.out.println("│       ID를 입력하세요         │");
+        System.out.print("│         >> "); 
+        String userId = scanner.nextLine();
+        System.out.println("└────────────────────────────┘"); // 박스 닫기
+
+
+        // PW 입력 박스
+        System.out.println("┌────────────────────────────┐");
+        System.out.println("│       PW를 입력하세요         │");
+        System.out.print("│         >> "); 
+        String password = scanner.nextLine();
+        System.out.println("└────────────────────────────┘");
+
 		UsersVo loginUserVo = userService.getUser(new UsersVo(userId, password));
 
 		if (loginUserVo == null) {
