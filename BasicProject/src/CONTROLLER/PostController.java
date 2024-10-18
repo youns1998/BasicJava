@@ -494,10 +494,10 @@ public class PostController {
 		        
 		        System.out.println("카테고리 목록:");
 		        for (CategoryVo category : categories) {
-		            System.out.printf("ID: %d, 이름: %s\n", category.getCategory_id(), category.getCategory_name());
+		            System.out.printf("분류번호: %d, 이름: %s\n", category.getCategory_id(), category.getCategory_name());
 		        }
 
-		        int categoryId = ScanUtil.nextInt("검색할 카테고리 ID를 입력하세요: ");
+		        int categoryId = ScanUtil.nextInt("검색할 분류번호를 입력하세요: ");
 		        List<PostVo> results = postService.searchPosts(null, categoryId); // 키워드는 null로 설정
 
 		        if (results.isEmpty()) {
