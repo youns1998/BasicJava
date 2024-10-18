@@ -95,27 +95,19 @@ public class PostController {
 	    System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
 
 	    if (post.getUser_id().equals(loginUserVo.getUser_id())) {
-	        System.out.println("5. 판매글 수정");
+	        System.out.print("5. 판매글 수정 \t");
+	        System.out.println("6. 판매글 삭제");
 	    }
 
 	    int choice = ScanUtil.nextInt();
 
 	    switch (choice) {
-	    case 1:
-	        return commentController.insertComment(postId);
-	    case 2:
-	        return commentController.updateComment(postId);
-	    case 3:
-	        return commentController.deleteComment(postId);
-	    case 4:
-	        return favoriteController.addFavorite(postId);
-	    case 5:
-	        if (post.getUser_id().equals(loginUserVo.getUser_id())) {
-	            return postUpdate(postId); // 게시물 ID를 자동으로 전달하여 수정 화면으로 이동
-	        } else {
-	            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-	        }
-	        return commentMenu(postId);
+	    case 1: return commentController.insertComment(postId);
+	    case 2: return commentController.updateComment(postId);
+	    case 3: return commentController.deleteComment(postId);
+	    case 4: return favoriteController.addFavorite(postId);
+	    case 5: return postUpdate(postId); // 게시물 ID를 자동으로 전달하여 수정 화면으로 이동
+	    case 6: return postDelete(postId);
 	    case 0:
 	        return returnToPostList();
 	    default:
@@ -311,34 +303,22 @@ public class PostController {
 		if (loginUserVo.getRole() != 0) {
 			int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 5.검색 0.관리자 화면으로 \n 메뉴 선택 >> ");
 			switch (input) {
-			case 1:
-				return Command.POST_INSERT;
-			case 2:
-				return Command.POST_DELETE;
-			case 3:
-				return Command.POST_UPDATE;
-			case 4:
-				MainController.sessionMap.remove("currentPostId");
-				return Command.POST_DETAIL;
-			case 5:
-				return postSearch(); // 검색 기능 추가
-			case 0:
-				return Command.USER_HOME;
+			case 1:	return Command.POST_INSERT;
+			case 2:	return Command.POST_DELETE;
+			case 3:	return Command.POST_UPDATE;
+			case 4:	MainController.sessionMap.remove("currentPostId");	
+					return Command.POST_DETAIL;
+			case 5:	return postSearch(); // 검색 기능 추가
+			case 0:	return Command.USER_HOME;
 			}
 		} else {
-			int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3.상세 보기 4.검색 0.내 화면으로 \n 메뉴 선택 >> ");
+			int input = ScanUtil.nextInt("1.판매 글 작성 2.상세 보기 3.검색 0.내 화면으로 \n 메뉴 선택 >> ");
 			switch (input) {
-			case 1:
-				return Command.POST_INSERT;
-			case 2:
-				return Command.POST_DELETE;
-			case 3:
-				MainController.sessionMap.remove("currentPostId");
-				return Command.POST_DETAIL;
-			case 4:
-				return postSearch(); // 검색 기능 추가
-			case 0:
-				return Command.USER_HOME;
+			case 1:	return Command.POST_INSERT;
+			case 2: MainController.sessionMap.remove("currentPostId");	
+					return Command.POST_DETAIL;
+			case 3: return postSearch(); // 검색 기능 추가
+			case 0:	return Command.USER_HOME;
 			}
 		}
 		return Command.USER_HOME;
@@ -409,10 +389,7 @@ public class PostController {
 	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 	    PostService postService = PostService.getInstance();
 	    PostVo post = postService.getPost(postId);
-	    if (post == null) {
-	        System.out.println("해당 게시물을 찾을 수 없습니다.");
-	        return Command.POST_LIST;
-	    }
+	    
 	    if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
 	        postService.updatePostSelect(post); 
 	    } else {
@@ -420,6 +397,19 @@ public class PostController {
 	    }
 	    return Command.POST_LIST;
 	}
+	// 게시글 삭제 메서드: 이미 글 번호를 알고 있는 경우
+		public Command postDelete(int postId ) {
+			UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+			PostService postService = PostService.getInstance();
+			PostVo post = postService.getPost(postId);
+			
+			if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+				postService.deletePost(post.getPost_id());
+			} else {
+				System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
+			}
+			return Command.POST_LIST;
+		}
 
 
 	// 게시글 삭제 메서드
