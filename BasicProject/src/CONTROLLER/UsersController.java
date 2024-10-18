@@ -1,12 +1,11 @@
 package CONTROLLER;
 
 import java.util.List;
+import java.util.Scanner;
 
-import SERVICE.FavoriteService;
 import SERVICE.UsersService;
 import UTIL.Command;
 import UTIL.ScanUtil;
-import VO.FavoriteVo;
 import VO.UsersVo;
 
 public class UsersController {
@@ -436,6 +435,7 @@ public class UsersController {
 
 	// 로그인 tw
 	public Command login() {
+		Scanner scanner = new Scanner(System.in);
 		System.out.println("==================== 로그인 ======================");
 
 		if (MainController.sessionMap.get("loginUser") != null) {
@@ -443,8 +443,22 @@ public class UsersController {
 			return Command.USER_HOME;
 		}
 
-		String userId = ScanUtil.nextLine("ID를 입력하세요 >> ");
-		String password = ScanUtil.nextLine("PW를 입력하세요 >> ");
+		  // ID 입력 박스
+        System.out.println("┌────────────────────────────┐");
+        System.out.println("│       ID를 입력하세요         │");
+        System.out.print("│         >> "); 
+        String userId = scanner.nextLine();
+        System.out.println("└────────────────────────────┘"); // 박스 닫기
+
+
+        // PW 입력 박스
+        System.out.println("┌────────────────────────────┐");
+        System.out.println("│       PW를 입력하세요         │");
+        System.out.print("│   >> "); 
+        String password = scanner.nextLine();
+        System.out.printf("│   >> %s%s│%n", password, " ".repeat(27 - password.length())); // 길이에 맞춰 공백 추가
+        System.out.println("└────────────────────────────┘");
+
 		UsersVo loginUserVo = userService.getUser(new UsersVo(userId, password));
 
 		if (loginUserVo == null) {
