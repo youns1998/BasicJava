@@ -43,7 +43,10 @@ public class FavoriteService {
        public boolean isFavoriteExists(String userId, int postId) {
            return favoriteDAO.isFavorite(userId, postId);
        }
-       
+       // 게시물에서 찜을한 사람의 수 확인
+       public int countFavoritesForPost(int postId) {
+    	   return favoriteDAO.countFavoritesForPost(postId);
+       }
      
 }
 

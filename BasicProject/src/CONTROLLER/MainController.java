@@ -157,7 +157,7 @@ public class MainController {
 		System.out.println("-----------------------------------------------------------------------");
 		System.out.println("1.PM 장터 보기\t2.내 정보 보기\t3.찜한 상품 보기\t4.나의 거래 내역\t0.로그 아웃");
 		System.out.println("-----------------------------------------------------------------------");
-		int input = ScanUtil.nextInt("선택 >> ");
+		int input = ScanUtil.nextInt("메뉴 선택 >> ");
 		
 		switch (input) {
 			case 1: return Command.POST_LIST;

@@ -122,8 +122,10 @@ public class PostService {
     }
 
     // 검색기능 메서드
-    public List<PostVo> searchPosts(String keyword) {
-        PostDao postDao = PostDao.getInstance();
-        return postDao.searchPosts(keyword);
-    }
+    public List<PostVo> searchPosts(String keyword, Integer categoryId) {
+	    PostDao postDao = PostDao.getInstance();
+	    return postDao.searchPosts(keyword, categoryId);
+	}
 }
+		
+

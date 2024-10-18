@@ -1,23 +1,28 @@
 package CONTROLLER;
 
+import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import SERVICE.CategoryService;
-import SERVICE.CommentsService;
-import SERVICE.FavoriteService;
-import SERVICE.HistoryService;
-import SERVICE.PostService;
-import SERVICE.UsersService;
-import UTIL.*;
-import VO.*;
+import SERVICE.*;
+
+import UTIL.ColorUtil;
+import UTIL.Command;
+import UTIL.ScanUtil;
+import VO.CategoryVo;
+import VO.CommentsVo;
+import VO.PostVo;
+import VO.UsersVo;
 
 public class PostController {
 
 	private static final String ANSI_LIGHT_RED = "\033[38;5;203m"; // 덜한 빨간색
 	private static final String ANSI_BOLD = "\033[1m";
 	private static final String ANSI_RESET = "\033[0m";
-
+	NumberFormat formatter = NumberFormat.getInstance();
+	DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	private static PostController instance;
 	private CommentController commentController = CommentController.getInstance();
 	private FavoriteController favoriteController = FavoriteController.getInstance();
@@ -44,10 +49,6 @@ public class PostController {
 		return detailPost(postId);
 	}
 
-	
-	
-	
-	
 	public Command detailPost(int postId) {
 		PostService postService = PostService.getInstance();
 		CommentsService commentsService = CommentsService.getInstance();
@@ -83,59 +84,44 @@ public class PostController {
 		return commentMenu(postId);
 	}
 
-	
-	
-	
-	
-	
-	
 	// 댓글 메뉴 메서드
 	private Command commentMenu(int postId) {
-	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-	    PostService postService = PostService.getInstance();
-	    PostVo post = postService.getPost(postId);
+		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+		PostService postService = PostService.getInstance();
+		PostVo post = postService.getPost(postId);
 
-	    System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
+		System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
 
-	    if (post.getUser_id().equals(loginUserVo.getUser_id())) {
-	        System.out.println("5. 판매글 수정");
-	        System.out.println("6. 판매 상태 변경"); // 상태 변경 옵션 추가
-	    }
 
-	    int choice = ScanUtil.nextInt();
+		if (post.getUser_id().equals(loginUserVo.getUser_id())) {
+			System.out.println("5. 판매글 수정  6. 판매 상태 변경");
+		}
 
-	    switch (choice) {
-	    case 1:
-	        return commentController.insertComment(postId);
-	    case 2:
-	        return commentController.updateComment(postId);
-	    case 3:
-	        return commentController.deleteComment(postId);
-	    case 4:
-	        return favoriteController.addFavorite(postId);
-	    case 5:
-	        if (post.getUser_id().equals(loginUserVo.getUser_id())) {
-	            return postUpdate(postId); // 게시물 ID를 자동으로 전달하여 수정 화면으로 이동
-	        } else {
-	            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-	        }
-	        return commentMenu(postId);
-	    case 6:
-	        if (post.getUser_id().equals(loginUserVo.getUser_id())) {
-	            return changePostCondition(postId); // 상태 변경으로 이동
-	        } else {
-	            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-	        }
-	        return commentMenu(postId); // 선택 메뉴로 돌아가기
-	    case 0:
-	        return returnToPostList();
-	    default:
-	        System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-	        return commentMenu(postId);
-	    }
+		System.out.print("메뉴 선택 >> ");
+		int choice = ScanUtil.nextInt();
+
+
+		switch (choice) {
+		case 1:
+			return commentController.insertComment(postId);
+		case 2:
+			return commentController.updateComment(postId);
+		case 3:
+			return commentController.deleteComment(postId);
+		case 4:
+			return favoriteController.addFavorite(postId);
+		case 5:
+			return postUpdate(postId); // 게시물 ID를 자동으로 전달하여 수정 화면으로 이동
+		case 6:
+			return postDelete(postId);
+		case 0:
+			return returnToPostList();
+		default:
+			System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+			return commentMenu(postId);
+		}
+
 	}
-
-
 
 
 	// 댓글, 수정, 삭제 기능을 유지
@@ -157,15 +143,33 @@ public class PostController {
 		FavoriteService favoriteService = FavoriteService.getInstance();
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 
+		PostService postService = PostService.getInstance();
 		int commentCount = commentsService.getCommentCount(post.getPost_id());
 		boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id());
+
+		CategoryService categoryService = CategoryService.getInstance();
+		String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
 
 		String borderLine = "+==============================================================================+";
 		System.out.println(borderLine);
 
 		// 직접 출력으로 변경
-		System.out.printf("| 작성자: %-12s 제목: %-20s 가격: %-8s 상태: %-3s %s\n", post.getUser_id(), post.getTitle(),
-				post.getPrice() + "원", post.getCondition(), isFavorite ? "♡ 찜한 상품" : " ");
+		String condition;
+		switch (post.getCondition()) {
+		case 1:
+			condition = "판매중";
+			break;
+		case 2:
+			condition = "예약중";
+			break;
+		case 3:
+			condition = "거래완료";
+			break;
+		default:
+			condition = "알 수 없음"; // 기본값 설정
+		}
+		System.out.printf("| 제목: %-20s 가격: %-20s 상태: %-10s \n| 작성자: %-50s  %s\n", post.getTitle(),
+				formatter.format(post.getPrice()) + "원", condition, post.getUser_id(), isFavorite ? "♡ 찜한 상품" : " ");
 		System.out.println(borderLine);
 
 		// 내용 출력
@@ -173,13 +177,18 @@ public class PostController {
 		System.out.printf("| %-78s \n", "");
 		System.out.println(borderLine);
 
+		LocalDateTime createdAt = post.getCreated_at();
+		LocalDateTime updatedAt = post.getUpdated_at();
+
 		// 작성 시간 및 수정 시간 출력
-		System.out.printf("| 작성 시간: %-61s \n", post.getCreated_at());
-		System.out.printf("| 수정 시간: %-61s \n", "(수정 시각 정보 미정)");
+		System.out.printf("| 작성 시간: %-40s        카테고리: %s \n", createdAt.format(formatter1), categoryName);
+		System.out.printf("| 수정 시간: %-61s \n", updatedAt.format(formatter1));
 		System.out.println(borderLine);
 
 		// 댓글 수와 찜한 사람 수 출력
-		System.out.printf("| 댓글 수: %-10d 찜한 사람 수: %-48s \n", commentCount, "(찜한 사람 수 미정)");
+
+		System.out.printf("| 댓글 수: %-48d 찜한 사람 : %s \n ", commentCount,
+				favoriteService.countFavoritesForPost(post.getPost_id()));
 		System.out.println(borderLine);
 	}
 
@@ -210,7 +219,7 @@ public class PostController {
 				System.out.println("게시물 번호: " + post.getPost_id());
 				System.out.println("제목: " + post.getTitle());
 				System.out.println("내용: " + post.getContent());
-				System.out.println("가격: " + post.getPrice());
+				System.out.println("가격: " + formatter.format(post.getPrice()) + "원");
 				System.out.println("작성일: " + post.getCreated_at());
 				System.out.println("수정일: " + post.getUpdated_at());
 				System.out.println("현재 상태: " + post.getCondition());
@@ -234,7 +243,7 @@ public class PostController {
 				System.out.println("게시물 번호: " + post.getPost_id());
 				System.out.println("제목: " + post.getTitle());
 				System.out.println("내용: " + post.getContent());
-				System.out.println("가격: " + post.getPrice());
+				System.out.println("가격: " + formatter.format(post.getPrice()) + "원");
 				System.out.println("작성일: " + post.getCreated_at());
 				System.out.println("수정일: " + post.getUpdated_at());
 				System.out.println("현재 상태: " + post.getCondition());
@@ -290,24 +299,23 @@ public class PostController {
 			// 판매 중 게시물 출력
 			for (PostVo post : salePosts) {
 				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), post.getPrice(), post.getUser_id(), "판매중");
+						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(), "판매중");
 				printAsciiArtBox(content, false);
 			}
 
 			// 예약 중 게시물 출력 (초록색)
 			for (PostVo post : reservedPosts) {
 				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), post.getPrice(), post.getUser_id(), "예약중");
+						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(), "예약중");
 				System.out.print(ColorUtil.GREEN);
 				printAsciiArtBox(content, false);
 				System.out.print(ColorUtil.RESET);
 			}
 
-
 			// 거래 완료 게시물 출력 (회색)
 			for (PostVo post : completedPosts) {
 				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), post.getPrice(), post.getUser_id(), "거래 완료");
+						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(), "거래 완료");
 				System.out.print(ColorUtil.GRAY);
 				printAsciiArtBox(content, true);
 				System.out.print(ColorUtil.RESET);
@@ -337,16 +345,14 @@ public class PostController {
 				return Command.USER_HOME;
 			}
 		} else {
-			int input = ScanUtil.nextInt("1.판매 글 작성 2. 게시물 삭제 3.상세 보기 4.검색 0.내 화면으로 \n 메뉴 선택 >> ");
+			int input = ScanUtil.nextInt("1.판매 글 작성 2.상세 보기 3.검색 0.내 화면으로 \n 메뉴 선택 >> ");
 			switch (input) {
 			case 1:
 				return Command.POST_INSERT;
 			case 2:
-				return Command.POST_DELETE;
-			case 3:
 				MainController.sessionMap.remove("currentPostId");
 				return Command.POST_DETAIL;
-			case 4:
+			case 3:
 				return postSearch(); // 검색 기능 추가
 			case 0:
 				return Command.USER_HOME;
@@ -417,21 +423,31 @@ public class PostController {
 
 	// 새로운 postUpdate: 이미 글 번호를 알고 있는 경우
 	public Command postUpdate(int postId) {
-	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-	    PostService postService = PostService.getInstance();
-	    PostVo post = postService.getPost(postId);
-	    if (post == null) {
-	        System.out.println("해당 게시물을 찾을 수 없습니다.");
-	        return Command.POST_LIST;
-	    }
-	    if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-	        postService.updatePostSelect(post); 
-	    } else {
-	        System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
-	    }
-	    return Command.POST_LIST;
+		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+		PostService postService = PostService.getInstance();
+		PostVo post = postService.getPost(postId);
+
+		if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+			postService.updatePostSelect(post);
+		} else {
+			System.out.println("다른 사용자의 글은 수정할 수 없습니다.");
+		}
+		return Command.POST_LIST;
 	}
 
+	// 게시글 삭제 메서드: 이미 글 번호를 알고 있는 경우
+	public Command postDelete(int postId) {
+		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+		PostService postService = PostService.getInstance();
+		PostVo post = postService.getPost(postId);
+
+		if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+			postService.deletePost(post.getPost_id());
+		} else {
+			System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
+		}
+		return Command.POST_LIST;
+	}
 
 	// 게시글 삭제 메서드
 	public Command postDelete() {
@@ -540,18 +556,56 @@ public class PostController {
 
 	// 게시글 검색 메서드
 	public Command postSearch() {
-		String keyword = ScanUtil.nextLine("검색할 키워드를 입력하세요: ");
-		PostService postService = PostService.getInstance();
-		List<PostVo> results = postService.searchPosts(keyword);
+		System.out.println("검색 방법을 선택하세요:");
+		System.out.println("1. 키워드로 검색");
+		System.out.println("2. 카테고리로 검색");
 
-		if (results.isEmpty()) {
-			System.out.println("검색 결과가 없습니다.");
-		} else {
-			for (PostVo post : results) {
-				System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %s\n", post.getPost_id(), post.getTitle(),
-						post.getPrice(), "판매중");
+		int choice = ScanUtil.nextInt("선택 >> ");
+
+		PostService postService = PostService.getInstance();
+
+		if (choice == 1) {
+			String keyword = ScanUtil.nextLine("검색할 키워드를 입력하세요: ");
+			List<PostVo> results = postService.searchPosts(keyword, null); // 카테고리는 null로 설정
+
+			if (results.isEmpty()) {
+				System.out.println("검색 결과가 없습니다.");
+			} else {
+				for (PostVo post : results) {
+					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %d\n", post.getPost_id(), post.getTitle(),
+							post.getPrice(), post.getCondition());
+				}
 			}
+		} else if (choice == 2) {
+			// 카테고리 목록 출력
+			CategoryService categoryService = CategoryService.getInstance();
+			List<CategoryVo> categories = categoryService.getCategoryList();
+
+			System.out.println("카테고리 목록:");
+			for (CategoryVo category : categories) {
+				System.out.printf("분류번호: %d, 이름: %s\n", category.getCategory_id(), category.getCategory_name());
+			}
+
+			int categoryId = ScanUtil.nextInt("검색할 분류번호를 입력하세요: ");
+			
+			
+			List<PostVo> results = postService.searchPosts(null, categoryId); // 키워드는 null로 설정
+
+			if (results.isEmpty()) {
+				System.out.println("검색 결과가 없습니다.");
+			} else {
+				for (PostVo post : results) {
+	                String categoryName = categoryService.getCategoryNameById(post.getCategory_id());
+	                
+					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %d\n", post.getPost_id(), post.getTitle(),
+							post.getPrice(), post.getCondition());
+				}
+
+			}
+		} else {
+			System.out.println("잘못된 선택입니다.");
 		}
+
 		return Command.POST_LIST; // 검색 후 게시물 목록으로 돌아감
 	}
 	
