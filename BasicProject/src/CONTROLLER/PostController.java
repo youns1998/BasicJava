@@ -1,7 +1,6 @@
 package CONTROLLER;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -150,7 +149,9 @@ public class PostController {
 		PostService postService = PostService.getInstance();
 		int commentCount = commentsService.getCommentCount(post.getPost_id());
 		boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id());
-
+		CategoryService categoryService = CategoryService.getInstance();
+	      String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
+	       
 		String borderLine = "+==============================================================================+";
 		System.out.println(borderLine);
 
