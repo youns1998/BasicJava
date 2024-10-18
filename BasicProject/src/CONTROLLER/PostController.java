@@ -1,7 +1,6 @@
 package CONTROLLER;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -147,10 +146,11 @@ public class PostController {
 	      CommentsService commentsService = CommentsService.getInstance();
 	      FavoriteService favoriteService = FavoriteService.getInstance();
 	      UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	      
 	      PostService postService = PostService.getInstance();
 	      int commentCount = commentsService.getCommentCount(post.getPost_id());
 	      boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id());
-
+	      
 	      CategoryService categoryService = CategoryService.getInstance();
 	       String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
 	       
@@ -185,12 +185,13 @@ public class PostController {
 	      LocalDateTime updatedAt = post.getUpdated_at();
 	      
 	      // 작성 시간 및 수정 시간 출력
-	      System.out.printf("| 작성 시간: %-35s        카테고리: %s \n", createdAt.format(formatter1),categoryName);
+	      System.out.printf("| 작성 시간: %-40s        카테고리: %s \n", createdAt.format(formatter1),categoryName);
 	      System.out.printf("| 수정 시간: %-61s \n", updatedAt.format(formatter1));
 	      System.out.println(borderLine);
 
 	      // 댓글 수와 찜한 사람 수 출력
-	      System.out.printf("| 댓글 수: %-10d 찜한 사람 수: %-48s \n", commentCount, "(찜한 사람 수 미정)");
+	    
+	      System.out.printf("| 댓글 수: %-48d 찜한 사람 : %s \n ", commentCount, favoriteService.countFavoritesForPost(post.getPost_id()));
 	      System.out.println(borderLine);
 	   }
 

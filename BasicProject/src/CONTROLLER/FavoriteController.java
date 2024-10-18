@@ -30,7 +30,6 @@ public class FavoriteController {
    public Command addFavorite(int postId) {
 	    FavoriteVo favorite = new FavoriteVo();
 	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-	    String currentuserid = (String) MainController.sessionMap.get("currentUserid");
 	    
 	    PostService postService = PostService.getInstance();
 	    PostVo postvo = postService.getPost(postId); 	//게시글 조회
@@ -145,6 +144,13 @@ public class FavoriteController {
 //        }
     }
     
+    //찜한 사람의 명수 확인 메서드
+    public int countFavoritesForPost(int postId) {
+    	FavoriteService favoriteService = FavoriteService.getInstance();
+    	int cnt=0;
+    	 cnt = favoriteService.countFavoritesForPost(postId);
+    	return cnt;
+    }
     // 관심 상품 관리 메뉴 표시
     public Command displayMenu() {
         while (true) {
