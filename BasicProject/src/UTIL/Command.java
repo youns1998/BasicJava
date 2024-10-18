@@ -38,6 +38,8 @@ public enum Command {
 	
 	// 거래 기록 관련
 	HISTORY_LIST,		// 거래 기록
+    USER_TRANSACTION_HISTORY, 
+
 	
 	// 전체 글 
 	POST_LIST,		// 전체 글 보기

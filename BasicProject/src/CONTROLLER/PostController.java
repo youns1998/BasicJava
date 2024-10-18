@@ -6,6 +6,7 @@ import java.util.List;
 import SERVICE.CategoryService;
 import SERVICE.CommentsService;
 import SERVICE.FavoriteService;
+import SERVICE.HistoryService;
 import SERVICE.PostService;
 import SERVICE.UsersService;
 import UTIL.*;
@@ -20,7 +21,9 @@ public class PostController {
 	private static PostController instance;
 	private CommentController commentController = CommentController.getInstance();
 	private FavoriteController favoriteController = FavoriteController.getInstance();
+	private HistoryController historyController = HistoryController.getInstance();
 
+	
 	private Command returnToPostList() {
 		PostController postController = PostController.getInstance();
 		return postController.postList();
@@ -96,6 +99,7 @@ public class PostController {
 
 	    if (post.getUser_id().equals(loginUserVo.getUser_id())) {
 	        System.out.println("5. 판매글 수정");
+	        System.out.println("6. 판매 상태 변경"); // 상태 변경 옵션 추가
 	    }
 
 	    int choice = ScanUtil.nextInt();
@@ -116,14 +120,21 @@ public class PostController {
 	            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
 	        }
 	        return commentMenu(postId);
+	    case 6:
+	        if (post.getUser_id().equals(loginUserVo.getUser_id())) {
+	            return changePostCondition(postId); // 상태 변경으로 이동
+	        } else {
+	            System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+	        }
+	        return commentMenu(postId); // 선택 메뉴로 돌아가기
 	    case 0:
 	        return returnToPostList();
 	    default:
 	        System.out.println("잘못된 선택입니다. 다시 시도하세요.");
 	        return commentMenu(postId);
 	    }
-
 	}
+
 
 
 
@@ -432,18 +443,100 @@ public class PostController {
 			System.out.println("해당 게시물을 찾을 수 없습니다.");
 			return Command.POST_LIST;
 		}
+		
 		if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
 			postService.deletePost(post.getPost_id());
 		} else {
+			 
 			System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
 		}
 		return Command.POST_LIST;
+	}  
+
+	public void updatePostCondition(int postId, String newCondition, String sellerId) {
+	    PostService postService = PostService.getInstance();  // 싱글톤 방식 사용
+	    String buyerId = null;  // 구매자 ID를 입력받음
+	    HistoryService historyService = HistoryService.getInstance(); // 싱글톤 인스턴스 사용
+
+	    // 문자열 상태를 숫자로 변환
+	    int conditionCode;
+	    switch (newCondition) {
+	        case "1":
+	            conditionCode = 1; // 판매중
+	            break;
+	        case "2":
+	            conditionCode = 2; // 예약중
+	            // 구매자 ID를 입력받아 예약 처리
+	            buyerId = ScanUtil.nextLine("구매자 ID를 입력하세요: ");
+	            if (buyerId == null || buyerId.isEmpty()) {
+	                System.out.println("유효하지 않은 구매자 ID입니다.");
+	                return; // 구매자 ID가 없으면 중단
+	            }
+	            break;
+	        case "3":
+	            conditionCode = 3; // 거래 완료
+	            
+	            // 거래 완료인 경우, 이전에 설정된 구매자 ID를 가져오기
+	            buyerId = historyService.getBuyerIdFromTransaction(postId);
+	            
+	            // 예약 중이었던 기록이 없는 경우
+	            if (buyerId == null || buyerId.isEmpty()) {
+	                buyerId = ScanUtil.nextLine("거래 완료를 위한 구매자 ID를 입력하세요: ");
+	                if (buyerId == null || buyerId.isEmpty()) {
+	                    System.out.println("유효하지 않은 구매자 ID입니다.");
+	                    return;
+	                }
+	            }
+	            break;
+	        default:
+	            throw new IllegalArgumentException("잘못된 상태: " + newCondition);
+	    }
+
+	    // 상태 업데이트 및 거래 내역 처리
+	    postService.updatePostCondition(postId, conditionCode, buyerId, sellerId, null);
+	    System.out.println("게시물 상태가 업데이트되었습니다.");
 	}
 
-	public void updatePostCondition(int postId, String newCondition, String buyerId, String sellerId) {
-		PostService.updatePostCondition(postId, newCondition, buyerId, sellerId);
-		System.out.println("게시물 상태가 업데이트되었습니다.");
+
+	private Command changePostCondition(int postId) {
+	    PostService postService = PostService.getInstance();
+	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	    PostVo post = postService.getPost(postId);
+
+	    if (post == null || !post.getUser_id().equals(loginUserVo.getUser_id())) {
+	        System.out.println("해당 게시물을 수정할 수 없습니다.");
+	        return Command.POST_LIST;
+	    }
+
+	    System.out.println("1. 판매중으로 변경 2. 예약중으로 변경 3. 거래 완료로 변경");
+	    int choice = ScanUtil.nextInt("선택 >> ");
+
+	    switch (choice) {
+	        case 1:
+	            postService.updatePostCondition(postId, 1, null, post.getUser_id(), null);  // 상태: 판매중 (숫자 1)
+	            System.out.println("상태가 '판매중'으로 변경되었습니다.");
+	            break;
+
+	        case 2:
+	            String buyerId = ScanUtil.nextLine("예약할 구매자 ID를 입력하세요: ");
+	            postService.updatePostCondition(postId, 2, buyerId, post.getUser_id(), 1);  // 상태: 예약중 (숫자 2)
+	            System.out.println("상태가 '예약중'으로 변경되었습니다.");
+	            break;
+
+	        case 3:
+	            postService.updatePostCondition(postId, 3, null, post.getUser_id(), null);  // 상태: 거래 완료 (숫자 3)
+	            System.out.println("상태가 '거래 완료'로 변경되었습니다.");
+	            break;
+
+	        default:
+	            System.out.println("잘못된 선택입니다.");
+	            break;
+	    }
+
+	    return Command.POST_LIST;
 	}
+
+
 
 	// 게시글 검색 메서드
 	public Command postSearch() {
@@ -461,4 +554,12 @@ public class PostController {
 		}
 		return Command.POST_LIST; // 검색 후 게시물 목록으로 돌아감
 	}
+	
+	
+	
+	
 }
+
+
+
+
