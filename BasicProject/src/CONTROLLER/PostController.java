@@ -584,7 +584,6 @@ public class PostController {
 			// 카테고리 목록 출력
 			CategoryService categoryService = CategoryService.getInstance();
 			List<CategoryVo> categories = categoryService.getCategoryList();
-
 			System.out.println("카테고리 목록:");
 			for (CategoryVo category : categories) {
 				System.out.printf("분류번호: %d, 이름: %s\n", category.getCategory_id(), category.getCategory_name());
@@ -600,9 +599,22 @@ public class PostController {
 			} else {
 				for (PostVo post : results) {
 	                String categoryName = categoryService.getCategoryNameById(post.getCategory_id());
-	                
-					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %d\n", post.getPost_id(), post.getTitle(),
-							post.getPrice(), post.getCondition());
+	                String condition;
+	    			switch (post.getCondition()) {
+	    			case 1:
+	    				condition = "판매중";
+	    				break;
+	    			case 2:
+	    				condition = "예약중";
+	    				break;
+	    			case 3:
+	    				condition = "거래완료";
+	    				break;
+	    			default:
+	    				condition = "알 수 없음"; // 기본값 설정
+	    			}
+					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %s\n", post.getPost_id(), post.getTitle(),
+							post.getPrice(), condition);
 				}
 
 			}
