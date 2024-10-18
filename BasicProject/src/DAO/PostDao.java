@@ -4,11 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import UTIL.Command;
 import UTIL.DBUtil;
 import UTIL.ScanUtil;
 import VO.HistoryVo;
@@ -62,9 +61,10 @@ public class PostDao {
 			ps.setString(4, PostVo.getTitle());
 			ps.setString(5, PostVo.getContent());
 			ps.setInt(6, PostVo.getCondition());
-//			ps.setTimestamp(5, Timestamp.valueOf(PostVo.getCreated_at()));
-//			ps.setTimestamp(6, Timestamp.valueOf(PostVo.getUpdated_at())); 
 			cnt = ps.executeUpdate();
+			
+			   PostVo.setCreated_at(LocalDateTime.now());
+		        PostVo.setUpdated_at(LocalDateTime.now());
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -150,8 +150,8 @@ public class PostDao {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				// postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
-				// postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+				 postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+				 postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
 				postvo.setPost_id(rs.getInt("POST_ID"));
 				postvo.setTitle(rs.getNString("TITLE"));
 				postvo.setUser_id(rs.getString("USER_ID"));
@@ -183,8 +183,8 @@ public class PostDao {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				// postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
-				// postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+				 postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+				 postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
 				postvo.setPost_id(rs.getInt("POST_ID"));
 				postvo.setTitle(rs.getNString("TITLE"));
 				postvo.setUser_id(rs.getString("USER_ID"));
@@ -252,7 +252,7 @@ public class PostDao {
 				postvo.setPrice(newPrice);
 				break;
 			case 4:
-				int newCondition = ScanUtil.nextInt("변경할 상태를 입력하세요 \n 1.판매중\t2.예약중\t3.판매완료\n선택 >> ");
+				int newCondition = ScanUtil.nextInt("변경할 거래 상태를 입력하세요 \n 1.판매중\t2.예약중\t3.판매완료\n선택 >> ");
 				postvo.setCondition(newCondition);
 				break;
 			case 0:
