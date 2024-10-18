@@ -192,16 +192,7 @@ public class PostController {
 		System.out.println(borderLine);
 	}
 
-	// 아스키 아트 박스 출력 함수
-	private void printAsciiArtBox(String content, boolean isLast) {
-		int width = 80;
-		String borderLine = "+" + "-".repeat(width - 2) + "+";
-		System.out.println(borderLine);
-		System.out.printf("| %-" + (width - 3) + "s\n", content);
-		if (!isLast) {
-			System.out.println(borderLine);
-		}
-	}
+	
 
 	// 내가 쓴 게시물 보기
 	public Command userPost() {
@@ -253,113 +244,126 @@ public class PostController {
 		return Command.ADMIN_USERDETAIL;
 	}
 
-	// 게시물 목록 출력
+	// 게시물 목록 출력############################################################################
 	public Command postList() {
 		int width = 80;
-		System.out.println("+" + "=".repeat(width - 2) + "+");
-
+		int pageSize = 10;  // 페이지당 게시물 수
+		int currentPage = 1;  // 현재 페이지
 		PostService postService = PostService.getInstance();
 		UsersService usersService = UsersService.getInstance();
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 		List<PostVo> posts = postService.getPostList();
-
+		
 		if (posts == null || posts.isEmpty()) {
 			System.out.println("작성된 게시물이 없습니다");
-		} else {
-			List<PostVo> adminPosts = new ArrayList<>();
-			List<PostVo> salePosts = new ArrayList<>(); // 상태 1: 판매 중
-			List<PostVo> reservedPosts = new ArrayList<>(); // 상태 2: 예약 중
-			List<PostVo> completedPosts = new ArrayList<>(); // 상태 3: 거래 완료
+			return Command.USER_HOME;
+		}
 
-			for (PostVo post : posts) {
-				UsersVo user = usersService.getUserSelect(post.getUser_id());
-				if (user != null && user.getRole() == 1) {
-					adminPosts.add(post);
+		// 페이지 이동 처리
+		int totalPosts = posts.size();
+		int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
+
+		while (true) {
+			// 현재 페이지에 맞는 게시물 목록 출력
+			int start = (currentPage - 1) * pageSize;
+			int end = Math.min(start + pageSize, totalPosts);
+			System.out.println("+" + "=".repeat(width - 2) + "+");
+
+			// 카테고리별로 분류된 게시물 목록을 출력
+			List<PostVo> pagePosts = posts.subList(start, end);
+
+			// 출력
+			for (PostVo post : pagePosts) {
+				String statusColor = getStatusColor(post.getCondition());
+				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
+						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(), statusColor + getStatus(post.getCondition()) + ColorUtil.RESET);
+				printAsciiArtBox(content, false);
+			}
+
+			System.out.println("+" + "=".repeat(width - 2) + "+");
+
+			// 페이지 이동 옵션 출력
+			System.out.print("페이지: ");
+			for (int i = 1; i <= totalPages; i++) {
+				if (i == currentPage) {
+					System.out.print("\033[1m" + i + "\033[0m "); // 현재 페이지는 볼드로 표시
 				} else {
-					switch (post.getCondition()) {
-					case 1:
-						salePosts.add(post);
-						break;
-					case 2:
-						reservedPosts.add(post);
-						break;
-					case 3:
-						completedPosts.add(post);
-						break;
-					}
+					System.out.print(i + " ");
 				}
 			}
+			System.out.println();
 
-			// 공지사항 출력
-			for (PostVo post : adminPosts) {
-				String content = "# 공지사항 : " + post.getTitle() + " #";
-				System.out.println(ColorUtil.RED + content + ColorUtil.RESET);
-			}
-
-			// 판매 중 게시물 출력
-			for (PostVo post : salePosts) {
-				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(), "판매중");
-				printAsciiArtBox(content, false);
-			}
-
-			// 예약 중 게시물 출력 (초록색)
-			for (PostVo post : reservedPosts) {
-				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(), "예약중");
-				System.out.print(ColorUtil.GREEN);
-				printAsciiArtBox(content, false);
-				System.out.print(ColorUtil.RESET);
-			}
-
-			// 거래 완료 게시물 출력 (회색)
-			for (PostVo post : completedPosts) {
-				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(), "거래 완료");
-				System.out.print(ColorUtil.GRAY);
-				printAsciiArtBox(content, true);
-				System.out.print(ColorUtil.RESET);
+			// 페이지 이동 메뉴
+			int input = ScanUtil.nextInt("1.이전 페이지 2.다음 페이지 3.판매 글 작성 4.상세 보기 5.검색 0.내 화면으로 \n 메뉴 선택 >> ");
+			switch (input) {
+				case 1:
+					if (currentPage > 1) {
+						currentPage--;
+					} else {
+						System.out.println("첫 페이지입니다.");
+					}
+					break;
+				case 2:
+					if (currentPage < totalPages) {
+						currentPage++;
+					} else {
+						System.out.println("마지막 페이지입니다.");
+					}
+					break;
+				case 3:
+					return Command.POST_INSERT;
+				case 4:
+					MainController.sessionMap.remove("currentPostId");
+					return Command.POST_DETAIL;
+				case 5:
+					return postSearch(); // 검색 기능 추가
+				case 0:
+					return Command.USER_HOME;
+				default:
+					System.out.println("잘못된 선택입니다. 다시 시도하세요.");
 			}
 		}
-
-		System.out.println("+" + "=".repeat(width - 2) + "+");
-		System.out.print("\033[H\033[2J");
-		System.out.flush();
-
-		// 메뉴 선택
-		if (loginUserVo.getRole() != 0) {
-			int input = ScanUtil.nextInt("1.공지 작성 2.글 삭제 3.수정 4.상세보기 5.검색 0.관리자 화면으로 \n 메뉴 선택 >> ");
-			switch (input) {
-			case 1:
-				return Command.POST_INSERT;
-			case 2:
-				return Command.POST_DELETE;
-			case 3:
-				return Command.POST_UPDATE;
-			case 4:
-				MainController.sessionMap.remove("currentPostId");
-				return Command.POST_DETAIL;
-			case 5:
-				return postSearch(); // 검색 기능 추가
-			case 0:
-				return Command.USER_HOME;
-			}
-		} else {
-			int input = ScanUtil.nextInt("1.판매 글 작성 2.상세 보기 3.검색 0.내 화면으로 \n 메뉴 선택 >> ");
-			switch (input) {
-			case 1:
-				return Command.POST_INSERT;
-			case 2:
-				MainController.sessionMap.remove("currentPostId");
-				return Command.POST_DETAIL;
-			case 3:
-				return postSearch(); // 검색 기능 추가
-			case 0:
-				return Command.USER_HOME;
-			}
-		}
-		return Command.USER_HOME;
 	}
+
+	// 게시물 상태 문자열 반환
+	private String getStatus(int condition) {
+		switch (condition) {
+			case 1:
+				return "판매중";
+			case 2:
+				return "예약중";
+			case 3:
+				return "거래 완료";
+			default:
+				return "알 수 없음";
+		}
+	}
+
+	// 게시물 상태에 따라 색상 반환
+	private String getStatusColor(int condition) {
+		switch (condition) {
+			case 1:
+				return ColorUtil.RED;  // 판매중은 빨간색
+			case 2:
+				return ColorUtil.GREEN;  // 예약중은 초록색
+			case 3:
+				return ColorUtil.GRAY;  // 거래 완료는 회색
+			default:
+				return ColorUtil.RESET;  // 기본 색상
+		}
+	}
+
+	// 아스키 아트 출력 함수
+	private void printAsciiArtBox(String content, boolean isLast) {
+		int width = 80;
+		String borderLine = "+" + "-".repeat(width - 2) + "+";
+		System.out.println(borderLine);
+		System.out.printf("| %-" + (width - 3) + "s\n", content);
+		if (!isLast) {
+			System.out.println(borderLine);
+		}
+	}
+
 
 	// 게시글 추가 메서드
 	public Command postInsert() {
