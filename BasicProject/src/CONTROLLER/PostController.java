@@ -180,13 +180,10 @@ public class PostController {
 		
 		LocalDateTime createdAt = post.getCreated_at();
 		LocalDateTime updatedAt = post.getUpdated_at();
-		// 작성 시간 및 수정 시간 출력
 		
-		System.out.printf("| 작성 시간: %-35s        카테고리: %s \n", 
-                (createdAt != null ? createdAt.format(formatter1) : "미정"), 
-                post.getCategory_id());
-System.out.printf("| 수정 시간: %-61s \n", 
-                (updatedAt != null ? updatedAt.format(formatter1) : "미정"));
+		// 작성 시간 및 수정 시간 출력
+		System.out.printf("| 작성 시간: %-35s        카테고리: %s \n", createdAt.format(formatter1),post.getCategory_id());
+		System.out.printf("| 수정 시간: %-61s \n", updatedAt.format(formatter1));
 		System.out.println(borderLine);
 
 		// 댓글 수와 찜한 사람 수 출력
