@@ -30,9 +30,9 @@ public class HistoryController {
         // 거래를 처리하는 서비스 호출
         historyService.processTransaction(buyerId, sellerId, postId);
         System.out.println("거래가 완료되었습니다.");
-        System.out.println("구매자 ID: " + buyerId);
-        System.out.println("판매자 ID: " + sellerId);
-        System.out.println("게시글 ID: " + postId);
+        System.out.println("구매자 ID : " + buyerId);
+        System.out.println("판매자 ID : " + sellerId);
+        System.out.println("게시글 번호 : " + postId);
     }
 
     // 거래 내역 출력 메서드 (구매자와 판매자의 이메일, 전화번호도 함께 출력)
@@ -61,12 +61,12 @@ public class HistoryController {
 
             // 거래 정보 출력 (구매자와 판매자의 이메일 및 전화번호 포함)
             System.out.println("======거래내역======");
-            System.out.printf("거래 번호: %s | 게시글 ID: %d | 거래 날짜: %s | 거래 상태: %s\n", 
+            System.out.printf("거래 번호 : %s | 게시글 번호 : %d | 거래 날짜 : %s | 거래 상태 : %s\n", 
                 history.getTransaction_id(), history.getPost_id(), history.getTransaction_date(), transactionStatus);
 
             // 구매자 정보 출력
             if (buyer != null) {
-                System.out.printf("구매자 정보: ID: %s | 이름: %s | 이메일: %s | 전화번호: %s\n",
+                System.out.printf("구매자 정보 : ID: %s | 이름 : %s | 이메일 : %s | 전화번호 : %s\n",
                     buyer.getUser_id(), buyer.getUsername(), buyer.getEmail(), buyer.getPhone_number());
             } else {
                 System.out.println("구매자 정보가 존재하지 않습니다.");
@@ -74,7 +74,7 @@ public class HistoryController {
 
             // 판매자 정보 출력
             if (seller != null) {
-                System.out.printf("판매자 정보: ID: %s | 이름: %s | 이메일: %s | 전화번호: %s\n",
+                System.out.printf("판매자 정보 : ID: %s | 이름 : %s | 이메일 : %s | 전화번호 : %s\n",
                     seller.getUser_id(), seller.getUsername(), seller.getEmail(), seller.getPhone_number());
             } else {
                 System.out.println("판매자 정보가 존재하지 않습니다.");

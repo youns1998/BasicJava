@@ -290,6 +290,7 @@ public class PostDao {
 				        postvo.setCategory_id(newCategory); // 유효한 카테고리 ID일 경우 설정
 				    } else {
 				        System.out.println("잘못된 카테고리 번호입니다. 다시 시도하세요.");
+				        continue;
 				    }
 				    break;
 			case 5:
@@ -332,6 +333,7 @@ public class PostDao {
 				e.printStackTrace();
 			}
 		}
+		
 
 	}
 

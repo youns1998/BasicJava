@@ -141,7 +141,7 @@ public Command categoryDelete() {
 		System.out.println("카테고리 수정 화면");
 		
 		// 사용자로부터 삭제할 카테고리의 ID 입력받기
-		int id = ScanUtil.nextInt("삭제 할 분류번호 입력 >>");
+		int id = ScanUtil.nextInt("삭제 할 분류번호 입력 >> ");
 		CategoryVo cate = cateservice.getCategorySelect(id); // 입력한 ID에 해당하는 카테고리 가져오기
 		
 		// 해당 ID의 카테고리가 존재하지 않을 경우

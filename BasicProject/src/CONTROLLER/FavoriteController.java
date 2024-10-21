@@ -72,7 +72,7 @@ public class FavoriteController {
         }
 
         // 찜한 상품이 있는지 확인
-        System.out.println("찜 목록: " + favorites.size() + "개의 게시물을 찜했습니다");
+        System.out.println("찜 목록 : " + favorites.size() + "개의 게시물을 찜했습니다");
          
         if (favorites.isEmpty()) {
             System.out.println("관심 상품이 없습니다.");
@@ -97,7 +97,7 @@ public class FavoriteController {
     public Command adminviewFavorites() {
         FavoriteService favoriteservice = FavoriteService.getInstance(); // FavoriteService 인스턴스 가져오기
         UsersService userService = UsersService.getInstance(); // UsersService 인스턴스 가져오기
-        String userId = ScanUtil.nextLine("찜 목록을 조회할 회원 ID>>"); // 조회할 사용자 ID 입력받기
+        String userId = ScanUtil.nextLine("찜 목록을 조회할 회원 ID >> "); // 조회할 사용자 ID 입력받기
         System.out.println();
         
         List<FavoriteVo> favorites =  favoriteservice.getFavoritesList(userId); // 해당 사용자의 찜 목록 가져오기
@@ -105,14 +105,14 @@ public class FavoriteController {
         
         // 입력한 사용자가 없을 경우 처리
         if (user == null) {
-            int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 >>");
+            int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 \n선택 >> ");
             if(choice==1) {return Command.FAVORITE_LIST;} // 찜 조회 창으로 다시 감}
             else {return Command.USER_LIST;} // 유저관리  창으로 다시 감
         
         } else {
             // 사용자의 찜 목록 출력
             System.out.println();
-            System.out.println("찜한 게시글 갯수: " + favorites.size() + "개");
+            System.out.println("찜한 게시글 갯수 : " + favorites.size() + "개");
             if (favorites.isEmpty()) {
                 System.out.println("찜한 상품이 없습니다.");
                 return Command.USER_LIST;
@@ -158,10 +158,10 @@ public class FavoriteController {
     // 특정 사용자가 특정 게시글을 즐겨찾기 했는지 확인하는 메서드
     public void checkFavorite() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("사용자 ID 입력: ");
+        System.out.print("사용자 ID 입력 : ");
         String userId = scanner.next(); // 사용자 ID 입력받기
-        System.out.print("게시글 ID 입력: ");
-        int postId = scanner.nextInt(); // 게시글 ID 입력받기
+        System.out.print("게시글 번호 입력 : ");
+        int postId = scanner.nextInt(); // 게시글 번호 입력받기
 
         // 즐겨찾기 여부 확인 메서드 호출 (주석 처리된 코드로, 기능 추가 필요)
 //        boolean isFavorite = favoriteService.isFavoriteEx(userId, postId);
@@ -184,7 +184,7 @@ public class FavoriteController {
     public Command displayMenu() {
         while (true) {
             System.out.println();
-            int choice = ScanUtil.nextInt("1.관심 상품 삭제 0.돌아가기 >>"); // 사용자 선택 입력받기
+            int choice = ScanUtil.nextInt("1.관심 상품 삭제 0.돌아가기 \n선택 >> "); // 사용자 선택 입력받기
             switch (choice) {
                 case 1:
                     deleteFavorite(); // 관심 상품 삭제 호출

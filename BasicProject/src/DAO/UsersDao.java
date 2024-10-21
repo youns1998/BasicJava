@@ -93,41 +93,34 @@ public class UsersDao {
         while (exit) {
             System.out.println();
             if(uservo.getRole()!=0) {
-            System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 6.회원제제 0.뒤로가기");
-            }else {
-            System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일  0.뒤로가기");
-            }
-            System.out.println("수정할 항목을 선택하세요 >>");
-            int choice = ScanUtil.nextInt();
+                System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 6.회원제제 0.뒤로가기");
+                }else {
+                System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 0.뒤로가기");
+                }
+            int choice = ScanUtil.nextInt("수정할 항목을 선택하세요 >> ");
             switch (choice) {
                 case 1:
-                    System.out.print("새로운 PW를 입력하세요: ");
-                    String newpw = ScanUtil.nextLine();
+                    String newpw = ScanUtil.nextLine("새로운 PW를 입력하세요 : ");
                     uservo.setUser_pass(newpw);
                     break;
                 case 2:
-                    System.out.print("새로운 이름을 입력하세요: ");
-                    String newname = ScanUtil.nextLine();
+                    String newname = ScanUtil.nextLine("새로운 이름을 입력하세요 : ");
                     uservo.setUsername(newname);
                     break;
                 case 3:
-                    System.out.print("새로운 번호를 입력하세요: ");
-                    String newphone_number = ScanUtil.nextLine();
+                    String newphone_number = ScanUtil.nextLine("새로운 번호를 입력하세요 : ");
                     uservo.setPhone_number(newphone_number);
                     break;
                 case 4:
-                    System.out.print("새로운 주소를 입력하세요: ");
-                    String newAdd = ScanUtil.nextLine();
+                    String newAdd = ScanUtil.nextLine("새로운 주소를 입력하세요 : ");
                     uservo.setAddress(newAdd);
                     break;
                 case 5:
-                    System.out.println("새로운 이메일을 입력하세요.");
-                    String newemail = ScanUtil.nextLine();    
+                    String newemail = ScanUtil.nextLine("새로운 이메일을 입력하세요 : ");    
                     uservo.setEmail(newemail);
                     break;
                 case 6: 
-                	System.out.println("제제할 회원의 ID를 입력하세요 >> ");
-                	String newId = ScanUtil.nextLine();
+                	String newId = ScanUtil.nextLine("제제할 회원의 ID를 입력하세요 >> ");
                 	String banId = ScanUtil.nextLine("제제할 사유를 입력하세요 >> ");
                 	uservo.setUser_ban(banId);
                 	uservo.setUser_id(newId);
@@ -147,7 +140,7 @@ public class UsersDao {
                     if (result > 0) {
                     	 MainController.sessionMap.put("loginUser", uservo);
                         System.out.println("회원 정보가 수정되었습니다.\n 1.더 수정하기 0.되돌아가기");
-                        int y = ScanUtil.nextInt();
+                        int y = ScanUtil.nextInt("선택 >> ");
                         if (y == 1) continue;
                         if (y == 0) exit = false;
                     } else {
