@@ -43,11 +43,18 @@ public class UsersService{
 		public void updateUser(UsersVo userVo) {
 			 dao.updateUserSelect(userVo);
 		}
+		
+		public void updateUserself(UsersVo userVo) {
+			 dao.updateUser(userVo);
+		}
 		//삭제
 		public void deleteUser(UsersVo userVo) {
 			 dao.deleteUser(userVo);
 		}
 		
+		public int updatePassword(String userId, String hashedPassword) {
+			return dao.updatePassword(userId, hashedPassword);
+		}
 		public int getMemberCount(String user_id) {
 			return getMemberCount(user_id);
 		}

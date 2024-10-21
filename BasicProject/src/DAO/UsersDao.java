@@ -12,6 +12,7 @@ import java.util.List;
 import CONTROLLER.MainController;
 import UTIL.Command;
 import UTIL.DBUtil;
+import UTIL.PasswordUtil;
 import UTIL.ScanUtil;
 import VO.UsersVo;
 
@@ -62,7 +63,7 @@ public class UsersDao {
         return userrole;  // 역할 반환
     }
 
-    // 사용자 추가(회원가입)
+ // 사용자 추가(회원가입)
     public int addUser(UsersVo user) {
         int cnt = 0;
         String sql = "INSERT INTO USERS (USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS ) "
@@ -76,7 +77,7 @@ public class UsersDao {
             ps.setString(4, user.getPhone_number()); // PHONE_NUMBER
             ps.setString(5, user.getAddress());      // ADDRESS
             ps.setTimestamp(6, user.getCreated_at() != null ? Timestamp.valueOf(user.getCreated_at()) : Timestamp.valueOf(LocalDateTime.now())); // 생성 일시
-            ps.setString(7, user.getUser_pass());    // USER_PASS
+            ps.setString(7, PasswordUtil.hashPassword(user.getUser_pass()));    // 해싱된 USER_PASS
             cnt = ps.executeUpdate();
             
         } catch (SQLException e) {
@@ -86,6 +87,7 @@ public class UsersDao {
         }
         return cnt;
     }
+
 
     // 관리자의 사용자 정보 선택 수정 메서드
     public void updateUserSelect(UsersVo uservo) {
@@ -162,7 +164,7 @@ public class UsersDao {
             con = DBUtil.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, userVo.getUser_id());
-            ps.setString(2, userVo.getUser_pass());
+            ps.setString(2, PasswordUtil.hashPassword(userVo.getUser_pass())); // 입력한 비밀번호를 해싱하여 비교
             
             rs = ps.executeQuery();
             
@@ -183,6 +185,23 @@ public class UsersDao {
             disConnect(); // DB 연결 해제
         }
         return getUserVo;
+    }
+
+    public int updatePassword(String userId, String hashedPassword) {//비밀번호 업데이트
+        int cnt = 0;
+        String sql = "UPDATE USERS SET USER_PASS = ? WHERE USER_ID = ?";
+        try {
+            con = DBUtil.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, hashedPassword);
+            ps.setString(2, userId);
+            cnt = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disConnect(); // DB 연결 해제
+        }
+        return cnt;
     }
 
     // 비밀번호 찾기 메서드
@@ -317,12 +336,12 @@ public class UsersDao {
             con = DBUtil.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, user.getUser_pass());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getUsername());
-            ps.setString(4, user.getPhone_number());
-            ps.setString(5, user.getAddress());
+            ps.setString(2, user.getEmail() != null ? user.getEmail() : ""); // null이 아니면 기존 값 유지
+            ps.setString(3, user.getUsername() != null ? user.getUsername() : ""); // null이 아니면 기존 값 유지
+            ps.setString(4, user.getPhone_number() != null ? user.getPhone_number() : ""); // null이 아니면 기존 값 유지
+            ps.setString(5, user.getAddress() != null ? user.getAddress() : ""); // null이 아니면 기존 값 유지
             ps.setString(6, user.getUser_ban());
-            ps.setString(7, user.getUser_id());           
+            ps.setString(7, user.getUser_id());         
             cnt = ps.executeUpdate(); // 업데이트 결과 반환
         } catch (SQLException e) {
             e.printStackTrace();

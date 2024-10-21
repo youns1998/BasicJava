@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import SERVICE.*;
 import UTIL.Command;
+import UTIL.PasswordUtil;
 import UTIL.ScanUtil;
 import VO.UsersVo;
 
@@ -308,56 +309,70 @@ public class UsersController {
 	}
 
 	// 비밀번호 찾기
+	
+	
+	// 비밀번호 찾기 - 비밀번호만 업데이트
 	public Command findUserPass() {
-		String userId = ScanUtil.nextLine("비밀번호를 찾을 계정의 아이디를 입력하세요 >> ");
-		String email = ScanUtil.nextLine("등록된 이메일 주소를 입력해 주세요 >> ");
-		boolean istrue = userService.iDisMatch(userId, email); // 등록된 이메일과 아이디가 일치하는지 확인
-		int count = 3; // 인증 코드 입력 기회
+	    String userId = ScanUtil.nextLine("비밀번호를 찾을 계정의 아이디를 입력하세요 >> ");
+	    String email = ScanUtil.nextLine("등록된 이메일 주소를 입력해 주세요 >> ");
+	    boolean istrue = userService.iDisMatch(userId, email); // 등록된 이메일과 아이디가 일치하는지 확인
+	    int count = 3; // 인증 코드 입력 기회
 
-		if (istrue && (count > 0)) {
-			VerificationController verificationController = VerificationController.getInstance(); // 이메일 인증 컨트롤러
-			verificationController.sendVerificationCode(email); // 이메일 인증 코드 발송
+	    if (istrue && (count > 0)) {
+	        VerificationController verificationController = VerificationController.getInstance(); // 이메일 인증 컨트롤러
+	        verificationController.sendVerificationCode(email); // 이메일 인증 코드 발송
 
-			while (true) {
-				String code = ScanUtil.nextLine("인증 코드 >> ");
-				if (verificationController.verifyCode(email, code)) {
-					System.out.println("이메일 인증에 성공했습니다.");
+	        while (true) {
+	            String code = ScanUtil.nextLine("인증 코드 >> ");
+	            if (verificationController.verifyCode(email, code)) {
+	                System.out.println("이메일 인증에 성공했습니다.");
 
-					UsersVo user = userService.findUserPass(userId, email); // 비밀번호 찾기
-					if (user != null) {
-						System.out.println("찾은 비밀번호: " + user.getUser_pass());
-					} else {
-						System.out.println("해당 정보로 비밀번호를 찾을 수 없습니다.");
-					}
+	                // 새 비밀번호 설정
+	                String newPassword, newPasswordConfirm;
+	                do {
+	                    newPassword = ScanUtil.nextLine("새로운 비밀번호를 입력하세요 >> ");
+	                    newPasswordConfirm = ScanUtil.nextLine("새로운 비밀번호를 다시 입력하세요 >> ");
 
-					break;
-				} else {
-					count--;
-					System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 " + count + "회\n");
-				}
+	                    if (!validatePassword(newPassword)) {
+	                        System.out.println("비밀번호 형식이 올바르지 않습니다. 다시 입력해 주세요.");
+	                    } else if (!newPassword.equals(newPasswordConfirm)) {
+	                        System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해 주세요.");
+	                    }
+	                } while (!validatePassword(newPassword) || !newPassword.equals(newPasswordConfirm));
 
-				if (count <= 0) {
-					System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-							+ "████▌▄▌▄▐▐▌█████\r\n"
-							+ "████▌▄▌▄▐▐▌▀████\r\n"
-							+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-							+ "");
-					String retry = ScanUtil.nextLine("다시 인증하시겠습니까? (y/n) >> ");
-					if (retry.equalsIgnoreCase("y")) {
-						count = 3; // 기회 초기화
-						verificationController.sendVerificationCode(email); // 인증 코드 재발송
-					} else {
-						return Command.HOME; // 홈으로 이동
-					}
-				}
-			}
-		} else {
-			System.out.println("동록된 이메일이 아닙니다.");
-			return Command.HOME; // 홈으로 이동
-		}
+	                // 비밀번호 해싱 후 업데이트
+	                String hashedPassword = PasswordUtil.hashPassword(newPassword);
+	                int result = userService.updatePassword(userId, hashedPassword);
+	                if (result > 0) {
+	                    System.out.println("비밀번호가 성공적으로 변경되었습니다.");
+	                } else {
+	                    System.out.println("비밀번호 변경에 실패했습니다.");
+	                }
+	                return Command.USER_HOME; // 수정 후 홈으로 이동
+	            } else {
+	                count--;
+	                System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 " + count + "회\n");
+	            }
 
-		return Command.HOME; // 기본적으로 홈으로 이동
+	            if (count <= 0) {
+	                System.out.println("인증 기회를 모두 소진했습니다.");
+	                String retry = ScanUtil.nextLine("다시 인증하시겠습니까? (y/n) >> ");
+	                if (retry.equalsIgnoreCase("y")) {
+	                    count = 3; // 기회 초기화
+	                    verificationController.sendVerificationCode(email); // 인증 코드 재발송
+	                } else {
+	                    return Command.HOME; // 홈으로 이동
+	                }
+	            }
+	        }
+	    } else {
+	        System.out.println("등록된 이메일이 아닙니다.");
+	        return Command.HOME; // 홈으로 이동
+	    }
 	}
+
+
+
 
 	// 아이디 찾기
 	public Command findUserId() {
