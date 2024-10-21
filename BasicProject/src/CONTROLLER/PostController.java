@@ -57,7 +57,7 @@ public class PostController {
 	public Command detailPost(int postId) {
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스 가져오기
 		CommentsService commentsService = CommentsService.getInstance(); // 댓글 서비스 인스턴스 가져오기
-
+		UsersService userservice = UsersService.getInstance();
 		PostVo selectedPost = postService.getPost(postId); // 입력받은 글 번호로 게시물 정보 가져오기
 
 		if (selectedPost == null) { // 게시물이 없을 경우 메시지 출력
@@ -83,8 +83,20 @@ public class PostController {
 				System.out.println("+------------------------------------------------------------------------------+");
 			}
 		}
+		String borderLine = "+==============================================================================+";
 
+		if(userservice.getUserRole(selectedPost.getUser_id()).equals("1"))
+		{
+			System.out.println(ANSI_LIGHT_RED+borderLine+ANSI_RESET);
+
+		}else {
+			System.out.println(borderLine);
+		}
+	
 		MainController.sessionMap.put("currentPostId", postId); // 현재 보고 있는 게시물 ID 세션에 저장
+		
+		
+		
 		return commentMenu(postId); // 댓글 메뉴로 이동
 	}
 
@@ -175,31 +187,30 @@ public class PostController {
 			System.out.println(ANSI_LIGHT_RED + borderLine);
 			System.out.println(borderLineUser);
 			System.out.println(borderLine + ANSI_RESET);
-			System.out.printf(ANSI_LIGHT_RED +"|"+ANSI_RESET +" 제목: %-20s \n"+ANSI_LIGHT_RED +"|"+ANSI_RESET +" 작성자: %-50s  \n", post.getTitle(), post.getUser_id());
+			System.out.printf("| 제목: %-20s \n| 작성자: %-50s  \n", post.getTitle(), post.getUser_id());
 
 			// 내용 출력
-			System.out.printf(ANSI_LIGHT_RED +"|"+ANSI_RESET +" 내용: %-72s \n", post.getContent());
-			System.out.printf(ANSI_LIGHT_RED +"|"+ANSI_RESET +" %-78s \n", "");
+			System.out.printf("| 내용: %-72s \n", post.getContent());
+			System.out.printf("| %-78s \n", "");
 			System.out.println(borderLine);
 
 			LocalDateTime createdAt = post.getCreated_at(); // 작성 시간
 			LocalDateTime updatedAt = post.getUpdated_at(); // 수정 시간
 
 			// 작성 및 수정 시간 출력
-			System.out.printf(ANSI_LIGHT_RED +"|"+ANSI_RESET +" 작성 시간: %-40s \n", createdAt.format(formatter1));
-			System.out.printf(ANSI_LIGHT_RED +"|"+ANSI_RESET +" 수정 시간: %-61s \n", updatedAt.format(formatter1));
+			System.out.printf("| 작성 시간: %-40s \n", createdAt.format(formatter1));
+			System.out.printf("| 수정 시간: %-61s \n", updatedAt.format(formatter1));
 			System.out.println(borderLine);
 
 			// 댓글 수와 찜한 사람 수 출력
-			System.out.printf(ANSI_LIGHT_RED +"|"+ANSI_RESET +" 댓글 수: %-48d \n ", commentCount);
-			System.out.println(ANSI_LIGHT_RED + borderLine + ANSI_RESET);
+			System.out.printf("| 댓글 수: %-48d \n ", commentCount);
+			System.out.println(borderLine);
 		} else {
 			// 제목, 가격, 상태, 작성자 출력
 			System.out.println(borderLine);
 
 			System.out.printf("| 제목: %-20s 가격: %-20s 상태: %-10s \n| 작성자: %-50s  %s\n", post.getTitle(),
-					formatter.format(post.getPrice()) + "원", condition, post.getUser_id(),
-					isFavorite ? "♡ 찜한 상품" : " ");
+					formatter.format(post.getPrice()) + "원", condition, post.getUser_id(), isFavorite ? "♡ 찜한 상품" : " ");
 			System.out.println(borderLine);
 
 			// 내용 출력
@@ -219,6 +230,8 @@ public class PostController {
 			System.out.printf("| 댓글 수: %-48d 찜한 사람 : %s \n ", commentCount,
 					favoriteService.countFavoritesForPost(post.getPost_id()));
 			System.out.println(borderLine);
+
+			
 		}
 	}
 
@@ -336,14 +349,20 @@ public class PostController {
 			int end = Math.min(start + pageSize, totalGeneralPosts); // 끝 인덱스 계산
 			List<PostVo> pagePosts = generalPosts.subList(start, end); // 해당 페이지에 해당하는 게시물 가져오기
 
-			// 일반 게시물 출력
-			for (PostVo post : pagePosts) {
-				String statusColor = getStatusColor(post.getCondition()); // 상태에 맞는 색상 지정
-				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(),
-						statusColor + getStatus(post.getCondition()) + ColorUtil.RESET);
-				printAsciiArtBox(content, false); // 게시물 출력
-			}
+
+	        // 일반 게시물 출력
+	        for (PostVo post : pagePosts) {
+	            String statusColor = getStatusColor(post.getCondition()); // 상태에 맞는 색상 지정
+	            String content = String.format("%-2d |  제목: %-10s  %-10s    |  작성자: %-6s    |  조회: %-10s\n|    |  가격: %-5s", 
+	                post.getPost_id(),
+	                post.getTitle(),
+	                statusColor + getStatus(post.getCondition()) + ColorUtil.RESET,
+	                post.getUser_id(),
+	                post.getView_count(),
+	                formatter.format(post.getPrice()) + "원"
+	            );
+	            printAsciiArtBox(content, false); // 게시물 출력
+	        }
 
 			System.out.println("+" + "=".repeat(width - 2) + "+"); // 테두리 출력
 

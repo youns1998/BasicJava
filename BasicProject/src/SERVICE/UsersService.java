@@ -56,7 +56,9 @@ public class UsersService{
 		        return dao.findUserId(email);
 		    }
 		
-		
+		public String getUserRole(String userId) {
+	        return dao.returnRole(userId);  // DAO의 returnRole() 호출하여 역할을 반환
+	    }
 		public UsersVo findUserPass(String userId,  String email) {
 	        return dao.findUserPass(userId, email);
 	    }
