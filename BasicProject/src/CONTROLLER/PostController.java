@@ -191,6 +191,7 @@ public class PostController {
 			// 댓글 수와 찜한 사람 수 출력
 			System.out.printf("| 댓글 수: %-48d \n ", commentCount);
 			System.out.println(borderLine);
+			
 		}else {
 		// 제목, 가격, 상태, 작성자 출력
 		System.out.printf("| 제목: %-20s 가격: %-20s 상태: %-10s \n| 작성자: %-50s  %s\n", post.getTitle(),
@@ -327,12 +328,13 @@ public class PostController {
 	        // 일반 게시물 출력
 	        for (PostVo post : pagePosts) {
 	            String statusColor = getStatusColor(post.getCondition()); // 상태에 맞는 색상 지정
-	            String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", 
+	            String content = String.format("%-2d |  제목: %-10s  %-10s    |  작성자: %-6s    |  조회: %-10s\n|    |  가격: %-5s", 
 	                post.getPost_id(),
 	                post.getTitle(),
-	                formatter.format(post.getPrice()) + "원",
+	                statusColor + getStatus(post.getCondition()) + ColorUtil.RESET,
 	                post.getUser_id(),
-	                statusColor + getStatus(post.getCondition()) + ColorUtil.RESET
+	                post.getView_count(),
+	                formatter.format(post.getPrice()) + "원"
 	            );
 	            printAsciiArtBox(content, false); // 게시물 출력
 	        }
