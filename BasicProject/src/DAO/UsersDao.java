@@ -38,6 +38,30 @@ public class UsersDao {
         if(con != null) try { con.close(); } catch(Exception e) {}
     }
     
+    public String returnRole(String userid) {
+        String sql = "SELECT ROLE FROM USERS WHERE USER_ID = ?";  // ROLE 필드를 선택하는 SQL 쿼리
+        String userrole = null;  // 역할을 저장할 변수
+        
+        try {
+            con = DBUtil.getConnection();  // DB 연결 가져오기
+            ps = con.prepareStatement(sql);  // SQL 준비
+            ps.setString(1, userid);  // USER_ID 설정
+            
+            rs = ps.executeQuery();  // 쿼리 실행
+            
+            if (rs.next()) {  // 결과가 있는지 확인
+                int role = rs.getInt("ROLE");  // ROLE 필드 값 가져오기
+                userrole = String.valueOf(role);  // int형 ROLE을 String으로 변환
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disConnect();  // DB 연결 해제
+        }
+        
+        return userrole;  // 역할 반환
+    }
+
     // 사용자 추가(회원가입)
     public int addUser(UsersVo user) {
         int cnt = 0;

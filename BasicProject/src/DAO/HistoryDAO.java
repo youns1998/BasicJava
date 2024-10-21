@@ -128,11 +128,7 @@ public class HistoryDAO {
                         break;
                 }
 
-                // 거래 내역 출력
-                System.out.println("======= 거래 내역 =======");
-                System.out.printf("거래 번호: %s | 구매자 ID: %s | 판매자 ID: %s | 게시글 ID: %d | 거래 날짜: %s | 거래 상태: %s\n",
-                                  history.getTransaction_id(), history.getBuyer_id(), history.getSeller_id(),
-                                  history.getPost_id(), history.getTransaction_date(), statusString);
+                
 
                 historyList.add(history); // 거래 내역 리스트에 추가
             }

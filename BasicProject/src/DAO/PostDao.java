@@ -52,26 +52,27 @@ public class PostDao {
 			}
 	}
 
-	// 게시글 추가 메서드
-	public int insertPost(PostVo PostVo) {
-		int cnt = 0;
-		String sql = "INSERT INTO POST (POST_ID, USER_ID, PRICE, CATEGORY_ID, TITLE, CONTENT, CONDITION, CREATED_AT, UPDATED_AT, ROLE) "
-				+ "VALUES( (SELECT NVL(MAX(POST_ID), 0) + 1 FROM POST), ?, ?, ?, ?, ?, ?, SYSDATE, SYSDATE, ?)";
+    // 게시글 추가 메서드
+    public int insertPost(PostVo PostVo) {
+        int cnt = 0;
+        String sql = "INSERT INTO POST (POST_ID, USER_ID, PRICE, CATEGORY_ID, TITLE, CONTENT, CONDITION, CREATED_AT, UPDATED_AT, ROLE, VIEW_COUNT) "
+                   + "VALUES( (SELECT NVL(MAX(POST_ID), 0) + 1 FROM POST), ?, ?, ?, ?, ?, ?, SYSDATE, SYSDATE, ?,?)";
 
-		try {
-			con = DBUtil.getConnection();
-			ps = con.prepareStatement(sql);
-			ps.setString(1, PostVo.getUser_id());
-			ps.setInt(2, PostVo.getPrice());
-			ps.setInt(3, PostVo.getCategory_id());
-			ps.setString(4, PostVo.getTitle());
-			ps.setString(5, PostVo.getContent());
-			ps.setInt(6, PostVo.getCondition());
-			ps.setInt(7, PostVo.getRole());
-			cnt = ps.executeUpdate();
-
-			PostVo.setCreated_at(LocalDateTime.now());
-			PostVo.setUpdated_at(LocalDateTime.now());
+        try {
+            con = DBUtil.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, PostVo.getUser_id());
+            ps.setInt(2, PostVo.getPrice());
+            ps.setInt(3, PostVo.getCategory_id());
+            ps.setString(4, PostVo.getTitle());
+            ps.setString(5, PostVo.getContent());
+            ps.setInt(6, PostVo.getCondition());
+            ps.setInt(7, PostVo.getRole());
+            ps.setInt(7, PostVo.getView_count());
+            cnt = ps.executeUpdate();
+            
+            PostVo.setCreated_at(LocalDateTime.now());
+            PostVo.setUpdated_at(LocalDateTime.now());
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -85,64 +86,64 @@ public class PostDao {
 	public List<PostVo> getAllPosts() {
 		List<PostVo> postlist = new ArrayList<PostVo>();
 		String sql = "SELECT * FROM POST ORDER BY CREATED_AT";
-
-		try {
-			con = DBUtil.getConnection();
-			ps = con.prepareStatement(sql);
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				PostVo postvo = new PostVo();
-				postvo.setPost_id(rs.getInt("POST_ID"));
-				postvo.setUser_id(rs.getString("USER_ID"));
-				postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
-				postvo.setTitle(rs.getNString("TITLE"));
-				postvo.setContent(rs.getString("CONTENT"));
-				postvo.setPrice(rs.getInt("PRICE"));
-				postvo.setCondition(rs.getInt("CONDITION"));
-				postvo.setRole(rs.getInt("ROLE"));
-				postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
-				postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
-				postlist.add(postvo);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			disConnect();
-		}
-		return postlist;
-	}
+        try {
+            con = DBUtil.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                PostVo postvo = new PostVo();
+                postvo.setPost_id(rs.getInt("POST_ID"));
+                postvo.setUser_id(rs.getString("USER_ID"));
+                postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
+                postvo.setTitle(rs.getNString("TITLE"));
+                postvo.setContent(rs.getString("CONTENT"));
+                postvo.setPrice(rs.getInt("PRICE"));
+                postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
+                postvo.setView_count(rs.getInt("VIEW_COUNT"));
+                postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+                postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+                postlist.add(postvo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            disConnect();
+        }
+        return postlist;
+    }
 
 	// 내가 쓴 글 전체 조회 메서드
 	public List<PostVo> getAllPosts(String userid) {
 		List<PostVo> postlist = new ArrayList<PostVo>();
 		String sql = "SELECT * FROM POST WHERE USER_ID = ? ";
-
-		try {
-			con = DBUtil.getConnection();
-			ps = con.prepareStatement(sql);
-			ps.setString(1, userid);
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				PostVo postvo = new PostVo();
-				postvo.setPost_id(rs.getInt("POST_ID"));
-				postvo.setUser_id(rs.getString("USER_ID"));
-				postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
-				postvo.setTitle(rs.getNString("TITLE"));
-				postvo.setContent(rs.getString("CONTENT"));
-				postvo.setPrice(rs.getInt("PRICE"));
-				postvo.setCondition(rs.getInt("CONDITION"));
-				postvo.setRole(rs.getInt("ROLE"));
-				postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
-				postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
-				postlist.add(postvo);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			disConnect();
-		}
-		return postlist;
-	}
+        try {
+            con = DBUtil.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, userid);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                PostVo postvo = new PostVo();
+                postvo.setPost_id(rs.getInt("POST_ID"));
+                postvo.setUser_id(rs.getString("USER_ID"));
+                postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
+                postvo.setTitle(rs.getNString("TITLE"));
+                postvo.setContent(rs.getString("CONTENT"));
+                postvo.setPrice(rs.getInt("PRICE"));
+                postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
+                postvo.setView_count(rs.getInt("VIEW_COUNT"));
+                postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+                postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+                postlist.add(postvo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            disConnect();
+        }
+        return postlist;
+    }
 
 	// 게시글 상세 조회 메서드 (POST ID로 조회)
 	public PostVo getPost(int post_id) {
@@ -154,21 +155,22 @@ public class PostDao {
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, post_id);
 			rs = ps.executeQuery();
-
+            
 			if (rs.next()) {
-				postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
-				postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
-				postvo.setPost_id(rs.getInt("POST_ID"));
-				postvo.setTitle(rs.getNString("TITLE"));
-				postvo.setUser_id(rs.getString("USER_ID"));
-				postvo.setPrice(rs.getInt("PRICE"));
-				postvo.setContent(rs.getString("CONTENT"));
-				postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
-				postvo.setCondition(rs.getInt("CONDITION"));
-				postvo.setRole(rs.getInt("ROLE"));
-			} else {
-				System.out.println("해당 게시물이 존재하지 않습니다");
-			}
+                postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+                postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+                postvo.setPost_id(rs.getInt("POST_ID"));
+                postvo.setTitle(rs.getNString("TITLE"));
+                postvo.setUser_id(rs.getString("USER_ID"));
+                postvo.setPrice(rs.getInt("PRICE"));
+                postvo.setContent(rs.getString("CONTENT"));
+                postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
+                postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
+                postvo.setView_count(rs.getInt("VIEW_COUNT"));
+            } else {
+                System.out.println("해당 게시물이 존재하지 않습니다");
+            }
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -188,21 +190,22 @@ public class PostDao {
 			ps = con.prepareStatement(sql);
 			ps.setString(1, userid);
 			rs = ps.executeQuery();
-
+            
 			if (rs.next()) {
-				postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
-				postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
-				postvo.setPost_id(rs.getInt("POST_ID"));
-				postvo.setTitle(rs.getNString("TITLE"));
-				postvo.setUser_id(rs.getString("USER_ID"));
-				postvo.setPrice(rs.getInt("PRICE"));
-				postvo.setContent(rs.getString("CONTENT"));
-				postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
-				postvo.setCondition(rs.getInt("CONDITION"));
-				postvo.setRole(rs.getInt("ROLE"));
-			} else {
-				System.out.println("해당 게시물이 존재하지 않습니다");
-			}
+                postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+                postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+                postvo.setPost_id(rs.getInt("POST_ID"));
+                postvo.setTitle(rs.getNString("TITLE"));
+                postvo.setUser_id(rs.getString("USER_ID"));
+                postvo.setPrice(rs.getInt("PRICE"));
+                postvo.setContent(rs.getString("CONTENT"));
+                postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
+                postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
+                postvo.setView_count(rs.getInt("VIEW_COUNT"));
+            } else {
+                System.out.println("해당 게시물이 존재하지 않습니다");
+            }
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -450,26 +453,27 @@ public class PostDao {
 
 			rs = ps.executeQuery();
 
-			while (rs.next()) {
-				PostVo postvo = new PostVo();
-				postvo.setPost_id(rs.getInt("POST_ID"));
-				postvo.setUser_id(rs.getString("USER_ID"));
-				postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
-				postvo.setTitle(rs.getNString("TITLE"));
-				postvo.setContent(rs.getString("CONTENT"));
-				postvo.setPrice(rs.getInt("PRICE"));
-				postvo.setCondition(rs.getInt("CONDITION"));
-				postvo.setRole(rs.getInt("ROLE"));
-				postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
-				postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
-				postlist.add(postvo);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			disConnect();
-		}
-		return postlist;
-	}
-
+            while (rs.next()) {
+                PostVo postvo = new PostVo();
+                postvo.setPost_id(rs.getInt("POST_ID"));
+                postvo.setUser_id(rs.getString("USER_ID"));
+                postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
+                postvo.setTitle(rs.getNString("TITLE"));
+                postvo.setContent(rs.getString("CONTENT"));
+                postvo.setPrice(rs.getInt("PRICE"));
+                postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
+                postvo.setView_count(rs.getInt("VIEW_COUNT"));
+                postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
+                postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
+                postlist.add(postvo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            disConnect();
+        }
+        return postlist;
+    }
+    
 }

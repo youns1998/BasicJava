@@ -13,16 +13,22 @@ public class PostVo {
 	private int price;
 	private int condition;
 	private int role;
+	private int view_count;
+	private LocalDateTime created_at; 
+	private LocalDateTime updated_at;
+	
+	public int getView_count() {
+		return view_count;
+	}
+	public void setView_count(int view_count) {
+		this.view_count = view_count;
+	}
 	public int getRole() {
 		return role;
 	}
 	public void setRole(int role) {
 		this.role = role;
 	}
-
-	private LocalDateTime created_at; 
-	private LocalDateTime updated_at;
-	
 	public int getPost_id() {
 		return post_id;
 	}
