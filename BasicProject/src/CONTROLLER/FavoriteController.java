@@ -77,17 +77,17 @@ public class FavoriteController {
             System.out.println("관심 상품이 없습니다.");
         } else {
             // 관심 상품 목록 출력
-            System.out.printf("%-15s %-30s %-10s%n", "게시글 번호", "게시글 제목", "작성 시간");
-            System.out.println("-------------------------------------------------------------");
+            System.out.printf("%-20s %-30s %-10s%n", "게시글 번호", "게시글 제목", "작성 시간");
+            System.out.println("-------------------------------------------------------------------");
              
             for (FavoriteVo favorite : favorites) {
-                System.out.printf("%-20d %-30s %-10s%n", 
+                System.out.printf("%-20d %-25s %-10.19s%n", 
                                   favorite.getPost_id(), 
                                   favorite.getPost_title(), 
                                   favorite.getCreated_at());
             }
         }
-        System.out.println("-------------------------------------------------------------");
+        System.out.println("-------------------------------------------------------------------");
         return Command.FAVORITE_DELETE; 
     }
 
