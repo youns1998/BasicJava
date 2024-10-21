@@ -186,8 +186,7 @@ public class PostDao {
         	con = DBUtil.getConnection();
             ps = con.prepareStatement(sql);
             ps.setInt(1, postId);
-            int updatedRows = ps.executeUpdate();
-            System.out.println("업데이트된 행 수: " + updatedRows); 
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(); 
         }finally {
@@ -295,12 +294,17 @@ public class PostDao {
 				    break;
 			case 5:
 				String PostDelete = ScanUtil.nextLine("정말로 삭제하시겠습니까?(y/n) >> ");
-				if (PostDelete.equals("y")) {
+				if (PostDelete.equalsIgnoreCase("y")) {
 					deletePost(postvo.getPost_id()); // 삭제 메서드 호출
 					return;
-				} else {
-					break;
+				
+				} else if(PostDelete.equalsIgnoreCase("n")) {
+					System.out.println("삭제되지 않았습니다");
+					return;
+				}else {
+					System.out.println("잘못입력 하였습니다");
 				}
+				break;
 			case 0:
 				System.out.println("수정을 종료합니다.");
 				return;
@@ -313,7 +317,7 @@ public class PostDao {
 			try {
 				int result = updatePost(postvo); // 게시물 업데이트
 				if (result > 0) {
-					System.out.println("게시물이 수정되었습니다.\n " + "1.더 수정 하기 0.되돌아 가기");
+					System.out.println("수정 끝.\n " + "1.재수정 하기 0.되돌아 가기");
 					int y = ScanUtil.nextInt();
 					if (y == 1) {
 						continue;

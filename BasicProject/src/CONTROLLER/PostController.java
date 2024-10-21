@@ -69,10 +69,15 @@ public class PostController {
 
 		// 댓글 목록 출력
 		List<CommentsVo> comments = commentsService.getComments(selectedPost.getPost_id()); // 댓글 목록 가져오기
-
 		if (comments.isEmpty()) { // 댓글이 없을 경우
 			System.out.println("댓글이 없습니다.");
-		} else { // 댓글이 있을 경우
+		}
+		
+		 else { // 댓글이 있을 경우
+			 UsersVo user = userservice.getUserSelect(selectedPost.getUser_id()); //게시물의 작성자 정보 가져오기
+			  if (user.getUser_ban() != null) { // 제재된 사용자 여부 확인
+			        return Command.POST_LIST; // 사용자 홈으로 이동
+			    }
 			System.out.println("+:::::::::::::::::::::::::::::::::: 댓글 목록 :::::::::::::::::::::::::::::::::::+");
 
 			for (CommentsVo comment : comments) {
@@ -156,13 +161,17 @@ public class PostController {
 		UsersService userService = UsersService.getInstance();
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
 		CategoryService categoryService = CategoryService.getInstance(); // 카테고리 서비스 인스턴스
-
 		postService.incrementViewCount(post.getPost_id());
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보
 
 		int commentCount = commentsService.getCommentCount(post.getPost_id()); // 댓글 개수 가져오기
 		boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id()); // 찜 여부 확인
 		String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
+		UsersVo user = userService.getUserSelect(post.getUser_id());
+		
+        if(user.getUser_ban()!=null) {
+        	System.out.println("해당 게시물은 제재된 사용자의 게시물입니다. 접근할 수 없습니다.");
+        }else {
 		// 게시물 상세 정보 출력
 		String borderLine = "+==============================================================================+";
 		String borderLineUser = "+                                    공지사항                                     +";
@@ -231,7 +240,7 @@ public class PostController {
 					favoriteService.countFavoritesForPost(post.getPost_id()));
 			System.out.println(borderLine);
 
-			
+			}
 		}
 	}
 
@@ -535,15 +544,19 @@ public class PostController {
 	// 게시글 삭제 메서드: 이미 글 번호를 알고 있는 경우 (글 상세보기 상태)
 	public Command postDelete(int postId) {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인 사용자 정보
+		CommentsService commentservice = CommentsService.getInstance(); // CommentsService 인스턴스 가져오기
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
 		PostVo post = postService.getPost(postId); // 게시물 정보 가져오기
-
-		if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) { // 본인 글일 경우
-			postService.deletePost(post.getPost_id()); // 게시물 삭제
-		} else { // 본인 글이 아닐 경우
-			System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
-		}
-		return Command.POST_LIST; // 게시물 목록으로 돌아감
+		
+		 // 게시글 작성자가 본인인 경우 또는 관리자일 경우
+	    if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
+	    	System.out.println("게시글 삭제 요청: 게시글 ID = " + postId); 
+	        commentservice.deleteCommentPost(postId); // 게시물에 연동된 댓글 삭제
+	        postService.deletePost(post.getPost_id()); // 게시물 삭제
+	    } else {
+	        System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
+	    }
+	    return Command.POST_LIST; // 게시물 목록으로 돌아감
 	}
 
 	// 게시글 삭제 메서드 (삭제할 글 번호를 직접 입력)

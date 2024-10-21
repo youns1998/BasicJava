@@ -92,8 +92,12 @@ public class UsersDao {
         boolean exit = true;
         while (exit) {
             System.out.println();
-            System.out.println("수정할 항목을 선택하세요 >>");
+            if(uservo.getRole()!=0) {
             System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 6.회원제제 0.뒤로가기");
+            }else {
+            System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일  0.뒤로가기");
+            }
+            System.out.println("수정할 항목을 선택하세요 >>");
             int choice = ScanUtil.nextInt();
             switch (choice) {
                 case 1:
@@ -300,6 +304,7 @@ public class UsersDao {
                 user.setPhone_number(rs.getString("PHONE_NUMBER"));
                 user.setAddress(rs.getString("ADDRESS"));
                 user.setRole(rs.getInt("ROLE"));
+                user.setUser_ban(rs.getString("USER_BAN"));
                 user.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
                 userList.add(user);
             }

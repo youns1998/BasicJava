@@ -44,6 +44,9 @@ public class CommentsService {
     public int deleteComment(int commentId) {
         return commentDAO.deleteComment(commentId);
     }
+    public void deleteCommentPost(int postid) {
+    	commentDAO.deleteCommentPost(postid);
+    }
     public int getCommentCount(int postId) {
         return commentDAO.getCommentCount(postId);
     }

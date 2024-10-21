@@ -39,10 +39,14 @@ public class UsersController {
 		System.out.println("==============================전체 유저 리스트==============================");
 		List<UsersVo> users = userService.getPostList(); // 회원 목록 가져오기
 		for (UsersVo user : users) {
-			System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername()); // 회원 정보 출력
-		}
+			if(user.getUser_ban()==null) {
+	            System.out.println("ID: " + user.getUser_id() + "\t\t이름: " + user.getUsername());
+	        	}else {
+	        	System.out.println("ID: " + user.getUser_id() +"\t\t제재당한 사용자입니다(사유: " + user.getUser_ban()+")");
+	        	}
+		}	
 		System.out.println("=========================================================================");
-		int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.회원의 찜 목록 조회 5.회원의 게시물 조회 6.회원의 댓글 조회 0.뒤로가기\n메뉴 선택 >> ");
+		int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 탈퇴 4.회원의 찜 목록 조회 5.회원의 게시물 조회 6.회원의 댓글 조회 0.뒤로가기\n메뉴 선택 >> ");
 		switch (input) {
 		case 1:
 			return Command.ADMIN_USER; // 회원 상세보기
@@ -191,7 +195,7 @@ public class UsersController {
 			System.out.println("주소 : " + user.getAddress());
 			System.out.println("전화번호 : " + user.getPhone_number());
 			System.out.println("이메일 : " + user.getEmail());
-			System.out.println("제제사유 : "+user.getUser_ban());
+			System.out.println("제재사유 : "+user.getUser_ban());
 			System.out.println();
 		} else { // 회원이 존재하지 않을 경우
 			System.out.println("해당 회원을 찾을 수 없습니다.");
@@ -440,7 +444,7 @@ public class UsersController {
 		}
 		if(loginUserVo.getUser_ban()!=null) {
 			System.out.println();
-			System.out.println("당신은 관리자에 의해 제제 되었습니다 \n사유 : " + loginUserVo.getUser_ban());
+			System.out.println("당신은 관리자에 의해 제재 되었습니다 \n사유 : " + loginUserVo.getUser_ban());
 			System.out.println();
 			return Command.HOME; // 다시 로그인
 		}
