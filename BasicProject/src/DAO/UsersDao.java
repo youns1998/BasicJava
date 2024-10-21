@@ -297,6 +297,7 @@ public class UsersDao {
                 user.setPhone_number(rs.getString("PHONE_NUMBER"));
                 user.setAddress(rs.getString("ADDRESS"));
                 user.setRole(rs.getInt("ROLE"));
+                user.setUser_ban(rs.getString("USER_BAN"));
                 user.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
                 userList.add(user);
             }

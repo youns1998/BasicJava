@@ -70,7 +70,11 @@ public class CommentController {
         System.out.println("==============================전체 유저 리스트==============================");
         List<UsersVo> users = usersService.getPostList(); // 전체 사용자 목록 불러오기
         for (UsersVo user : users)
+        	if(user.getUser_ban()==null) {
             System.out.println("ID: " + user.getUser_id());
+        	}else {
+        	System.out.println("ID: " + user.getUser_id() +"\t\t\t 제재당한 사용자입니다(사유: " + user.getUser_ban()+")");
+        	}
         System.out.println("=========================================================================");
         
         // 댓글 리스트를 조회할 사용자 ID 입력받기
@@ -81,7 +85,7 @@ public class CommentController {
         if (user == null) {
             int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 \n선택 >> ");
             if(choice==1) {return Command.COMMENT_ADMIN;} // 댓글 조회 창으로 다시 감}
-            else {return Command.USER_LIST;} // 댓글 조회 창으로 다시 감
+            else {return Command.USER_HOME;} // 댓글 조회 창으로 다시 감
         }
 
         // 해당 사용자의 댓글 목록 가져오기
