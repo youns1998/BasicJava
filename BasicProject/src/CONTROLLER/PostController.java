@@ -59,7 +59,7 @@ public class PostController {
 		CommentsService commentsService = CommentsService.getInstance(); // 댓글 서비스 인스턴스 가져오기
 
 		PostVo selectedPost = postService.getPost(postId); // 입력받은 글 번호로 게시물 정보 가져오기
-
+		
 		if (selectedPost == null) { // 게시물이 없을 경우 메시지 출력
 			System.out.println("해당 게시글이 존재하지 않습니다.");
 			return Command.USER_HOME; // 사용자 홈으로 이동
@@ -145,12 +145,12 @@ public class PostController {
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
 		CategoryService categoryService = CategoryService.getInstance(); // 카테고리 서비스 인스턴스
 
+		postService.incrementViewCount(post.getPost_id());
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보
 		
 		int commentCount = commentsService.getCommentCount(post.getPost_id()); // 댓글 개수 가져오기
 		boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id()); // 찜 여부 확인
 		String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
-		
 		// 게시물 상세 정보 출력
 		String borderLine = "+==============================================================================+";
 		System.out.println(borderLine);
@@ -239,6 +239,7 @@ public class PostController {
 				System.out.println("작성일: " + post.getCreated_at());
 				System.out.println("수정일: " + post.getUpdated_at());
 				System.out.println("현재 상태: " + post.getCondition());
+				System.out.println("조회수 : " + post.getView_count());
 				System.out.println("------------------------------");
 			}
 		}
@@ -271,6 +272,7 @@ public class PostController {
 				System.out.println("작성일: " + post.getCreated_at());
 				System.out.println("수정일: " + post.getUpdated_at());
 				System.out.println("현재 상태: " + post.getCondition());
+				System.out.println("조회수 : " + post.getView_count());
 				System.out.println("------------------------------");
 			}
 		}
@@ -284,7 +286,6 @@ public class PostController {
 	    int currentPage = 1; // 현재 페이지 설정
 	    PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
 	    List<PostVo> posts = postService.getPostList(); // 모든 게시물 가져오기
-
 	    if (posts == null || posts.isEmpty()) { // 게시물이 없을 경우
 	        System.out.println("작성된 게시물이 없습니다");
 	        return Command.USER_HOME; // 사용자 홈으로 이동
@@ -324,11 +325,10 @@ public class PostController {
 	        int start = (currentPage - 1) * pageSize; // 시작 인덱스 계산
 	        int end = Math.min(start + pageSize, totalGeneralPosts); // 끝 인덱스 계산
 	        List<PostVo> pagePosts = generalPosts.subList(start, end); // 해당 페이지에 해당하는 게시물 가져오기
-
 	        // 일반 게시물 출력
 	        for (PostVo post : pagePosts) {
 	            String statusColor = getStatusColor(post.getCondition()); // 상태에 맞는 색상 지정
-	            String content = String.format("%-2d |  제목: %-10s  %-10s    |  작성자: %-6s    |  조회: %-10s\n|    |  가격: %-5s", 
+	            String content = String.format("%-2d |  제목: %-10s  %-10s    |  작성자: %-6s  |  조회: %s\n|    |  가격: %-5s", 
 	                post.getPost_id(),
 	                post.getTitle(),
 	                statusColor + getStatus(post.getCondition()) + ColorUtil.RESET,
@@ -447,6 +447,12 @@ public class PostController {
 				System.out.println("분류번호: " + category.getCategory_id() + ", 카테고리: " + category.getCategory_name());
 			}
 			int category = ScanUtil.nextInt("카테고리 >> "); // 카테고리 선택
+			CategoryVo cate = cateservice.getCategorySelect(category);
+			if(cate==null){
+				int choice = ScanUtil.nextInt("입력한 카테고리는 없는 카테고리입니다 \n1.처음부터 다시 작성하기 0.돌아가기");
+				if(choice==1) {return Command.POST_INSERT;}
+				if(choice==0) {return Command.POST_LIST;}
+			}
 			String content = ScanUtil.nextLine("글 내용 입력 >> "); // 게시물 내용 입력
 			post.setTitle(Title); // 제목 설정
 			post.setPrice(price); // 가격 설정

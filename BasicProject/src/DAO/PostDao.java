@@ -56,7 +56,7 @@ public class PostDao {
             ps.setString(5, PostVo.getContent());
             ps.setInt(6, PostVo.getCondition());
             ps.setInt(7, PostVo.getRole());
-            ps.setInt(7, PostVo.getView_count());
+            ps.setInt(8, PostVo.getView_count());
             cnt = ps.executeUpdate();
             
             PostVo.setCreated_at(LocalDateTime.now());
@@ -169,7 +169,21 @@ public class PostDao {
         }
         return postvo;
     }
-
+    //조회수 증가하는 메서드
+    public void incrementViewCount(int postId) {
+        String sql = "UPDATE POST SET view_count = view_count + 1 WHERE post_id = ?";
+        try { 
+        	con = DBUtil.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, postId);
+            int updatedRows = ps.executeUpdate();
+            System.out.println("업데이트된 행 수: " + updatedRows); 
+        } catch (SQLException e) {
+            e.printStackTrace(); 
+        }finally {
+            disConnect();
+        }
+    }
     // 게시글 상세 조회 메서드 (USER_ID로 조회)
     public PostVo getPostuser(String userid) {
         PostVo postvo = new PostVo();

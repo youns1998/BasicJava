@@ -22,8 +22,8 @@ public class CategoryController {
 		return instance;
 	}
 
-	// 전체 카테고리 목록을 출력하는 메서드
-	public Command categoryList() {
+// 전체 카테고리 목록을 출력하는 메서드
+public Command categoryList() {
 		CategoryService cateservice = CategoryService.getInstance(); // 카테고리 서비스 인스턴스 가져오기
 		List<CategoryVo> catevo = cateservice.getCategoryList(); // 카테고리 목록 불러오기
 		
@@ -46,13 +46,13 @@ public class CategoryController {
 		return Command.USER_HOME; // 기본적으로 홈으로 돌아감
 	}
 
-	// 카테고리 상세 정보를 보는 메서드 (기본적으로 카테고리 리스트로 이동)
-	public Command categoryDetail() {
+// 카테고리 상세 정보를 보는 메서드 (기본적으로 카테고리 리스트로 이동)
+public Command categoryDetail() {
 		return Command.CATEGORY_LIST;
 	}
 
-	// 카테고리 추가 메서드
-	public Command categoryInsert() {
+// 카테고리 추가 메서드
+public Command categoryInsert() {
 		CategoryService cateservice = CategoryService.getInstance(); // 카테고리 서비스 인스턴스 가져오기
 		CategoryVo cate = new CategoryVo(); // 새 카테고리 객체 생성
 		System.out.println("카테고리 추가 화면");
@@ -82,8 +82,8 @@ public class CategoryController {
 		return Command.CATEGORY_LIST; // 카테고리 리스트로 돌아감
 	}
 
-	// 카테고리 수정 메서드
-	public Command categoryUpdate() {
+// 카테고리 수정 메서드
+public Command categoryUpdate() {
 		CategoryService cateservice = CategoryService.getInstance(); // 카테고리 서비스 인스턴스 가져오기
 		System.out.println("카테고리 수정 화면");
 		
@@ -136,7 +136,7 @@ public class CategoryController {
 	}
 
 	// 카테고리 삭제 메서드
-	public Command categoryDelete() {
+public Command categoryDelete() {
 		CategoryService cateservice = CategoryService.getInstance(); // 카테고리 서비스 인스턴스 가져오기
 		System.out.println("카테고리 수정 화면");
 		

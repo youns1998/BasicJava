@@ -110,7 +110,10 @@ public class PostService {
         }
         dao.updatePostSelect(postvo);
     }
-
+    // 조회수 증가 메서드
+    public void incrementViewCount(int postId) {
+         dao.incrementViewCount(postId);
+    }
     // 게시글 번호를 매개변수로 받아서 해당 게시글 정보를 삭제하는 메서드
     public int deletePost(int post_id) {
         if (post_id == 0) {

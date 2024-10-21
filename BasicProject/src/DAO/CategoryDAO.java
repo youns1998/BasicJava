@@ -47,7 +47,7 @@ public class CategoryDAO {
             
             cateList = new ArrayList<CategoryVo>();  // 결과를 저장할 리스트 초기화
             while(rs.next()) {  // 결과 집합에서 한 행씩 읽음
-                CategoryVo catevo = new CategoryVo();
+            	CategoryVo catevo = new CategoryVo();
                 catevo.setCategory_id((rs.getInt("CATEGORY_ID")));  // 카테고리 ID 설정
                 catevo.setCategory_name((rs.getString("CATEGORY_NAME")));  // 카테고리 이름 설정
                 cateList.add(catevo);  // 리스트에 추가
