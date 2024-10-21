@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailService {
     private static final String FROM_EMAIL = "youns1998@gmail.com";
-    private static final String PASSWORD = "rbcrwkqxyrbtlxzm";
+    private static final String PASSWORD = "코드 보안";
     private static final String HOST = "smtp.gmail.com";
     private static final String PORT = "587";
 
