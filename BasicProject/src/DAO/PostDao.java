@@ -43,8 +43,8 @@ public class PostDao {
     // 게시글 추가 메서드
     public int insertPost(PostVo PostVo) {
         int cnt = 0;
-        String sql = "INSERT INTO POST (POST_ID, USER_ID, PRICE, CATEGORY_ID, TITLE, CONTENT, CONDITION, CREATED_AT, UPDATED_AT) "
-                   + "VALUES( (SELECT NVL(MAX(POST_ID), 0) + 1 FROM POST), ?, ?, ?, ?, ?, ?, SYSDATE, SYSDATE)";
+        String sql = "INSERT INTO POST (POST_ID, USER_ID, PRICE, CATEGORY_ID, TITLE, CONTENT, CONDITION, CREATED_AT, UPDATED_AT, ROLE) "
+                   + "VALUES( (SELECT NVL(MAX(POST_ID), 0) + 1 FROM POST), ?, ?, ?, ?, ?, ?, SYSDATE, SYSDATE, ?)";
 
         try {
             con = DBUtil.getConnection();
@@ -55,6 +55,7 @@ public class PostDao {
             ps.setString(4, PostVo.getTitle());
             ps.setString(5, PostVo.getContent());
             ps.setInt(6, PostVo.getCondition());
+            ps.setInt(7, PostVo.getRole());
             cnt = ps.executeUpdate();
             
             PostVo.setCreated_at(LocalDateTime.now());
@@ -86,6 +87,7 @@ public class PostDao {
                 postvo.setContent(rs.getString("CONTENT"));
                 postvo.setPrice(rs.getInt("PRICE"));
                 postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
                 postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
                 postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
                 postlist.add(postvo);
@@ -117,6 +119,7 @@ public class PostDao {
                 postvo.setContent(rs.getString("CONTENT"));
                 postvo.setPrice(rs.getInt("PRICE"));
                 postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
                 postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
                 postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
                 postlist.add(postvo);
@@ -150,6 +153,7 @@ public class PostDao {
                 postvo.setContent(rs.getString("CONTENT"));
                 postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
                 postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
             } else {
                 System.out.println("해당 게시물이 존재하지 않습니다");
             }
@@ -183,6 +187,7 @@ public class PostDao {
                 postvo.setContent(rs.getString("CONTENT"));
                 postvo.setCategory_id(rs.getInt("CATEGORY_ID"));
                 postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
             } else {
                 System.out.println("해당 게시물이 존재하지 않습니다");
             }
@@ -198,7 +203,7 @@ public class PostDao {
     // 게시글 수정 메서드
     public int updatePost(PostVo postvo) {
         int cnt = 0;
-        String sql = "UPDATE POST SET TITLE = ?, CONTENT = ?, PRICE = ?, CONDITION = ?, CATEGORY_ID = ?, UPDATED_AT = SYSDATE WHERE POST_ID = ?";
+        String sql = "UPDATE POST SET TITLE = ?, CONTENT = ?, PRICE = ?, CONDITION = ?, CATEGORY_ID = ?, UPDATED_AT = SYSDATE, ROLE =? WHERE POST_ID = ?";
 
         try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, postvo.getTitle());
@@ -207,7 +212,7 @@ public class PostDao {
             ps.setInt(4, postvo.getCondition());
             ps.setInt(5, postvo.getCategory_id());
             ps.setInt(6, postvo.getPost_id());
-
+            ps.setInt(7,postvo.getRole());
             cnt = ps.executeUpdate();
 
         } catch (Exception e) {
@@ -415,6 +420,7 @@ public class PostDao {
                 postvo.setContent(rs.getString("CONTENT"));
                 postvo.setPrice(rs.getInt("PRICE"));
                 postvo.setCondition(rs.getInt("CONDITION"));
+                postvo.setRole(rs.getInt("ROLE"));
                 postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
                 postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
                 postlist.add(postvo);
