@@ -25,7 +25,6 @@ public class PostService {
     }
     // -----------------------------------------------------------
 
-    // 게시물 상태 업데이트
  // 게시물 상태 업데이트
     public void updatePostCondition(int postId, int conditionCode, String buyerId, String sellerId, Integer commentId) {
         // 상태 코드 유효성 검사

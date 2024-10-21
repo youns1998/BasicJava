@@ -50,6 +50,7 @@ public class FavoriteController {
 	    // 이미 찜한 상품인지 확인
 	    if (favoriteService.isFavoriteExists(loginUserVo.getUser_id(), postId)) {
 	        System.out.println("이미 찜한 상품입니다.");
+	        return Command.POST_DETAIL;
 	    } else {
 	        favoriteService.addFavorite(favorite);
 	        System.out.println("관심 상품 등록 완료.");

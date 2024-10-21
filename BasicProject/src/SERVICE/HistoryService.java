@@ -32,7 +32,7 @@ public class HistoryService {
         
         // 거래 내역 객체 생성
         HistoryVo history = new HistoryVo("0", buyerId, sellerId, postId, currentDate, transactionStatus);
-        
+         
         // 거래 내역 추가
         historyDAO.addTransaction(history);
     }

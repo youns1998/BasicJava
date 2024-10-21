@@ -115,7 +115,7 @@ public class PostController {
 		case 5:
 			return postUpdate(postId); // 게시글 수정
 		case 6:
-			return postDelete(postId); // 게시글 삭제
+			return changePostCondition(postId); // 게시글 상태 수정
 		case 0:
 			return returnToPostList(); // 게시글 목록으로 이동
 		default:
