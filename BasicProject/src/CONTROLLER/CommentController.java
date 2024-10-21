@@ -27,7 +27,7 @@ public class CommentController {
         return instance;
     }
 
-    // 내가 쓴 댓글 목록을 보는 메서드
+    // 사용자의 내가 쓴 댓글 목록을 보는 메서드
     public Command CommentList() {
         CommentsService commentservice = CommentsService.getInstance(); // CommentsService 인스턴스 가져오기
         UsersService usersService = UsersService.getInstance(); // UsersService 인스턴스 가져오기
@@ -46,7 +46,6 @@ public class CommentController {
             // 댓글이 있을 경우, 댓글 리스트 출력
             for (CommentsVo cvo : comvo) {
                 System.out.print("게시물 번호: " + cvo.getPost_id() + "\t");
-                System.out.println("댓글 번호: " + cvo.getComment_id());
                 System.out.println("댓글 내용: " + cvo.getContent());
                 System.out.println();
                 System.out.println("작성일: " + cvo.getCreated_at());
@@ -76,8 +75,9 @@ public class CommentController {
         
         // 입력한 사용자 ID가 없을 경우
         if (user == null) {
-            System.out.println("등록된 회원이 아닙니다");
-            return Command.USER_LIST; // 사용자 목록 화면으로 돌아감
+            int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 >>");
+            if(choice==1) {return Command.COMMENT_ADMIN;} // 댓글 조회 창으로 다시 감}
+            else {return Command.USER_HOME;} // 댓글 조회 창으로 다시 감
         }
 
         // 해당 사용자의 댓글 목록 가져오기
@@ -90,7 +90,6 @@ public class CommentController {
             // 댓글이 있을 경우, 댓글 리스트 출력
             for (CommentsVo cvo : comvo) {
                 System.out.print("게시물 번호: " + cvo.getPost_id() + "\t");
-                System.out.println("댓글 번호: " + cvo.getComment_id());
                 System.out.println("댓글 내용: " + cvo.getContent());
                 System.out.println();
                 System.out.println("작성일: " + cvo.getCreated_at());
