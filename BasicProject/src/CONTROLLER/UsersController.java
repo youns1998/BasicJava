@@ -186,11 +186,12 @@ public class UsersController {
 		String userId = ScanUtil.nextLine("조회할 회원 ID를 입력하세요: "); // 조회할 회원 ID 입력받기
 		UsersVo user = userService.getUserSelect(userId); // 회원 정보 가져오기
 		if (user != null) { // 회원이 존재할 경우
-			System.out.println("ID: " + user.getUser_id());
-			System.out.println("이름: " + user.getUsername());
-			System.out.println("주소: " + user.getAddress());
-			System.out.println("전화번호: " + user.getPhone_number());
-			System.out.println("이메일: " + user.getEmail());
+			System.out.println("ID : " + user.getUser_id());
+			System.out.println("이름 : " + user.getUsername());
+			System.out.println("주소 : " + user.getAddress());
+			System.out.println("전화번호 : " + user.getPhone_number());
+			System.out.println("이메일 : " + user.getEmail());
+			System.out.println("제제사유 : "+user.getUser_ban());
 			System.out.println();
 		} else { // 회원이 존재하지 않을 경우
 			System.out.println("해당 회원을 찾을 수 없습니다.");

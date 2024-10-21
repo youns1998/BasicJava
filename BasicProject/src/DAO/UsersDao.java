@@ -69,7 +69,7 @@ public class UsersDao {
         while (exit) {
             System.out.println();
             System.out.println("수정할 항목을 선택하세요 >>");
-            System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 0.뒤로가기");
+            System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 6.회원제제 0.뒤로가기");
             int choice = ScanUtil.nextInt();
             switch (choice) {
                 case 1:
@@ -97,6 +97,13 @@ public class UsersDao {
                     String newemail = ScanUtil.nextLine();    
                     uservo.setEmail(newemail);
                     break;
+                case 6: 
+                	System.out.println("제제할 회원의 ID를 입력하세요 >> ");
+                	String newId = ScanUtil.nextLine();
+                	String banId = ScanUtil.nextLine("제제할 사유를 입력하세요 >> ");
+                	uservo.setUser_ban(banId);
+                	uservo.setUser_id(newId);
+                	MainController.sessionMap.put("loginUser", uservo);
                 case 0:
                     exit = false;
                     break;
@@ -243,6 +250,7 @@ public class UsersDao {
                 user.setEmail(rs.getString("EMAIL"));
                 user.setPhone_number(rs.getString("PHONE_NUMBER"));
                 user.setRole(rs.getInt("ROLE"));
+                user.setUser_ban(rs.getString("USER_BAN"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -282,7 +290,7 @@ public class UsersDao {
     // 사용자 정보 수정 메서드
     public int updateUser(UsersVo user) {
         int cnt = 0;
-        String sql = "UPDATE USERS SET USER_PASS = ?, EMAIL = ?, USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ? WHERE USER_ID = ?";
+        String sql = "UPDATE USERS SET USER_PASS = ?, EMAIL = ?, USERNAME = ?, PHONE_NUMBER = ?, ADDRESS = ?, USER_BAN = ? WHERE USER_ID = ?";
         try {
             con = DBUtil.getConnection();
             ps = con.prepareStatement(sql);
@@ -291,7 +299,8 @@ public class UsersDao {
             ps.setString(3, user.getUsername());
             ps.setString(4, user.getPhone_number());
             ps.setString(5, user.getAddress());
-            ps.setString(6, user.getUser_id());
+            ps.setString(6, user.getUser_ban());
+            ps.setString(7, user.getUser_id());           
             cnt = ps.executeUpdate(); // 업데이트 결과 반환
         } catch (SQLException e) {
             e.printStackTrace();
