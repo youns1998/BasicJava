@@ -90,6 +90,9 @@ public class CommentController {
         if (comvo.isEmpty()) {
             System.out.println("작성된 댓글이 없습니다.");
         } else {
+        	
+            comvo.sort(Comparator.comparing(CommentsVo::getPost_id));
+
             // 댓글이 있을 경우, 댓글 리스트 출력
             for (CommentsVo cvo : comvo) {
                 System.out.print("게시물 번호: " + cvo.getPost_id() + "\t");
