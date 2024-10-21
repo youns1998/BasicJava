@@ -12,7 +12,7 @@ public class CommentController {
     private Command returnToPostDetail(int postId) {
         PostController postController = PostController.getInstance();
         postController.detailPost(postId);  // 현재 보던 글의 postId로 상세 보기를 호출
-        return Command.POST_DETAIL;
+        return Command.USER_HOME;
     }
 
     private CommentController() {}
