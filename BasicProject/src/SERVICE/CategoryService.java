@@ -6,7 +6,7 @@ import DAO.CategoryDAO;
 import VO.CategoryVo;
 
 public class CategoryService {
-	private CategoryDAO dao;
+	private static CategoryDAO dao;
 
 	private static CategoryService instance;
 
@@ -25,7 +25,7 @@ public class CategoryService {
 		return dao.InsertCategory(cate);
 	}
 
-	public List<CategoryVo> getCategoryList() {
+	public static List<CategoryVo> getCategoryList() {
 		return dao.getCategoryList();
 	}
 
