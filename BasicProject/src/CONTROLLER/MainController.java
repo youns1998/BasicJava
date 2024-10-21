@@ -42,7 +42,7 @@ public class MainController {
 				case LOGIN: cmd = usersController.login(); break;
 				case JOIN: cmd = usersController.join(); break;
 				case MYPAGE: cmd = usersController.myPage(); break;
-				case UESR_LIST: cmd =usersController.userList(); break;
+				case USER_LIST: cmd =usersController.userList(); break;
 				case ADMIN_USER: cmd = usersController.userSelect(); break;
 				case ADMIN_USERDETAIL: cmd = usersController.userdetail(); break;
 				case USER_UPDATE: cmd =usersController.userUpdate(); break; //관리자용
@@ -187,7 +187,7 @@ public class MainController {
 		int input = ScanUtil.nextInt("메뉴 선택 >> ");
 		
 		switch (input) {
-			case 1: return Command.UESR_LIST;
+			case 1: return Command.USER_LIST;
 			case 2: return Command.POST_LIST;
 			case 3: return Command.COMMENT_ADMIN;			//사용자가 쓴 모든 댓글 불러오기 
 			case 4: return Command.CATEGORY_LIST;

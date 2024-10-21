@@ -84,13 +84,21 @@ public class FavoriteController {
     //관리자가 회원 ID로 조회하는 사용자의 찜목록
     public Command adminviewFavorites() {
         FavoriteService favoriteservice = FavoriteService.getInstance();
+        UsersService userService = UsersService.getInstance();
         String userId = ScanUtil.nextLine("찜 목록을 조회할 회원 ID>>");
+        System.out.println();
         List<FavoriteVo> favorites =  favoriteservice.getFavoritesList(userId);
+        UsersVo user = userService.getUserSelect(userId);
+        
+        if(user==null) {						
+        	System.out.println("등록된 회원이 아닙니다");
+        	return Command.USER_LIST;
+        }else {
         System.out.println();
         System.out.println("찜한 게시글 갯수:  " + favorites.size()+"개");
-         
         if (favorites.isEmpty() || favorites==null) {
-            System.out.println("관심 상품이 없습니다.");
+            System.out.println("찜한 상품이 없습니다.");
+            return Command.USER_LIST;
             
         } else {
         	System.out.printf("%-20s %-25s %-10s%n", "게시글 번호", "게시글 제목", "작성자");
@@ -104,6 +112,7 @@ public class FavoriteController {
             }
         }
         System.out.println("-------------------------------------------------------------");
+        }
         return Command.USER_HOME; // 게시물 목록으로 돌아가기
     }
 

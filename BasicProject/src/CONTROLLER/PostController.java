@@ -224,8 +224,12 @@ public class PostController {
 	public Command adminPost() {
 		PostService postService = PostService.getInstance();
 		UsersService usersService = UsersService.getInstance();
-		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 		String userId = ScanUtil.nextLine("게시물 리스트를 조회할 회원 ID >> ");
+		  UsersVo user = usersService.getUserSelect(userId);
+		 if(user==null) {						
+	        	System.out.println("등록된 회원이 아닙니다");
+	        	return Command.USER_LIST;
+		 }
 		List<PostVo> posts = postService.getPost(userId);
 		if (posts.isEmpty()) {
 			System.out.println("작성된 게시물이 없습니다.");
@@ -320,7 +324,7 @@ public class PostController {
 	            }
 	        }
 	        System.out.println();
-
+	        System.out.println();
 	        // 페이지 이동 메뉴
 	        int input = ScanUtil.nextInt("1.이전 페이지 2.다음 페이지 3.판매 글 작성 4.상세 보기 5.검색 0.내 화면으로 \n 메뉴 선택 >> ");
 	        switch (input) {
@@ -400,14 +404,15 @@ public class PostController {
 		PostService postService = PostService.getInstance();
 		PostVo post = new PostVo();
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-		if (loginUserVo.getRole() != 0) { // 관리자의 공지 추가
-			System.out.println("공지사항 쓰기");
+		
+		if (loginUserVo.getRole() != 0) { 												// 관리자의 공지 추가
+			System.out.println("<<공지사항 쓰기>>");
 			String title = ScanUtil.nextLine("제목 >> ");
 			String content = ScanUtil.nextLine("내용 >> ");
 			post.setTitle(title);
 			post.setContent(content);
 			post.setUser_id(loginUserVo.getUser_id());
-		} else { // 사용자의 게시글 추가
+		} else { 																	// 사용자의 게시글 추가
 			String Title = ScanUtil.nextLine("글 제목 >> ");
 			int price = ScanUtil.nextInt("가격 >> ");
 			CategoryService cateservice = CategoryService.getInstance();
@@ -455,7 +460,7 @@ public class PostController {
 		return Command.POST_LIST;
 	}
 
-	// 새로운 postUpdate: 이미 글 번호를 알고 있는 경우
+	// 새로운 postUpdate: 이미 글 번호를 알고 있는 경우 (글의 상세보기에 들어가 있는 경우)
 	public Command postUpdate(int postId) {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 		PostService postService = PostService.getInstance();
@@ -469,7 +474,7 @@ public class PostController {
 		return Command.POST_LIST;
 	}
 
-	// 게시글 삭제 메서드: 이미 글 번호를 알고 있는 경우
+	// 게시글 삭제 메서드: 이미 글 번호를 알고 있는 경우 (글의 상세보기에 들어가 있는 경우) 
 	public Command postDelete(int postId) {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 		PostService postService = PostService.getInstance();
@@ -483,7 +488,7 @@ public class PostController {
 		return Command.POST_LIST;
 	}
 
-	// 게시글 삭제 메서드
+	// 게시글 삭제 메서드 
 	public Command postDelete() {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
 		int choice = ScanUtil.nextInt("삭제할 글 번호를 입력하세요: ");

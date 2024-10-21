@@ -79,8 +79,6 @@ public class FavoriteDAO {
     }
 	// 관리자의 사용자 관심 상품 목록 조회
 		public List<FavoriteVo> getFavoritesList(String userid) {
-			 UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-			 
 			 List<FavoriteVo> favorites = new ArrayList<>();
 	        String sql = "SELECT f.USER_ID, f.POST_ID, p.TITLE, p.USER_ID AS AUTHOR "
 	                	+ "FROM FAVORITE f "
