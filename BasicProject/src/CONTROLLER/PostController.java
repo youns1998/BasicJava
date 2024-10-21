@@ -60,8 +60,7 @@ public class PostController {
 		UsersService userservice = UsersService.getInstance();
 		PostVo selectedPost = postService.getPost(postId); // 입력받은 글 번호로 게시물 정보 가져오기
 		
-		if (selectedPost == null) { // 게시물이 없을 경우 메시지 출력
-			System.out.println("해당 게시글이 존재하지 않습니다.");
+		if (selectedPost == null) { // 게시물이 없을 경우
 			return Command.USER_HOME; // 사용자 홈으로 이동
 		}
 

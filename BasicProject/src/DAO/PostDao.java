@@ -147,8 +147,8 @@ public class PostDao {
 
 	// 게시글 상세 조회 메서드 (POST ID로 조회)
 	public PostVo getPost(int post_id) {
-		PostVo postvo = new PostVo();
-		String sql = "SELECT *FROM POST WHERE POST_ID = ?";
+	    PostVo postvo = null; // 게시물이 없을 경우 null 반환
+		String sql = "SELECT * FROM POST WHERE POST_ID = ?";
 
 		try {
 			con = DBUtil.getConnection();
@@ -157,10 +157,11 @@ public class PostDao {
 			rs = ps.executeQuery();
             
 			if (rs.next()) {
+	            postvo = new PostVo(); // 여기서 객체를 생성해야 NullPointerException이 발생하지 않음
                 postvo.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
                 postvo.setUpdated_at(rs.getTimestamp("UPDATED_AT").toLocalDateTime());
                 postvo.setPost_id(rs.getInt("POST_ID"));
-                postvo.setTitle(rs.getNString("TITLE"));
+                postvo.setTitle(rs.getString("TITLE"));
                 postvo.setUser_id(rs.getString("USER_ID"));
                 postvo.setPrice(rs.getInt("PRICE"));
                 postvo.setContent(rs.getString("CONTENT"));
@@ -169,7 +170,7 @@ public class PostDao {
                 postvo.setRole(rs.getInt("ROLE"));
                 postvo.setView_count(rs.getInt("VIEW_COUNT"));
             } else {
-                System.out.println("해당 게시물이 존재하지 않습니다");
+                System.out.println("해당 게시물이 존재하지 않습니다"); 
             }
 
         } catch (Exception e) {
@@ -196,7 +197,7 @@ public class PostDao {
     }
     // 게시글 상세 조회 메서드 (USER_ID로 조회)
     public PostVo getPostuser(String userid) {
-        PostVo postvo = new PostVo();
+	    PostVo postvo = null; // 게시물이 없을 경우 null 반환
         String sql = "SELECT *FROM POST WHERE USER_ID = ?";
 
 		try {
