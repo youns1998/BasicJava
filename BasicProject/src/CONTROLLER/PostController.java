@@ -471,12 +471,12 @@ public class PostController {
 			List<CategoryVo> catevo = cateservice.getCategoryList(); // 카테고리 목록 가져오기
 			for (CategoryVo category : catevo) {
 				// 카테고리 목록 출력
-				System.out.println("분류번호: " + category.getCategory_id() + ", 카테고리: " + category.getCategory_name());
+				System.out.println("분류번호 : " + category.getCategory_id() + ", 카테고리 : " + category.getCategory_name());
 			}
 			int category = ScanUtil.nextInt("카테고리 >> "); // 카테고리 선택
 			CategoryVo cate = cateservice.getCategorySelect(category);
 			if(cate==null){
-				int choice = ScanUtil.nextInt("입력한 카테고리는 없는 카테고리입니다 \n1.처음부터 다시 작성하기 0.돌아가기");
+				int choice = ScanUtil.nextInt("입력한 카테고리는 없는 카테고리입니다 \n1.처음부터 다시 작성하기 0.돌아가기 \n선택 >> ");
 				if(choice==1) {return Command.POST_INSERT;}
 				if(choice==0) {return Command.POST_LIST;}
 			}
@@ -503,7 +503,7 @@ public class PostController {
 	// 기존 방식: 사용자가 직접 글 번호를 입력
 	public Command postUpdate() {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인 사용자 정보
-		int choice = ScanUtil.nextInt("수정할 내 글 번호를 입력하세요: "); // 수정할 글 번호 입력받기
+		int choice = ScanUtil.nextInt("수정할 내 글 번호를 입력하세요 : "); // 수정할 글 번호 입력받기
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
 		PostVo post = postService.getPost(choice); // 해당 게시물 가져오기
 		if (post == null) { // 게시물이 없을 경우
@@ -549,7 +549,7 @@ public class PostController {
 	// 게시글 삭제 메서드 (삭제할 글 번호를 직접 입력)
 	public Command postDelete() {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인 사용자 정보
-		int choice = ScanUtil.nextInt("삭제할 글 번호를 입력하세요: "); // 삭제할 글 번호 입력받기
+		int choice = ScanUtil.nextInt("삭제할 글 번호를 입력하세요 : "); // 삭제할 글 번호 입력받기
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
 		PostVo post = postService.getPost(choice); // 게시물 정보 가져오기
 		if (post == null) { // 게시물이 없을 경우
@@ -580,7 +580,7 @@ public class PostController {
 		case "2":
 			conditionCode = 2; // 예약중 상태
 			// 구매자 ID 입력받기
-			buyerId = ScanUtil.nextLine("구매자 ID를 입력하세요: ");
+			buyerId = ScanUtil.nextLine("구매자 ID를 입력하세요 : ");
 			if (buyerId == null || buyerId.isEmpty()) {
 				System.out.println("유효하지 않은 구매자 ID입니다.");
 				return;
@@ -591,7 +591,7 @@ public class PostController {
 			// 예약된 구매자 정보 가져오기
 			buyerId = historyService.getBuyerIdFromTransaction(postId);
 			if (buyerId == null || buyerId.isEmpty()) {
-				buyerId = ScanUtil.nextLine("거래 완료를 위한 구매자 ID를 입력하세요: ");
+				buyerId = ScanUtil.nextLine("거래 완료를 위한 구매자 ID를 입력하세요 : ");
 				if (buyerId == null || buyerId.isEmpty()) {
 					System.out.println("유효하지 않은 구매자 ID입니다.");
 					return;
@@ -599,7 +599,7 @@ public class PostController {
 			}
 			break;
 		default:
-			throw new IllegalArgumentException("잘못된 상태: " + newCondition);
+			throw new IllegalArgumentException("잘못된 상태 : " + newCondition);
 		}
 
 		// 상태 업데이트 및 거래 내역 처리
@@ -646,7 +646,7 @@ public class PostController {
 
 	// 게시물 검색 메서드
 	public Command postSearch() {
-		System.out.println("검색 방법을 선택하세요:");
+		System.out.println("검색 방법을 선택하세요 :");
 		System.out.println("1. 키워드로 검색");
 		System.out.println("2. 카테고리로 검색");
 
@@ -655,7 +655,7 @@ public class PostController {
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
 
 		if (choice == 1) { // 키워드로 검색
-			String keyword = ScanUtil.nextLine("검색할 키워드를 입력하세요: ");
+			String keyword = ScanUtil.nextLine("검색할 키워드를 입력하세요 : ");
 			List<PostVo> results = postService.searchPosts(keyword, null); // 키워드로 검색
 
 			if (results.isEmpty()) { // 검색 결과가 없을 경우
@@ -663,19 +663,19 @@ public class PostController {
 			} else { // 검색 결과가 있을 경우
 				for (PostVo post : results) {
 					// 검색 결과 출력
-					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %s | 상태: %d\n", post.getPost_id(), post.getTitle(),
+					System.out.printf("게시물 번호 : %d | 제목 : %s | 가격 : %s | 상태 : %d\n", post.getPost_id(), post.getTitle(),
 							formatter.format(post.getPrice()) + "원", post.getCondition());
 				}
 			}
 		} else if (choice == 2) { // 카테고리로 검색
 			CategoryService categoryService = CategoryService.getInstance(); // 카테고리 서비스 인스턴스
 			List<CategoryVo> categories = categoryService.getCategoryList(); // 카테고리 목록 가져오기
-			System.out.println("카테고리 목록:");
+			System.out.println("카테고리 목록 :");
 			for (CategoryVo category : categories) { // 카테고리 출력
-				System.out.printf("분류번호: %d, 이름: %s\n", category.getCategory_id(), category.getCategory_name());
+				System.out.printf("분류번호 : %d, 이름 : %s\n", category.getCategory_id(), category.getCategory_name());
 			}
 
-			int categoryId = ScanUtil.nextInt("검색할 분류번호를 입력하세요: "); // 검색할 카테고리 선택
+			int categoryId = ScanUtil.nextInt("검색할 분류번호를 입력하세요 : "); // 검색할 카테고리 선택
 
 			List<PostVo> results = postService.searchPosts(null, categoryId); // 카테고리로 검색
 
@@ -698,7 +698,7 @@ public class PostController {
 						condition = "알 수 없음"; // 기본값 설정
 					}
 					// 검색 결과 출력
-					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %s | 상태: %s\n", post.getPost_id(), post.getTitle(),
+					System.out.printf("게시물 번호 : %d | 제목 : %s | 가격 : %s | 상태 : %s\n", post.getPost_id(), post.getTitle(),
 							formatter.format(post.getPrice()) + "원", condition);
 				}
 			}

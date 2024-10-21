@@ -49,10 +49,10 @@ public class CommentController {
             
             // 댓글이 있을 경우, 댓글 리스트 출력
             for (CommentsVo cvo : comvo) {
-                System.out.print("게시물 번호: " + cvo.getPost_id() + "\t");
-                System.out.println("댓글 내용: " + cvo.getContent());
+                System.out.print("게시물 번호 : " + cvo.getPost_id() + "\t");
+                System.out.println("댓글 내용 : " + cvo.getContent());
                 System.out.println();
-                System.out.println("작성일: " + cvo.getCreated_at());
+                System.out.println("작성일 : " + cvo.getCreated_at());
                 System.out.println("------------------------------");
             }
         }
@@ -74,12 +74,12 @@ public class CommentController {
         System.out.println("=========================================================================");
         
         // 댓글 리스트를 조회할 사용자 ID 입력받기
-        String userId = ScanUtil.nextLine("댓글 리스트를 조회할 회원 ID>>");
+        String userId = ScanUtil.nextLine("댓글 리스트를 조회할 회원 ID >> ");
         UsersVo user = usersService.getUserSelect(userId); // 해당 사용자 정보 가져오기
         
         // 입력한 사용자 ID가 없을 경우
         if (user == null) {
-            int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 >>");
+            int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 \n선택 >> ");
             if(choice==1) {return Command.COMMENT_ADMIN;} // 댓글 조회 창으로 다시 감}
             else {return Command.USER_LIST;} // 댓글 조회 창으로 다시 감
         }
@@ -96,10 +96,10 @@ public class CommentController {
 
             // 댓글이 있을 경우, 댓글 리스트 출력
             for (CommentsVo cvo : comvo) {
-                System.out.print("게시물 번호: " + cvo.getPost_id() + "\t");
-                System.out.println("댓글 내용: " + cvo.getContent());
+                System.out.print("게시물 번호 : " + cvo.getPost_id() + "\t");
+                System.out.println("댓글 내용 : " + cvo.getContent());
                 System.out.println();
-                System.out.println("작성일: " + cvo.getCreated_at());
+                System.out.println("작성일 : " + cvo.getCreated_at());
                 System.out.println("------------------------------");
             }
         }
@@ -109,7 +109,7 @@ public class CommentController {
     // 댓글 작성 메서드
     public Command insertComment(int postId) {
         // 사용자로부터 댓글 내용 입력받기
-        String commentText = ScanUtil.nextLine("댓글을 입력하세요: ");
+        String commentText = ScanUtil.nextLine("댓글을 입력하세요 : ");
         UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보 가져오기
 
         // 새로운 댓글 객체 생성 및 데이터 설정
@@ -163,7 +163,7 @@ public class CommentController {
     // 댓글 삭제 메서드
     public Command deleteComment(int postId) {
         // 삭제할 댓글 번호 입력받기
-        int commentId = ScanUtil.nextInt("삭제할 댓글 번호를 입력하세요: ");
+        int commentId = ScanUtil.nextInt("삭제할 댓글 번호를 입력하세요 : ");
         
         // 입력한 댓글 번호에 해당하는 댓글 가져오기
         CommentsVo comment = CommentsService.getInstance().getComment(commentId);

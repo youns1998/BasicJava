@@ -125,7 +125,6 @@ public class UsersDao {
                 	uservo.setUser_ban(banId);
                 	uservo.setUser_id(newId);
                 	MainController.sessionMap.put("loginUser", uservo);
-                	
                 case 0:
                     exit = false;
                     break;
