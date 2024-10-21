@@ -96,7 +96,6 @@ public class CommentController {
             // 댓글이 있을 경우, 댓글 리스트 출력
             for (CommentsVo cvo : comvo) {
                 System.out.print("게시물 번호: " + cvo.getPost_id() + "\t");
-                System.out.println("댓글 번호: " + cvo.getComment_id());
                 System.out.println("댓글 내용: " + cvo.getContent());
                 System.out.println();
                 System.out.println("작성일: " + cvo.getCreated_at());
