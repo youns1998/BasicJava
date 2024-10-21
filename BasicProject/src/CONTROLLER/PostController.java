@@ -278,7 +278,7 @@ public class PostController {
 	        System.out.println("+" + "=".repeat(width - 2) + "+");  // 공지사항 테두리 빨간색
 	        for (PostVo post : noticePosts) {
 	            // 공지사항 내용 출력 (상태, 가격 생략)
-	            String content = String.format("%-2d | %10s###########공지사항 : %-50s%s  ", 
+	            String content = String.format("%-2d | %10s#공지사항 : %-50s%s  ", 
 	                post.getPost_id(),
 	                ANSI_BOLD + ANSI_LIGHT_RED,  // 빨간색 볼드체 시작	               
 	                post.getTitle(),

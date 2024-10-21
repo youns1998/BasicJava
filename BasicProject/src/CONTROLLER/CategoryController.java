@@ -105,7 +105,7 @@ public Command categoryUpdate() {
 	    return Command.CATEGORY_LIST;
 	}
 
-	//카테고리 삭제
+	//카테고리 삭제 
 public Command categoryDelete() {
 	 CategoryService cateservice = CategoryService.getInstance();
 	  System.out.println("카테고리 수정 화면");
