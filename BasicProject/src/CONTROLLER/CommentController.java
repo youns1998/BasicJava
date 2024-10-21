@@ -101,8 +101,7 @@ public class CommentController {
     }
     //댓글 수정
     public Command updateComment(int postId) {
-        int commentId = ScanUtil.nextInt("수정할 댓글 번호를 입력하세요: ");
-        ScanUtil.nextLine();
+        int commentId = ScanUtil.nextInt("수정할 댓글 번호를 입력하세요 >> ");
 
         CommentsVo comment = CommentsService.getInstance().getComment(commentId);
         if (comment == null || comment.getPost_id() != postId) {
@@ -110,15 +109,16 @@ public class CommentController {
             return returnToPostDetail(postId);
         }
         UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-        if (loginUserVo == null || !comment.getUser_id().equals(loginUserVo.getUser_id())) {
-            System.out.println("다른 사용자의 댓글은 수정할 수 없습니다.");
-            return returnToPostDetail(postId);
-        }
-        String newCommentText = ScanUtil.nextLine("새 댓글 내용을 입력하세요: ");
-        comment.setContent(newCommentText);
+        
+        if (loginUserVo.getRole() != 0 || comment.getUser_id().equals(loginUserVo.getUser_id())) {
+            String newCommentText = ScanUtil.nextLine("새 댓글 내용을 입력하세요: ");
+            comment.setContent(newCommentText);
 
-        int result = CommentsService.getInstance().updateComment(comment);
-        System.out.println(result > 0 ? "댓글이 성공적으로 수정되었습니다." : "댓글 수정에 실패했습니다.");
+            int result = CommentsService.getInstance().updateComment(comment);
+            System.out.println(result > 0 ? "댓글이 성공적으로 수정되었습니다." : "댓글 수정에 실패했습니다.");
+        } else {
+            System.out.println("다른 사용자의 댓글은 수정할 수 없습니다.");
+        }
 
         return returnToPostDetail(postId); // 댓글 수정 후 상세 보기로 돌아가기
     }
