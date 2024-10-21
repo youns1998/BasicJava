@@ -79,7 +79,7 @@ public class PostController {
 
 			}
 		}
-
+ 
 		MainController.sessionMap.put("currentPostId", postId);
 		return commentMenu(postId);
 	}
@@ -246,84 +246,114 @@ public class PostController {
 
 	// 게시물 목록 출력############################################################################
 	public Command postList() {
-		int width = 80;
-		int pageSize = 10;  // 페이지당 게시물 수
-		int currentPage = 1;  // 현재 페이지
-		PostService postService = PostService.getInstance();
-		UsersService usersService = UsersService.getInstance();
-		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
-		List<PostVo> posts = postService.getPostList();
-		
-		if (posts == null || posts.isEmpty()) {
-			System.out.println("작성된 게시물이 없습니다");
-			return Command.USER_HOME;
-		}
+	    int width = 80;
+	    int pageSize = 10;  // 페이지당 게시물 수 (공지사항 제외)
+	    int currentPage = 1;  // 현재 페이지
+	    PostService postService = PostService.getInstance();
+	    UsersService usersService = UsersService.getInstance();
+	    UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
+	    List<PostVo> posts = postService.getPostList();
+	    
+	    if (posts == null || posts.isEmpty()) {
+	        System.out.println("작성된 게시물이 없습니다");
+	        return Command.USER_HOME;
+	    }
 
-		// 페이지 이동 처리
-		int totalPosts = posts.size();
-		int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
+	    // 공지사항 필터링 (작성자 ID가 "1"인 게시물)
+	    List<PostVo> noticePosts = new ArrayList<>();
+	    List<PostVo> generalPosts = new ArrayList<>();
+	    for (PostVo post : posts) {
+	        if (post.getUser_id().equals("1")) {
+	            noticePosts.add(post);  // 공지사항으로 분류
+	        } else {
+	            generalPosts.add(post);  // 일반 게시물로 분류
+	        }
+	    }
 
-		while (true) {
-			// 현재 페이지에 맞는 게시물 목록 출력
-			int start = (currentPage - 1) * pageSize;
-			int end = Math.min(start + pageSize, totalPosts);
-			System.out.println("+" + "=".repeat(width - 2) + "+");
+	    int totalGeneralPosts = generalPosts.size();
+	    int totalPages = (int) Math.ceil((double) totalGeneralPosts / pageSize);  // 공지사항은 제외한 게시물 수로 페이지 계산
 
-			// 카테고리별로 분류된 게시물 목록을 출력
-			List<PostVo> pagePosts = posts.subList(start, end);
+	    while (true) {
+	        // 공지사항은 항상 출력
+	        System.out.println("+" + "=".repeat(width - 2) + "+");  // 공지사항 테두리 빨간색
+	        for (PostVo post : noticePosts) {
+	            // 공지사항 내용 출력 (상태, 가격 생략)
+	            String content = String.format("%-2d | %10s###########공지사항 : %-50s%s  ", 
+	                post.getPost_id(),
+	                ANSI_BOLD + ANSI_LIGHT_RED,  // 빨간색 볼드체 시작	               
+	                post.getTitle(),
+	                ANSI_RESET,  // 색상과 볼드체 초기화
+	                post.getUser_id()
+	            );
+	            System.out.println(ANSI_BOLD+ANSI_LIGHT_RED + "+" + "-".repeat(width - 2) + "+" + ANSI_RESET);  // 공지사항 내부 테두리 빨간색
+	            System.out.printf(ANSI_BOLD+ANSI_LIGHT_RED + "| %-" + (width - 3) + "s\n" + ANSI_RESET, content);  // 공지사항 내용 출력
+	            System.out.println(ANSI_BOLD+ANSI_LIGHT_RED + "+" + "-".repeat(width - 2) + "+" + ANSI_RESET);  // 공지사항 하단 테두리 빨간색
+	        }
 
-			// 출력
-			for (PostVo post : pagePosts) {
-				String statusColor = getStatusColor(post.getCondition());
-				String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", post.getPost_id(),
-						post.getTitle(), formatter.format(post.getPrice()) + "원", post.getUser_id(), statusColor + getStatus(post.getCondition()) + ColorUtil.RESET);
-				printAsciiArtBox(content, false);
-			}
+	        // 현재 페이지에 맞는 일반 게시물 출력
+	        int start = (currentPage - 1) * pageSize;
+	        int end = Math.min(start + pageSize, totalGeneralPosts);
+	        List<PostVo> pagePosts = generalPosts.subList(start, end);
 
-			System.out.println("+" + "=".repeat(width - 2) + "+");
+	        // 일반 게시물 출력
+	        for (PostVo post : pagePosts) {
+	            String statusColor = getStatusColor(post.getCondition());
+	            String content = String.format("%-2d | 제목: %-20s | 가격: %-5s | 작성자: %-6s | 상태: %-10s", 
+	                post.getPost_id(),
+	                post.getTitle(),
+	                formatter.format(post.getPrice()) + "원",
+	                post.getUser_id(),
+	                statusColor + getStatus(post.getCondition()) + ColorUtil.RESET
+	            );
+	            printAsciiArtBox(content, false);  // 일반 게시물 출력
+	        }
 
-			// 페이지 이동 옵션 출력
-			System.out.print("페이지: ");
-			for (int i = 1; i <= totalPages; i++) {
-				if (i == currentPage) {
-					System.out.print("\033[1m" + i + "\033[0m "); // 현재 페이지는 볼드로 표시
-				} else {
-					System.out.print(i + " ");
-				}
-			}
-			System.out.println();
+	        System.out.println("+" + "=".repeat(width - 2) + "+");
 
-			// 페이지 이동 메뉴
-			int input = ScanUtil.nextInt("1.이전 페이지 2.다음 페이지 3.판매 글 작성 4.상세 보기 5.검색 0.내 화면으로 \n 메뉴 선택 >> ");
-			switch (input) {
-				case 1:
-					if (currentPage > 1) {
-						currentPage--;
-					} else {
-						System.out.println("첫 페이지입니다.");
-					}
-					break;
-				case 2:
-					if (currentPage < totalPages) {
-						currentPage++;
-					} else {
-						System.out.println("마지막 페이지입니다.");
-					}
-					break;
-				case 3:
-					return Command.POST_INSERT;
-				case 4:
-					MainController.sessionMap.remove("currentPostId");
-					return Command.POST_DETAIL;
-				case 5:
-					return postSearch(); // 검색 기능 추가
-				case 0:
-					return Command.USER_HOME;
-				default:
-					System.out.println("잘못된 선택입니다. 다시 시도하세요.");
-			}
-		}
+	        // 페이지 이동 옵션 출력
+	        System.out.print("페이지: ");
+	        for (int i = 1; i <= totalPages; i++) {
+	            if (i == currentPage) {
+	                System.out.print("\033[1m" + i + "\033[0m "); // 현재 페이지는 볼드로 표시
+	            } else {
+	                System.out.print(i + " ");
+	            }
+	        }
+	        System.out.println();
+
+	        // 페이지 이동 메뉴
+	        int input = ScanUtil.nextInt("1.이전 페이지 2.다음 페이지 3.판매 글 작성 4.상세 보기 5.검색 0.내 화면으로 \n 메뉴 선택 >> ");
+	        switch (input) {
+	            case 1:
+	                if (currentPage > 1) {
+	                    currentPage--;
+	                } else {
+	                    System.out.println("첫 페이지입니다.");
+	                }
+	                break;
+	            case 2:
+	                if (currentPage < totalPages) {
+	                    currentPage++;
+	                } else {
+	                    System.out.println("마지막 페이지입니다.");
+	                }
+	                break;
+	            case 3:
+	                return Command.POST_INSERT;
+	            case 4:
+	                MainController.sessionMap.remove("currentPostId");
+	                return Command.POST_DETAIL;
+	            case 5:
+	                return postSearch(); // 검색 기능 추가
+	            case 0:
+	                return Command.USER_HOME;
+	            default:
+	                System.out.println("잘못된 선택입니다. 다시 시도하세요.");
+	        }
+	    }
 	}
+
+
 
 	// 게시물 상태 문자열 반환
 	private String getStatus(int condition) {
