@@ -548,7 +548,7 @@ public class PostController {
 		
 		 // 게시글 작성자가 본인인 경우 또는 관리자일 경우
 	    if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
-	    	System.out.println("게시글 삭제 요청: 게시글 ID = " + postId); 
+
 	        postService.deletePost(post.getPost_id()); // 게시물 삭제
 	    } else {
 	        System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");

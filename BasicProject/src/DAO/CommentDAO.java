@@ -142,6 +142,5 @@ public class CommentDAO {
         return 0;  // 실패 시 0 반환
     }
     
-    //게시물이 삭제되면 댓글도 삭제되는 메서드 
-    
+
 }
