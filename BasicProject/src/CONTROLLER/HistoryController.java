@@ -2,17 +2,20 @@ package CONTROLLER;
 
 import java.util.List;
 import SERVICE.HistoryService;
+import SERVICE.UsersService;
 import UTIL.Command;
 import VO.HistoryVo;
 import VO.UsersVo;
 
 public class HistoryController {
     private HistoryService historyService;
+    private UsersService usersService;
     private static HistoryController instance;
-    
+
     // HistoryController 생성자 (싱글톤 패턴 적용)
     private HistoryController() {
         this.historyService = HistoryService.getInstance(); // HistoryService의 싱글톤 인스턴스 가져오기
+        this.usersService = UsersService.getInstance(); // UsersService 인스턴스 가져오기
     }
 
     // HistoryController 인스턴스를 반환하는 메서드 (싱글톤 패턴)
@@ -21,7 +24,7 @@ public class HistoryController {
             instance = new HistoryController();
         return instance;
     }
-    
+
     // 거래 완료 처리 메서드
     public void completeTransaction(String buyerId, String sellerId, int postId) {
         // 거래를 처리하는 서비스 호출
@@ -32,7 +35,7 @@ public class HistoryController {
         System.out.println("게시글 ID: " + postId);
     }
 
-    // 거래 내역 출력 메서드
+    // 거래 내역 출력 메서드 (구매자와 판매자의 이메일, 전화번호도 함께 출력)
     public void printTransactionHistory(List<HistoryVo> historyList) {
         // 전달받은 거래 내역 리스트를 반복하여 출력
         for (HistoryVo history : historyList) {
@@ -51,10 +54,33 @@ public class HistoryController {
                 default:
                     transactionStatus = "알 수 없음";
             }
-            // 거래 정보 출력
-            System.out.println("거래 번호: " + history.getTransaction_id() + " | 구매자 ID: " + history.getBuyer_id()
-                + " | 판매자 ID: " + history.getSeller_id() + " | 게시글 ID: " + history.getPost_id()
-                + " | 거래 날짜: " + history.getTransaction_date() + " | 거래 상태: " + transactionStatus);
+
+            // 구매자 정보와 판매자 정보 가져오기
+            UsersVo buyer = usersService.getUserSelect(history.getBuyer_id());
+            UsersVo seller = usersService.getUserSelect(history.getSeller_id());
+
+            // 거래 정보 출력 (구매자와 판매자의 이메일 및 전화번호 포함)
+            System.out.println("======거래내역======");
+            System.out.printf("거래 번호: %s | 게시글 ID: %d | 거래 날짜: %s | 거래 상태: %s\n", 
+                history.getTransaction_id(), history.getPost_id(), history.getTransaction_date(), transactionStatus);
+
+            // 구매자 정보 출력
+            if (buyer != null) {
+                System.out.printf("구매자 정보: ID: %s | 이름: %s | 이메일: %s | 전화번호: %s\n",
+                    buyer.getUser_id(), buyer.getUsername(), buyer.getEmail(), buyer.getPhone_number());
+            } else {
+                System.out.println("구매자 정보가 존재하지 않습니다.");
+            }
+
+            // 판매자 정보 출력
+            if (seller != null) {
+                System.out.printf("판매자 정보: ID: %s | 이름: %s | 이메일: %s | 전화번호: %s\n",
+                    seller.getUser_id(), seller.getUsername(), seller.getEmail(), seller.getPhone_number());
+            } else {
+                System.out.println("판매자 정보가 존재하지 않습니다.");
+            }
+
+            System.out.println(); // 거래 내역 사이에 공백 추가
         }
     }
 
@@ -72,6 +98,9 @@ public class HistoryController {
         // 로그인한 사용자의 ID로 거래 내역 조회
         String userId = loginUserVo.getUser_id();
         List<HistoryVo> historyList = historyService.getTransactionHistory(userId);
+
+        // 거래 내역 출력
+        printTransactionHistory(historyList);  // 이 부분에서만 거래 내역 출력
 
         // 거래 내역 조회 후 홈 화면으로 이동
         return Command.USER_HOME;
