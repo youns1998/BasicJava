@@ -1,17 +1,17 @@
 package DAO;
 
-import java.time.LocalDateTime;
-import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import CONTROLLER.MainController;
 import UTIL.DBUtil;
 import UTIL.ScanUtil;
-import VO.PostVo;
 import VO.UsersVo;
 
 public class UsersDao {
@@ -95,7 +95,7 @@ public class UsersDao {
                     System.out.println("새로운 이메일을 입력하세요.");
                     String newemail = ScanUtil.nextLine();    
                     uservo.setEmail(newemail);
-                    return;
+                    break;
                 case 0:
                     break;
                 default:
@@ -108,10 +108,11 @@ public class UsersDao {
                 try {
                     int result = updateUser(uservo); // 회원 정보 업데이트
                     if (result > 0) {
+                    	 MainController.sessionMap.put("loginUser", uservo);
                         System.out.println("회원 정보가 수정되었습니다.\n 1.더 수정하기 0.되돌아가기");
                         int y = ScanUtil.nextInt();
                         if (y == 1) continue;
-                        if (y == 0) break;
+                        if (y == 0) exit = false;
                     } else {
                         System.out.println("회원 정보 수정에 실패했습니다.");
                     }
@@ -119,7 +120,6 @@ public class UsersDao {
                     e.printStackTrace();
                 }
             }
-            exit = false;
         }
     }
 
