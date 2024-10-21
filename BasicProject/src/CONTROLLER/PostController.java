@@ -663,8 +663,8 @@ public class PostController {
 			} else { // 검색 결과가 있을 경우
 				for (PostVo post : results) {
 					// 검색 결과 출력
-					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %d\n", post.getPost_id(), post.getTitle(),
-							post.getPrice(), post.getCondition());
+					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %s | 상태: %d\n", post.getPost_id(), post.getTitle(),
+							formatter.format(post.getPrice()) + "원", post.getCondition());
 				}
 			}
 		} else if (choice == 2) { // 카테고리로 검색
@@ -698,8 +698,8 @@ public class PostController {
 						condition = "알 수 없음"; // 기본값 설정
 					}
 					// 검색 결과 출력
-					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %d | 상태: %s\n", post.getPost_id(), post.getTitle(),
-							post.getPrice(), condition);
+					System.out.printf("게시물 번호: %d | 제목: %s | 가격: %s | 상태: %s\n", post.getPost_id(), post.getTitle(),
+							formatter.format(post.getPrice()) + "원", condition);
 				}
 			}
 		} else {
