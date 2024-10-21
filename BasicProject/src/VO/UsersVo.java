@@ -11,7 +11,15 @@ public class UsersVo {
 	private String address;
 	private int role;
 	private LocalDateTime created_at;
+	
+	public String getUser_ban() {
+		return user_ban;
+	}
 
+	public void setUser_ban(String user_ban) {
+		this.user_ban = user_ban;
+	}
+	private String user_ban;
 
 	
 	

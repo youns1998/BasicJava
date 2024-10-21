@@ -28,7 +28,7 @@ public class CommentController {
         return instance;
     }
 
-    // 내가 쓴 댓글 목록을 보는 메서드
+    // 사용자의 내가 쓴 댓글 목록을 보는 메서드
     public Command CommentList() {
         CommentsService commentservice = CommentsService.getInstance(); // CommentsService 인스턴스 가져오기
         UsersService usersService = UsersService.getInstance(); // UsersService 인스턴스 가져오기
@@ -79,8 +79,9 @@ public class CommentController {
         
         // 입력한 사용자 ID가 없을 경우
         if (user == null) {
-            System.out.println("등록된 회원이 아닙니다");
-            return Command.USER_LIST; // 사용자 목록 화면으로 돌아감
+            int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 >>");
+            if(choice==1) {return Command.COMMENT_ADMIN;} // 댓글 조회 창으로 다시 감}
+            else {return Command.USER_LIST;} // 댓글 조회 창으로 다시 감
         }
 
         // 해당 사용자의 댓글 목록 가져오기
@@ -102,7 +103,7 @@ public class CommentController {
                 System.out.println("------------------------------");
             }
         }
-        return Command.USER_HOME; // 관리자 홈 화면으로 돌아감
+        return Command.USER_LIST; // 관리자의 유저리스트 화면으로 돌아감
     }
 
     // 댓글 작성 메서드
@@ -188,4 +189,5 @@ public class CommentController {
 
         return returnToPostDetail(postId); // 댓글 삭제 후 해당 게시물 상세 보기로 돌아감
     }
+    
 }
