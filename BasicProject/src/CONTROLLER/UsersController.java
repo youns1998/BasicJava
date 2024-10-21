@@ -33,16 +33,16 @@ public class UsersController {
 		return Command.ADMIN_USERDETAIL;
 	}
 
-	// 회원관리 - 관리자용 / 조회할 회원 ID 입력 후 나타나는 화면 tw
+	// 관리자의  회원관리 화면
 	public Command userdetail() {
-		System.out.println("전체 유저 리스트");
+		System.out.println();
+		System.out.println("==============================전체 유저 리스트==============================");
 		List<UsersVo> users = userService.getPostList();
 		for (UsersVo user : users) {
-			System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername() + ", 주소: " + user.getAddress()
-					+ ", 전화번호: " + user.getPhone_number() + ", 이메일: " + user.getEmail() + ", 관리자: " + user.getRole());
+			System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername());
 		}
-		System.out.println("======================================================");
-		int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.찜 목록 조회 5.쓴 게시물 조회 6.쓴 댓글 조회 0.뒤로가기\n메뉴 선택 >> ");
+		System.out.println("=========================================================================");
+		int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 삭제 4.회원의 찜 목록 조회 5.회원의 게시물 조회 6.회원의 댓글 조회 0.뒤로가기\n메뉴 선택 >> ");
 		switch (input) {
 		case 1:
 			return Command.ADMIN_USER;
@@ -116,7 +116,6 @@ public class UsersController {
 			
 			if (choice1 == 1) {
 				userService.deleteUser(user);
-<<<<<<< HEAD
 				System.out.println(".　　。+。☆゜*。゜。\r\n"
 						+ "　。＊゜゜+☆＊+゜。*。\r\n"
 						+ "　＠。゜*゜。+。☆＊＠゜\r\n"
@@ -126,19 +125,6 @@ public class UsersController {
 						+ "　　　　＼ (^ω^＊)　그 동안 Peanut Market을\r\n"
 						+ "　　　　　◎⊂　)　아끼고 찾아 주셔서\r\n"
 						+ "　　　　　△し-J　감사 합니다 ﻿ʚ◡̈ɞ\r\n"
-=======
-				System.out.println("............./´¯/)...............(\\¯`\\\r\n"
-						+ "............/....//..............\\\\....\\\r\n"
-						+ ".........../....//................\\\\....\\\r\n"
-						+ "...../´¯/..../´¯\\............./¯`\\....\\¯`\\..\r\n"
-						+ ".././.../..../..../.\\......_|.\\....\\....\\---\\.\\..\r\n"
-						+ "(.(....(....(..../.)...)....(..(.\\....)....)----.).)\r\n"
-						+ ".\\................\\/.../....\\...\\/................/\r\n"
-						+ "..\\................. /........\\................../\r\n"
-						+ "....\\..............(............)............../\r\n"
-						+ "......\\.............\\.........../............./\r\n"
-						+ ".......|............|...........|.............|\r\n"
->>>>>>> branch 'main' of https://github.com/youns1998/BasicJava
 						+ "");
 			}else {
 			System.out.println("좋은 생각입니다 더 좋은 서비스로 보답하겠습니다");
@@ -163,7 +149,7 @@ public class UsersController {
 		+ "████▌▄▌▄▐▐▌▀████\r\n"
 		+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
 		+ "");
-			return Command.UESR_LIST;
+			return Command.USER_LIST;
 		}
 
 		// 사용자 권한 확인 tw
@@ -203,17 +189,6 @@ public class UsersController {
 		return Command.ADMIN_USERDETAIL;
 	}
 
-	// 회원 찜목록 상세보기 - 관리자용 tw
-	public Command userFavorites() {
-		String userId = ScanUtil.nextLine("찜 목록을 볼 회원 ID를 입력하세요: ");
-		UsersVo user = userService.getUserSelect(userId);
-		if (user != null) {
-			System.out.println("회원 ID: " + user.getUser_id());
-			System.out.println("찜 목록:");
-			return Command.USER_FAVORITE;
-		}
-		return Command.USER_FAVORITE;
-	}
 
 	// 회원 상세보기 tw
 	public Command userSelect() {

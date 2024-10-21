@@ -51,14 +51,19 @@ public class CommentController {
     	UsersService usersService = UsersService.getInstance();
     	UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");
     	System.out.println();
+    	System.out.println("==============================전체 유저 리스트==============================");
     	List<UsersVo> users =  usersService.getPostList();			//전체 회원 리스트 불러오기
-		for (UsersVo user : users) {
-			System.out.println("ID: " + user.getUser_id() + ", 이름: " + user.getUsername() + ", 주소: " + user.getAddress()
-					+ ", 전화번호: " + user.getPhone_number() + "\n이메일: " + user.getEmail() + ", 관리자: " + user.getRole()+"\n");
-		}
-		System.out.println("================================================================================");
+		for (UsersVo user : users) 
+			System.out.println("ID: " + user.getUser_id());
+			
+		System.out.println("=========================================================================");
 		
 		String userId = ScanUtil.nextLine("댓글 리스트를 조회할 회원 ID>>");
+		   UsersVo user = usersService.getUserSelect(userId);
+		 if(user==null) {						
+	        	System.out.println("등록된 회원이 아닙니다");
+	        	return Command.USER_LIST;
+		 }
 		List<CommentsVo> comvo = commentservice.getComment(userId);	//회원ID를 입력해서 게시글 불러오기
     	if (comvo.isEmpty()) {
 	        System.out.println("작성된 댓글이 없습니다.");
