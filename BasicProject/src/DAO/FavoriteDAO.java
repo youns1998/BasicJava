@@ -1,6 +1,7 @@
 package DAO;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import CONTROLLER.MainController;
@@ -45,7 +46,7 @@ public class FavoriteDAO {
     public List<FavoriteVo> getFavoritesByUser() {
         UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser");  // 로그인한 사용자 정보 가져오기
         List<FavoriteVo> favorites = new ArrayList<>();
-        String sql = "SELECT f.USER_ID, f.POST_ID, p.TITLE, p.USER_ID AS AUTHOR "
+        String sql = "SELECT f.USER_ID, f.POST_ID, f.CREATED_AT, p.TITLE, p.USER_ID AS AUTHOR "
                      + "FROM FAVORITE f "
                      + "JOIN POST p ON f.POST_ID = p.POST_ID "
                      + "WHERE f.USER_ID = ?";
@@ -57,6 +58,7 @@ public class FavoriteDAO {
                 FavoriteVo favorite = new FavoriteVo();
                 favorite.setUser_id(rs.getString("USER_ID"));  // 사용자 ID 설정
                 favorite.setPost_id(rs.getInt("POST_ID"));  // 게시물 ID 설정
+                favorite.setCreated_at(rs.getTimestamp("CREATED_AT").toLocalDateTime());
                 favorite.setPost_title(rs.getString("TITLE"));  // 게시물 제목 설정
                 favorite.setAuthor(rs.getString("AUTHOR"));  // 게시물 작성자 설정
                 favorites.add(favorite);  // 리스트에 추가
