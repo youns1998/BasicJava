@@ -187,10 +187,10 @@ public class PostController {
 			System.out.println(ANSI_LIGHT_RED + borderLine);
 			System.out.println(borderLineUser);
 			System.out.println(borderLine + ANSI_RESET);
-			System.out.printf("| 제목: %-20s \n| 작성자: %-50s  \n", post.getTitle(), post.getUser_id());
+			System.out.printf("| 제목 : %-20s \n| 작성자 : %-50s  \n", post.getTitle(), post.getUser_id());
 
 			// 내용 출력
-			System.out.printf("| 내용: %-72s \n", post.getContent());
+			System.out.printf("| 내용 : %-72s \n", post.getContent());
 			System.out.printf("| %-78s \n", "");
 			System.out.println(borderLine);
 
@@ -198,23 +198,23 @@ public class PostController {
 			LocalDateTime updatedAt = post.getUpdated_at(); // 수정 시간
 
 			// 작성 및 수정 시간 출력
-			System.out.printf("| 작성 시간: %-40s \n", createdAt.format(formatter1));
-			System.out.printf("| 수정 시간: %-61s \n", updatedAt.format(formatter1));
+			System.out.printf("| 작성 시간 : %-40s \n", createdAt.format(formatter1));
+			System.out.printf("| 수정 시간 : %-61s \n", updatedAt.format(formatter1));
 			System.out.println(borderLine);
 
 			// 댓글 수와 찜한 사람 수 출력
-			System.out.printf("| 댓글 수: %-48d \n ", commentCount);
+			System.out.printf("| 댓글 수 : %-48d \n ", commentCount);
 			System.out.println(borderLine);
 		} else {
 			// 제목, 가격, 상태, 작성자 출력
 			System.out.println(borderLine);
 
-			System.out.printf("| 제목: %-20s 가격: %-20s 상태: %-10s \n| 작성자: %-50s  %s\n", post.getTitle(),
+			System.out.printf("| 제목 : %-20s 가격 : %-20s 상태 : %-10s \n| 작성자 : %-50s  %s\n", post.getTitle(),
 					formatter.format(post.getPrice()) + "원", condition, post.getUser_id(), isFavorite ? "♡ 찜한 상품" : " ");
 			System.out.println(borderLine);
 
 			// 내용 출력
-			System.out.printf("| 내용: %-72s \n", post.getContent());
+			System.out.printf("| 내용 : %-72s \n", post.getContent());
 			System.out.printf("| %-78s \n", "");
 			System.out.println(borderLine);
 
@@ -222,12 +222,12 @@ public class PostController {
 			LocalDateTime updatedAt = post.getUpdated_at(); // 수정 시간
 
 			// 작성 및 수정 시간 출력
-			System.out.printf("| 작성 시간: %-40s        카테고리: %s \n", createdAt.format(formatter1), categoryName);
-			System.out.printf("| 수정 시간: %-61s \n", updatedAt.format(formatter1));
+			System.out.printf("| 작성 시간 : %-40s        카테고리 : %s \n", createdAt.format(formatter1), categoryName);
+			System.out.printf("| 수정 시간 : %-61s \n", updatedAt.format(formatter1));
 			System.out.println(borderLine);
 
 			// 댓글 수와 찜한 사람 수 출력
-			System.out.printf("| 댓글 수: %-48d 찜한 사람 : %s \n ", commentCount,
+			System.out.printf("| 댓글 수 : %-48d 찜한 사람 : %s \n ", commentCount,
 					favoriteService.countFavoritesForPost(post.getPost_id()));
 			System.out.println(borderLine);
 
@@ -250,13 +250,13 @@ public class PostController {
 		} else { // 게시물이 있을 경우
 			for (PostVo post : posts) {
 				// 게시물 정보 출력
-				System.out.println("게시물 번호: " + post.getPost_id());
-				System.out.println("제목: " + post.getTitle());
-				System.out.println("내용: " + post.getContent());
-				System.out.println("가격: " + formatter.format(post.getPrice()) + "원");
-				System.out.println("작성일: " + post.getCreated_at());
-				System.out.println("수정일: " + post.getUpdated_at());
-				System.out.println("현재 상태: " + post.getCondition());
+				System.out.println("게시물 번호 : " + post.getPost_id());
+				System.out.println("제목 : " + post.getTitle());
+				System.out.println("내용 : " + post.getContent());
+				System.out.println("가격 : " + formatter.format(post.getPrice()) + "원");
+				System.out.println("작성일 : " + post.getCreated_at());
+				System.out.println("수정일 : " + post.getUpdated_at());
+				System.out.println("현재 상태 : " + post.getCondition());
 				System.out.println("조회수 : " + post.getView_count());
 				System.out.println("------------------------------");
 			}
@@ -272,7 +272,7 @@ public class PostController {
 		UsersVo user = usersService.getUserSelect(userId); // 해당 회원 정보 가져오기
 		// 입력한 사용자 ID가 없을 경우
 		if (user == null) {
-			int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 >>");
+			int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 \n선택 >> ");
 			if (choice == 1) {
 				return Command.POST_ADMIN;
 			} // 게시글 조회 창으로 다시 감}
@@ -287,13 +287,13 @@ public class PostController {
 		} else { // 게시물이 있을 경우
 			for (PostVo post : posts) {
 				// 게시물 정보 출력
-				System.out.println("게시물 번호: " + post.getPost_id());
-				System.out.println("제목: " + post.getTitle());
-				System.out.println("내용: " + post.getContent());
-				System.out.println("가격: " + formatter.format(post.getPrice()) + "원");
-				System.out.println("작성일: " + post.getCreated_at());
-				System.out.println("수정일: " + post.getUpdated_at());
-				System.out.println("현재 상태: " + post.getCondition());
+				System.out.println("게시물 번호 : " + post.getPost_id());
+				System.out.println("제목 : " + post.getTitle());
+				System.out.println("내용 : " + post.getContent());
+				System.out.println("가격 : " + formatter.format(post.getPrice()) + "원");
+				System.out.println("작성일 : " + post.getCreated_at());
+				System.out.println("수정일 : " + post.getUpdated_at());
+				System.out.println("현재 상태 : " + post.getCondition());
 				System.out.println("조회수 : " + post.getView_count());
 				System.out.println("------------------------------");
 			}
@@ -369,7 +369,7 @@ public class PostController {
 			System.out.println("+" + "=".repeat(width - 2) + "+"); // 테두리 출력
 
 			// 페이지 이동 옵션 출력
-			System.out.print("페이지: ");
+			System.out.print("페이지 : ");
 			for (int i = 1; i <= totalPages; i++) {
 				if (i == currentPage) {
 					System.out.print("\033[1m" + i + "\033[0m "); // 현재 페이지는 볼드체로 표시
