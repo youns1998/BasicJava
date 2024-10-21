@@ -49,7 +49,7 @@ public class PostController {
 
 	// 상세 게시글 보기 메서드 - 글 번호를 입력받아 상세 보기 실행
 	public Command detailPost() {
-		int postId = ScanUtil.nextInt("보고싶은 글 번호를 입력하세요: "); // 글 번호 입력받기
+		int postId = ScanUtil.nextInt("보고싶은 글 번호를 입력하세요 : "); // 글 번호 입력받기
 		return detailPost(postId); // 해당 글 번호로 상세 보기 호출
 	}
 
@@ -78,7 +78,7 @@ public class PostController {
 			for (CommentsVo comment : comments) {
 				String createdAt = comment.getFormattedCreatedAt(); // 댓글 작성 시간
 				System.out.println("+------------------------------------------------------------------------------+");
-				System.out.printf("| %-3s | 작성자: %-5s | 내용: %-10s | 작성 시간: %-8s \n", comment.getComment_id(),
+				System.out.printf("| %-3s | 작성자 : %-5s | 내용 : %-10s | 작성 시간 : %-8s \n", comment.getComment_id(),
 						comment.getUser_id(), comment.getContent(), createdAt);
 				System.out.println("+------------------------------------------------------------------------------+");
 			}
