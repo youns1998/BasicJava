@@ -146,14 +146,15 @@ public class PostController {
 		CategoryService categoryService = CategoryService.getInstance(); // 카테고리 서비스 인스턴스
 
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보
+		
 		int commentCount = commentsService.getCommentCount(post.getPost_id()); // 댓글 개수 가져오기
 		boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id()); // 찜 여부 확인
-
 		String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
+		
 		// 게시물 상세 정보 출력
 		String borderLine = "+==============================================================================+";
 		System.out.println(borderLine);
-
+		
 		// 게시물 상태를 조건에 맞게 출력
 		String condition;
 		switch (post.getCondition()) {
@@ -169,6 +170,28 @@ public class PostController {
 		default:
 			condition = "알 수 없음"; // 기본값 설정
 		}
+		if(post.getRole()!=0) {
+			// 제목, 작성자 출력
+			System.out.printf("| 제목: %-20s \n| 작성자: %-50s  \n", post.getTitle(), post.getUser_id());
+			System.out.println(borderLine);
+
+			// 내용 출력
+			System.out.printf("| 내용: %-72s \n", post.getContent());
+			System.out.printf("| %-78s \n", "");
+			System.out.println(borderLine);
+
+			LocalDateTime createdAt = post.getCreated_at(); // 작성 시간
+			LocalDateTime updatedAt = post.getUpdated_at(); // 수정 시간
+
+			// 작성 및 수정 시간 출력
+			System.out.printf("| 작성 시간: %-40s \n", createdAt.format(formatter1));
+			System.out.printf("| 수정 시간: %-61s \n", updatedAt.format(formatter1));
+			System.out.println(borderLine);
+
+			// 댓글 수와 찜한 사람 수 출력
+			System.out.printf("| 댓글 수: %-48d \n ", commentCount);
+			System.out.println(borderLine);
+		}else {
 		// 제목, 가격, 상태, 작성자 출력
 		System.out.printf("| 제목: %-20s 가격: %-20s 상태: %-10s \n| 작성자: %-50s  %s\n", post.getTitle(),
 				formatter.format(post.getPrice()) + "원", condition, post.getUser_id(), isFavorite ? "♡ 찜한 상품" : " ");
@@ -191,8 +214,8 @@ public class PostController {
 		System.out.printf("| 댓글 수: %-48d 찜한 사람 : %s \n ", commentCount,
 				favoriteService.countFavoritesForPost(post.getPost_id()));
 		System.out.println(borderLine);
+		}
 	}
-
 	// 내가 쓴 게시물 보기 메서드
 	public Command userPost() {
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
@@ -411,6 +434,7 @@ public class PostController {
 			post.setTitle(title); // 제목 설정
 			post.setContent(content); // 내용 설정
 			post.setUser_id(loginUserVo.getUser_id()); // 작성자 ID 설정
+			post.setRole(loginUserVo.getRole());
 		} else { // 일반 사용자의 게시글 추가
 			String Title = ScanUtil.nextLine("글 제목 >> ");
 			int price = ScanUtil.nextInt("가격 >> ");
@@ -427,7 +451,7 @@ public class PostController {
 			post.setCategory_id(category); // 카테고리 설정
 			post.setContent(content); // 내용 설정
 			post.setCondition(1); // 상태 설정
-
+			post.setRole(loginUserVo.getRole());
 			post.setUser_id(loginUserVo.getUser_id()); // 작성자 ID 설정
 		}
 		int result = postService.insertPost(post); // 게시글 추가

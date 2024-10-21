@@ -12,16 +12,17 @@ public class PostVo {
 	private String content;
 	private int price;
 	private int condition;
+	private int role;
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int role) {
+		this.role = role;
+	}
+
 	private LocalDateTime created_at; 
 	private LocalDateTime updated_at;
-	private boolean isNotice;	//공지사항 여부
 	
-	 public boolean getisNotice() {
-	        return isNotice;
-	    }
-	public void setNotice(boolean isNotice) {
-		this.isNotice = isNotice;
-	}
 	public int getPost_id() {
 		return post_id;
 	}
