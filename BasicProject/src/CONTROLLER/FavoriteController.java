@@ -97,13 +97,16 @@ public class FavoriteController {
         UsersService userService = UsersService.getInstance(); // UsersService 인스턴스 가져오기
         String userId = ScanUtil.nextLine("찜 목록을 조회할 회원 ID>>"); // 조회할 사용자 ID 입력받기
         System.out.println();
+        
         List<FavoriteVo> favorites =  favoriteservice.getFavoritesList(userId); // 해당 사용자의 찜 목록 가져오기
         UsersVo user = userService.getUserSelect(userId); // 해당 사용자 정보 가져오기
         
         // 입력한 사용자가 없을 경우 처리
-        if (user == null) {						
-        	System.out.println("등록된 회원이 아닙니다");
-        	return Command.USER_LIST;
+        if (user == null) {
+            int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 >>");
+            if(choice==1) {return Command.FAVORITE_LIST;} // 찜 조회 창으로 다시 감}
+            else {return Command.USER_LIST;} // 유저관리  창으로 다시 감
+        
         } else {
             // 사용자의 찜 목록 출력
             System.out.println();
@@ -124,7 +127,7 @@ public class FavoriteController {
             }
             System.out.println("-------------------------------------------------------------");
         }
-        return Command.USER_HOME; // 사용자 홈 화면으로 돌아가기
+        return Command.USER_LIST; // 사용자 홈 화면으로 돌아가기
     }
 
     // 관심 상품 삭제 메서드

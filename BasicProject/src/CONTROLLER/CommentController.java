@@ -81,7 +81,7 @@ public class CommentController {
         if (user == null) {
             int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 >>");
             if(choice==1) {return Command.COMMENT_ADMIN;} // 댓글 조회 창으로 다시 감}
-            else {return Command.USER_HOME;} // 댓글 조회 창으로 다시 감
+            else {return Command.USER_LIST;} // 댓글 조회 창으로 다시 감
         }
 
         // 해당 사용자의 댓글 목록 가져오기
@@ -103,7 +103,7 @@ public class CommentController {
                 System.out.println("------------------------------");
             }
         }
-        return Command.USER_HOME; // 관리자 홈 화면으로 돌아감
+        return Command.USER_LIST; // 관리자의 유저리스트 화면으로 돌아감
     }
 
     // 댓글 작성 메서드
@@ -189,4 +189,53 @@ public class CommentController {
 
         return returnToPostDetail(postId); // 댓글 삭제 후 해당 게시물 상세 보기로 돌아감
     }
+ // 댓글 메뉴 메서드
+ 	private Command commentMenu(int postId) {
+ 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보 가져오기
+ 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
+ 		PostVo post = postService.getPost(postId); // 게시물 정보 가져오기
+
+ 		System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
+
+ 		if (post.getUser_id().equals(loginUserVo.getUser_id())) { // 게시글 작성자인 경우
+ 			System.out.println("5. 판매글 수정  6. 판매 상태 변경"); // 수정, 상태 변경 옵션 추가
+ 		}
+
+ 		System.out.print("메뉴 선택 >> ");
+ 		int choice = ScanUtil.nextInt(); // 사용자 선택 입력받기
+
+ 		switch (choice) {
+ 		case 1:
+ 			return commentController.insertComment(postId); // 댓글 달기
+ 		case 2:
+ 			return commentController.updateComment(postId); // 댓글 수정
+ 		case 3:
+ 			return commentController.deleteComment(postId); // 댓글 삭제
+ 		case 4:
+ 			return favoriteController.addFavorite(postId); // 찜하기
+ 		case 5:
+ 			return postUpdate(postId); // 게시글 수정
+ 		case 6:
+ 			return postDelete(postId); // 게시글 삭제
+ 		case 0:
+ 			return returnToPostList(); // 게시글 목록으로 이동
+ 		default:
+ 			System.out.println("잘못된 선택입니다. 다시 시도하세요."); // 잘못된 입력 처리
+ 			return commentMenu(postId); // 다시 댓글 메뉴로 이동
+ 		}
+ 	}
+
+ 	// 댓글 관리 기능들 (view, update, delete)
+ 	private Command viewComments(int postId) {
+ 		return Command.POST_LIST;
+ 	}
+
+ 	private Command updateComment(int postId) {
+ 		return Command.POST_LIST;
+ 	}
+
+ 	private Command deleteComment(int postId) {
+ 		return Command.POST_LIST;
+ 	}
+
 }

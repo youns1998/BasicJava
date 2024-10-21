@@ -149,7 +149,7 @@ public class UsersController {
 		// 사용자 권한 확인 (본인 또는 관리자)
 		if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
 			userService.updateUser(uservo); // 회원 정보 수정
-			System.out.println("선택한 회원이 수정되었습니다");
+			System.out.println("수정 끝났습니다");
 		}
 
 		return Command.ADMIN_USERDETAIL; // 수정 후 관리자 회원 상세보기로 이동
@@ -418,11 +418,6 @@ public class UsersController {
 				+ "                                             \r\n"
 				+ "");
 
-		if (MainController.sessionMap.get("loginUser") != null) { // 이미 로그인된 상태
-			System.out.println("이미 로그인된 상태입니다.");
-			return Command.USER_HOME; // 홈으로 이동
-		}
-
 		// ID 입력 박스
 		System.out.println("┌────────────────────────────┐");
 		System.out.println("│       ID를 입력하세요         │");
@@ -438,12 +433,16 @@ public class UsersController {
 		System.out.println("└────────────────────────────┘");
 
 		UsersVo loginUserVo = userService.getUser(new UsersVo(userId, password)); // 로그인 정보 확인
-
 		if (loginUserVo == null) { // 로그인 실패 시
 			System.out.println("ID 혹은 PW를 잘못 입력하셨습니다.");
 			return Command.LOGIN; // 다시 로그인
 		}
-
+		if(loginUserVo.getUser_ban()!=null) {
+			System.out.println();
+			System.out.println("당신은 관리자에 의해 제제 되었습니다 \n사유 : " + loginUserVo.getUser_ban());
+			System.out.println();
+			return Command.HOME; // 다시 로그인
+		}
 		MainController.sessionMap.put("loginUser", loginUserVo); // 세션에 로그인 사용자 정보 저장
 		System.out.println();
 		System.out.println(loginUserVo.getRole() != 0 ? "#관리자 로그인 성공!!# " : "#일반 사용자 로그인 성공!!#");

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import CONTROLLER.MainController;
+import UTIL.Command;
 import UTIL.DBUtil;
 import UTIL.ScanUtil;
 import VO.UsersVo;
@@ -62,7 +63,7 @@ public class UsersDao {
         return cnt;
     }
 
-    // 사용자 정보 선택 수정 메서드
+    // 관리자의 사용자 정보 선택 수정 메서드
     public void updateUserSelect(UsersVo uservo) {
         boolean exit = true;
         while (exit) {
@@ -97,6 +98,7 @@ public class UsersDao {
                     uservo.setEmail(newemail);
                     break;
                 case 0:
+                    exit = false;
                     break;
                 default:
                     System.out.println("잘못된 선택입니다. 다시 시도하세요.");
@@ -126,13 +128,14 @@ public class UsersDao {
     // 로그인 메서드 (사용자 정보 가져오기)
     public UsersVo getUser(UsersVo userVo) {
         UsersVo getUserVo = null;
-        String sql = "SELECT USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ROLE FROM USERS "
+        String sql = "SELECT USER_ID, EMAIL, USERNAME, PHONE_NUMBER, ADDRESS, CREATED_AT, USER_PASS, ROLE, USER_BAN FROM USERS "
                    + "WHERE USER_ID = ? AND USER_PASS = ?";
         try {
             con = DBUtil.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, userVo.getUser_id());
             ps.setString(2, userVo.getUser_pass());
+            
             rs = ps.executeQuery();
             
             if (rs.next()) {
@@ -144,6 +147,7 @@ public class UsersDao {
                 getUserVo.setEmail(rs.getString("EMAIL"));
                 getUserVo.setPhone_number(rs.getString("PHONE_NUMBER"));
                 getUserVo.setRole(rs.getInt("ROLE")); // 사용자 역할 정보
+                getUserVo.setUser_ban(rs.getString("USER_BAN"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

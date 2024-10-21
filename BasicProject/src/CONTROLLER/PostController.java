@@ -141,15 +141,15 @@ public class PostController {
 	private void displayPostDetails(PostVo post) {
 		CommentsService commentsService = CommentsService.getInstance(); // 댓글 서비스 인스턴스
 		FavoriteService favoriteService = FavoriteService.getInstance(); // 찜 서비스 인스턴스
-		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보
-
+		UsersService userService = UsersService.getInstance();	
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
+		CategoryService categoryService = CategoryService.getInstance(); // 카테고리 서비스 인스턴스
+
+		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보
 		int commentCount = commentsService.getCommentCount(post.getPost_id()); // 댓글 개수 가져오기
 		boolean isFavorite = favoriteService.isFavoriteExists(loginUserVo.getUser_id(), post.getPost_id()); // 찜 여부 확인
 
-		CategoryService categoryService = CategoryService.getInstance(); // 카테고리 서비스 인스턴스
 		String categoryName = categoryService.getCategoryNameById(post.getCategory_id()); // 카테고리 이름 가져오기
-
 		// 게시물 상세 정보 출력
 		String borderLine = "+==============================================================================+";
 		System.out.println(borderLine);
@@ -169,7 +169,6 @@ public class PostController {
 		default:
 			condition = "알 수 없음"; // 기본값 설정
 		}
-
 		// 제목, 가격, 상태, 작성자 출력
 		System.out.printf("| 제목: %-20s 가격: %-20s 상태: %-10s \n| 작성자: %-50s  %s\n", post.getTitle(),
 				formatter.format(post.getPrice()) + "원", condition, post.getUser_id(), isFavorite ? "♡ 찜한 상품" : " ");
@@ -228,10 +227,13 @@ public class PostController {
 		UsersService usersService = UsersService.getInstance(); // 사용자 서비스 인스턴스
 		String userId = ScanUtil.nextLine("게시물 리스트를 조회할 회원 ID >> "); // 회원 ID 입력받기
 		UsersVo user = usersService.getUserSelect(userId); // 해당 회원 정보 가져오기
-		if (user == null) { // 해당 회원이 없을 경우
-			System.out.println("등록된 회원이 아닙니다");
-			return Command.USER_LIST; // 사용자 목록으로 돌아감
-		}
+		 // 입력한 사용자 ID가 없을 경우
+        if (user == null) {
+            int choice = ScanUtil.nextInt("등록된 회원이 아닙니다 \n1. 다시 조회 0.뒤로 가기 >>");
+            if(choice==1) {return Command.POST_ADMIN;} // 게시글 조회 창으로 다시 감}
+            else {return Command.USER_LIST;} // 게시글 조회 창으로 다시 감
+        }
+		
 		List<PostVo> posts = postService.getPost(userId); // 해당 회원이 작성한 게시물 목록 가져오기
 		if (posts.isEmpty()) { // 게시물이 없을 경우
 			System.out.println("작성된 게시물이 없습니다.");
