@@ -543,14 +543,12 @@ public class PostController {
 	// 게시글 삭제 메서드: 이미 글 번호를 알고 있는 경우 (글 상세보기 상태)
 	public Command postDelete(int postId) {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인 사용자 정보
-		CommentsService commentservice = CommentsService.getInstance(); // CommentsService 인스턴스 가져오기
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
 		PostVo post = postService.getPost(postId); // 게시물 정보 가져오기
 		
 		 // 게시글 작성자가 본인인 경우 또는 관리자일 경우
 	    if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
 	    	System.out.println("게시글 삭제 요청: 게시글 ID = " + postId); 
-	        commentservice.deleteCommentPost(postId); // 게시물에 연동된 댓글 삭제
 	        postService.deletePost(post.getPost_id()); // 게시물 삭제
 	    } else {
 	        System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");

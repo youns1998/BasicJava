@@ -143,15 +143,5 @@ public class CommentDAO {
     }
     
     //게시물이 삭제되면 댓글도 삭제되는 메서드 
-    public void deleteCommentPost(int postId) {
-    	System.out.println("댓글 삭제 요청: 게시글 ID = " + postId);
-        String sql = "DELETE FROM comments WHERE post_id = ?";
-        try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, postId);  // 댓글 ID 바인딩
-            int rowsAffected = pstmt.executeUpdate();  // 쿼리 실행 후 영향받은 행 수 반환
-            System.out.println(rowsAffected + " 댓글이 삭제되었습니다.");  // 삭제된 댓글 수 확인
-        } catch (SQLException e) {
-            e.printStackTrace();  // 예외 발생 시 오류 메시지 출력
-        }
-    }
+    
 }
