@@ -78,7 +78,7 @@ public class UsersController {
 		case 2:
 			return Command.POST_SELF; // 내가 쓴 글 보기
 		case 3:
-			return Command.COMMENT_SELF; // 내가 쓴 댓글 보기
+			return Command.COMMENT_SELF; // 내가 쓴 댓글 보기sessionMap.put
 		case 4:
 			return Command.USER_SELFDELETE; // 회원 탈퇴
 		}
