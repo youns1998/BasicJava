@@ -9,6 +9,7 @@ public class UsersVo {
 	private String username;
 	private String phone_number;
 	private String address;
+	private String user_ban;
 	private int role;
 	private LocalDateTime created_at;
 	
@@ -19,9 +20,7 @@ public class UsersVo {
 	public void setUser_ban(String user_ban) {
 		this.user_ban = user_ban;
 	}
-	private String user_ban;
 
-	
 	
 	public UsersVo(String userId, String name, String email) {
         this.user_id = userId;
@@ -127,5 +126,6 @@ public class UsersVo {
         this.user_id = user_id;
         this.user_pass = user_pass;
     }
-	
+
+
 }

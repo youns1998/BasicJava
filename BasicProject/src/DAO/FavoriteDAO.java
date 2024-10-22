@@ -5,13 +5,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import CONTROLLER.MainController;
+import SERVICE.FavoriteService;
 import UTIL.DBUtil;
 import VO.FavoriteVo;
 import VO.PostVo;
 import VO.UsersVo;
 
 public class FavoriteDAO {
-    private Connection con = null;
+    private static FavoriteDAO instance;
+	private Connection con = null;
     private PreparedStatement ps = null;
     private ResultSet rs = null;
 
@@ -19,6 +21,11 @@ public class FavoriteDAO {
     public FavoriteDAO() {
     }
 
+    public static FavoriteDAO getInstance() {
+		if (instance == null)
+			instance = new FavoriteDAO();
+		return instance;
+	}
     // 리소스를 해제하는 메서드
     private void disConnect() {
         if (rs != null) try { rs.close(); } catch (Exception e) {}
@@ -141,4 +148,5 @@ public class FavoriteDAO {
         }
         return 0;  // 찜한 사람이 없을 경우 0 반환
     }
+    
 }

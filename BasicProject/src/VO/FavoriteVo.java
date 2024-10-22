@@ -5,7 +5,7 @@ public class FavoriteVo {
 	private String user_id;
 	private int post_id;
 	private String post_title;
-	 private String author;    // 작성자 추가
+	private String author;    // 작성자 추가
 	private LocalDateTime created_at;
 	
 	public String getUser_id() {
