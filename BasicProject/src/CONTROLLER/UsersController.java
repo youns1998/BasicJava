@@ -71,6 +71,24 @@ public class UsersController {
 
 	// 내 정보 관리 - 사용자용
 	public Command userSelf() {
+		UsersVo updateUser = (UsersVo) MainController.sessionMap.get("updateUser"); // 로그인한 사용자 정보 가져오기
+		if(updateUser !=null) {
+		System.out.println("+==============================+");
+		System.out.println("|           MY PAGE            |");
+		System.out.println("+------------------------------+");
+
+		System.out.printf("   %-8s         %-15s \n", "ID", updateUser.getUser_id());
+		System.out.println("|-----------|------------------|");
+		System.out.printf("   %-8s         %-15s \n", "이름", updateUser.getUsername());
+		System.out.println("|-----------|------------------|");
+		System.out.printf("   %-8s         %-15s \n", "E-MAIL", updateUser.getEmail());
+		System.out.println("|-----------|------------------|");
+		System.out.printf("   %-8s         %-15s \n", "전화번호", updateUser.getPhone_number());
+		System.out.println("|-----------|------------------|");
+		System.out.printf("   %-8s         %-15s \n", "주소", updateUser.getAddress());
+
+		System.out.println("+==============================+");
+		}
 		int choice = ScanUtil.nextInt("1. 개인 정보 수정 2.내가 쓴 글 보기 3.내가 쓴 댓글 보기 4.회원 탈퇴 0.돌아가기\n메뉴 선택 >> ");
 		switch (choice) {
 		case 1:
@@ -93,8 +111,7 @@ public class UsersController {
 		UsersVo uservo = userService.getUserSelect(choice); // 사용자 정보 가져오기
 		userService.updateUser(uservo); // 사용자 정보 업데이트
 		System.out.println("회원 수정이 끝났습니다");
-
-		return Command.USER_HOME; // 수정 후 홈으로 이동
+		return Command.USER_SELF; // 수정 후 홈으로 이동
 	}
 
 	// 회원 탈퇴 - 사용자용
@@ -481,22 +498,7 @@ public class UsersController {
 			return Command.USER_SELF; // 마이페이지 후 사용자 정보 관리로 이동
 		}
 		else {
-			System.out.println("+==============================+");
-			System.out.println("|           MY PAGE            |");
-			System.out.println("+------------------------------+");
-
-			System.out.printf("   %-8s         %-15s \n", "ID", updateUser.getUser_id());
-			System.out.println("|-----------|------------------|");
-			System.out.printf("   %-8s         %-15s \n", "이름", updateUser.getUsername());
-			System.out.println("|-----------|------------------|");
-			System.out.printf("   %-8s         %-15s \n", "E-MAIL", updateUser.getEmail());
-			System.out.println("|-----------|------------------|");
-			System.out.printf("   %-8s         %-15s \n", "전화번호", updateUser.getPhone_number());
-			System.out.println("|-----------|------------------|");
-			System.out.printf("   %-8s         %-15s \n", "주소", updateUser.getAddress());
-
-			System.out.println("+==============================+");
-
+			
 			return Command.USER_SELF; // 마이페이지 후 사용자 정보 관리로 이동
 		}
 		// 인터페이스 출력
