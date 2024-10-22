@@ -27,6 +27,11 @@ public class UsersService{
 		public int addUser(UsersVo user) {
 			return dao.addUser(user);
 		}
+		
+		// 회원가입 시 이메일 중복 확인
+		public UsersVo isEmailDuplicated(String email) {
+			return dao.isEmailDuplicated(email);
+		}
 		//로그인
 		public UsersVo getUser(UsersVo userVo) {
 			return dao.getUser(userVo);

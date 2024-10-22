@@ -40,14 +40,15 @@ public class UsersController {
 		System.out.println("==============================전체 유저 리스트==============================");
 		List<UsersVo> users = userService.getPostList(); // 회원 목록 가져오기
 		for (UsersVo user : users) {
-			if(user.getUser_ban()==null) {
-	            System.out.println("ID: " + user.getUser_id() + "\t\t이름: " + user.getUsername());
-	        	}else {
-	        	System.out.println("ID: " + user.getUser_id() +"\t\t제재당한 사용자입니다(사유: " + user.getUser_ban()+")");
-	        	}
-		}	
+			if (user.getUser_ban() == null) {
+				System.out.println("ID: " + user.getUser_id() + "\t\t이름: " + user.getUsername());
+			} else {
+				System.out.println("ID: " + user.getUser_id() + "\t\t제재당한 사용자입니다(사유: " + user.getUser_ban() + ")");
+			}
+		}
 		System.out.println("=========================================================================");
-		int input = ScanUtil.nextInt("1.회원 상세보기 2.회원 수정 3.회원 탈퇴 4.회원의 찜 목록 조회 5.회원의 게시물 조회 6.회원의 댓글 조회 0.뒤로가기\n메뉴 선택 >> ");
+		int input = ScanUtil
+				.nextInt("1.회원 상세보기 2.회원 수정 3.회원 탈퇴 4.회원의 찜 목록 조회 5.회원의 게시물 조회 6.회원의 댓글 조회 0.뒤로가기\n메뉴 선택 >> ");
 		switch (input) {
 		case 1:
 			return Command.ADMIN_USER; // 회원 상세보기
@@ -104,28 +105,15 @@ public class UsersController {
 		UsersVo user = userService.getUserSelect(choice); // 사용자 정보 가져오기
 
 		if (user.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) { // 본인 또는 관리자인지 확인
-			System.out.println(".　　　_＿＿＿_\r\n"
-					+ "　　／　　　　＼　\r\n"
-					+ "　／　  _ノ 　ヽ_＼\r\n"
-					+ " ／   　（●）（●）＼\r\n"
-					+ " |　    ///（_人_）///| 참내..\r\n"
-					+ " ＼   　　　 　　    ／\r\n"
-					+ "／　 　　　 　    　＼\r\n"
-					+ "");
+			System.out.println(".　　　_＿＿＿_\r\n" + "　　／　　　　＼　\r\n" + "　／　  _ノ 　ヽ_＼\r\n" + " ／   　（●）（●）＼\r\n"
+					+ " |　    ///（_人_）///| 참내..\r\n" + " ＼   　　　 　　    ／\r\n" + "／　 　　　 　    　＼\r\n" + "");
 			int choice1 = ScanUtil.nextInt("진짜루?? \n 탈퇴하시려면 1 입력 \n 돌아가시려면 아무숫자 입력 \n 선택 >> ");
 
 			if (choice1 == 1) { // 탈퇴 확인
 				userService.deleteUser(user); // 사용자 삭제
-				System.out.println(".　　。+。☆゜*。゜。\r\n"
-						+ "　。＊゜゜+☆＊+゜。*。\r\n"
-						+ "　＠。゜*゜。+。☆＊＠゜\r\n"
-						+ "　゜+。☆゜。*。＠。+*゜\r\n"
-						+ "　＼゜*。゜。*゜*。+／\r\n"
-						+ "　　 ＼*゜+ ∧,,∧ .／\r\n"
-						+ "　　　　＼ (^ω^＊)　그 동안 Peanut Market을\r\n"
-						+ "　　　　　◎⊂　)　아끼고 찾아 주셔서\r\n"
-						+ "　　　　　△し-J　감사 합니다 ﻿ʚ◡̈ɞ\r\n"
-						+ "");
+				System.out.println(".　　。+。☆゜*。゜。\r\n" + "　。＊゜゜+☆＊+゜。*。\r\n" + "　＠。゜*゜。+。☆＊＠゜\r\n" + "　゜+。☆゜。*。＠。+*゜\r\n"
+						+ "　＼゜*。゜。*゜*。+／\r\n" + "　　 ＼*゜+ ∧,,∧ .／\r\n" + "　　　　＼ (^ω^＊)　그 동안 Peanut Market을\r\n"
+						+ "　　　　　◎⊂　)　아끼고 찾아 주셔서\r\n" + "　　　　　△し-J　감사 합니다 ﻿ʚ◡̈ɞ\r\n" + "");
 			} else { // 탈퇴 취소
 				System.out.println("좋은 생각입니다 더 좋은 서비스로 보답하겠습니다");
 				return Command.USER_HOME; // 홈으로 돌아가기
@@ -143,11 +131,8 @@ public class UsersController {
 
 		if (uservo == null) { // 해당 회원이 없는 경우
 			System.out.println("해당 회원을 찾을 수 없습니다.");
-			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-					+ "████▌▄▌▄▐▐▌█████\r\n"
-					+ "████▌▄▌▄▐▐▌▀████\r\n"
-					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-					+ "");
+			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
 			return Command.USER_LIST; // 회원 목록으로 돌아감
 		}
 
@@ -169,11 +154,8 @@ public class UsersController {
 
 		if (user == null) { // 회원이 없는 경우
 			System.out.println("해당 유저를 찾을 수 없습니다.");
-			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-					+ "████▌▄▌▄▐▐▌█████\r\n"
-					+ "████▌▄▌▄▐▐▌▀████\r\n"
-					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-					+ "");
+			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
 			return Command.ADMIN_USERDETAIL; // 관리자 회원 상세보기로 돌아감
 		}
 
@@ -196,15 +178,12 @@ public class UsersController {
 			System.out.println("주소 : " + user.getAddress());
 			System.out.println("전화번호 : " + user.getPhone_number());
 			System.out.println("이메일 : " + user.getEmail());
-			System.out.println("제재사유 : "+user.getUser_ban());
+			System.out.println("제재사유 : " + user.getUser_ban());
 			System.out.println();
 		} else { // 회원이 존재하지 않을 경우
 			System.out.println("해당 회원을 찾을 수 없습니다.");
-			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-					+ "████▌▄▌▄▐▐▌█████\r\n"
-					+ "████▌▄▌▄▐▐▌▀████\r\n"
-					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-					+ "");
+			System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+					+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
 			System.out.println();
 		}
 		return Command.ADMIN_USERDETAIL; // 회원 조회 후 관리자 회원 상세보기로 돌아감
@@ -225,6 +204,11 @@ public class UsersController {
 		return password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$"); // 비밀번호 형식이 유효한지 확인 (영문자 및 숫자, 8~20자)
 	}
 
+	// 이메일 중복 확인 메서드
+	private boolean isEmailDuplicated(String email) {
+		return userService.isEmailDuplicated(email) != null;
+	}
+
 	// 회원가입
 	public Command join() {
 		System.out.println("==================== 회원가입 ======================");
@@ -236,11 +220,8 @@ public class UsersController {
 			userId = ScanUtil.nextLine("아이디 >> ");
 			if (!validateUserId(userId)) {
 				System.out.println("아이디 형식이 올바르지 않습니다. 다시 입력해 주세요.");
-				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-						+ "████▌▄▌▄▐▐▌█████\r\n"
-						+ "████▌▄▌▄▐▐▌▀████\r\n"
-						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-						+ "");
+				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
 				continue;
 			}
 			if (isUserIdDuplicated(userId)) {
@@ -255,42 +236,55 @@ public class UsersController {
 			password = ScanUtil.nextLine("비밀번호 >> ");
 			if (!validatePassword(password)) {
 				System.out.println("비밀번호 형식이 올바르지 않습니다. 다시 입력해 주세요.");
-				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-						+ "████▌▄▌▄▐▐▌█████\r\n"
-						+ "████▌▄▌▄▐▐▌▀████\r\n"
-						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-						+ "");
+				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
 				continue;
 			}
 			passwordConfirm = ScanUtil.nextLine("비밀번호 확인 >> ");
 			if (!password.equals(passwordConfirm)) {
 				System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해 주세요.");
-				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-						+ "████▌▄▌▄▐▐▌█████\r\n"
-						+ "████▌▄▌▄▐▐▌▀████\r\n"
-						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-						+ "");
+				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
 			}
 		} while (!validatePassword(password) || !password.equals(passwordConfirm));
 
 		// 이메일 입력 및 인증 처리
-		String email = ScanUtil.nextLine("이메일 >> ");
-		VerificationController verificationController = VerificationController.getInstance(); // 이메일 인증 컨트롤러
-		verificationController.sendVerificationCode(email); // 이메일 인증 코드 발송
+		int count = 3; // 인증 코드 기회 부여
+		String email;
+		while (true) {
+			email = ScanUtil.nextLine("이메일 >> ");
+			if (isEmailDuplicated(email)) { // 이메일 중복 검사
+				System.out.println("이미 사용 중인 이메일입니다. 다른 이메일을 입력하세요.");
+				continue; // 중복되면 다시 입력받기.
+			} else {
+				break; // 중복되지 않은 경우 인증코드 발송.
+			}
+		}
 
 		// 인증 코드 입력 및 확인
+		
+		VerificationController verificationController = VerificationController.getInstance(); // 이메일 인증 컨트롤러
+		verificationController.sendVerificationCode(email); // 이메일 인증 코드 발송
 		while (true) {
-			String code = ScanUtil.nextLine("인증 코드 >> ");
-			if (verificationController.verifyCode(email, code)) {
+			String code = ScanUtil.nextLine("남은 횟수 : "+count +"회"+"\n인증 코드 입력 >> ");
+			if (verificationController.verifyCode(email, code) && (count>0)) {
 				System.out.println("이메일 인증에 성공했습니다.");
-				break;
-			} else {
+				break;	
+			} 
+			else {
+				count--;
 				System.out.println("잘못된 인증 코드입니다. 다시 입력하세요.");
-				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-						+ "████▌▄▌▄▐▐▌█████\r\n"
-						+ "████▌▄▌▄▐▐▌▀████\r\n"
-						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-						+ "");
+				System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+						+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
+			}if (count <= 0) {
+				System.out.println("인증 기회를 모두 소진했습니다.");
+				String retry = ScanUtil.nextLine("다시 인증하시겠습니까? (y/n) >> ");
+				if (retry.equalsIgnoreCase("y")) {
+					count = 3; // 기회 초기화
+					verificationController.sendVerificationCode(email); // 인증 코드 재발송
+				} else {
+					return Command.HOME; // 홈으로 이동
+				}
 			}
 		}
 
@@ -308,71 +302,65 @@ public class UsersController {
 		return Command.HOME; // 홈으로 이동
 	}
 
-	// 비밀번호 찾기
-	
-	
 	// 비밀번호 찾기 - 비밀번호만 업데이트
 	public Command findUserPass() {
-	    String userId = ScanUtil.nextLine("비밀번호를 찾을 계정의 아이디를 입력하세요 >> ");
-	    String email = ScanUtil.nextLine("등록된 이메일 주소를 입력해 주세요 >> ");
-	    boolean istrue = userService.iDisMatch(userId, email); // 등록된 이메일과 아이디가 일치하는지 확인
-	    int count = 3; // 인증 코드 입력 기회
+		String userId = ScanUtil.nextLine("비밀번호를 찾을 계정의 아이디를 입력하세요 >> ");
+		String email = ScanUtil.nextLine("등록된 이메일 주소를 입력해 주세요 >> ");
+		boolean istrue = userService.iDisMatch(userId, email); // 등록된 이메일과 아이디가 일치하는지 확인
+		int count = 3; // 인증 코드 입력 기회
 
-	    if (istrue && (count > 0)) {
-	        VerificationController verificationController = VerificationController.getInstance(); // 이메일 인증 컨트롤러
-	        verificationController.sendVerificationCode(email); // 이메일 인증 코드 발송
+		if (istrue && (count > 0)) {
+			VerificationController verificationController = VerificationController.getInstance(); // 이메일 인증 컨트롤러
+			verificationController.sendVerificationCode(email); // 이메일 인증 코드 발송
 
-	        while (true) {
-	            String code = ScanUtil.nextLine("인증 코드 >> ");
-	            if (verificationController.verifyCode(email, code)) {
-	                System.out.println("이메일 인증에 성공했습니다.");
+			while (true) {
+				String code = ScanUtil.nextLine("인증 코드 >> ");
+				if (verificationController.verifyCode(email, code)) {
+					System.out.println("이메일 인증에 성공했습니다.");
 
-	                // 새 비밀번호 설정
-	                String newPassword, newPasswordConfirm;
-	                do {
-	                    newPassword = ScanUtil.nextLine("새로운 비밀번호를 입력하세요 >> ");
-	                    newPasswordConfirm = ScanUtil.nextLine("새로운 비밀번호를 다시 입력하세요 >> ");
+					// 새 비밀번호 설정
+					String newPassword, newPasswordConfirm;
+					do {
+						newPassword = ScanUtil.nextLine("새로운 비밀번호를 입력하세요 >> ");
+						newPasswordConfirm = ScanUtil.nextLine("새로운 비밀번호를 다시 입력하세요 >> ");
 
-	                    if (!validatePassword(newPassword)) {
-	                        System.out.println("비밀번호 형식이 올바르지 않습니다. 다시 입력해 주세요.");
-	                    } else if (!newPassword.equals(newPasswordConfirm)) {
-	                        System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해 주세요.");
-	                    }
-	                } while (!validatePassword(newPassword) || !newPassword.equals(newPasswordConfirm));
+						if (!validatePassword(newPassword)) {
+							System.out.println("비밀번호 형식이 올바르지 않습니다. 다시 입력해 주세요.");
+						} else if (!newPassword.equals(newPasswordConfirm)) {
+							System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해 주세요.");
+						}
+					} while (!validatePassword(newPassword) || !newPassword.equals(newPasswordConfirm));
 
-	                // 비밀번호 해싱 후 업데이트
-	                String hashedPassword = PasswordUtil.hashPassword(newPassword);
-	                int result = userService.updatePassword(userId, hashedPassword);
-	                if (result > 0) {
-	                    System.out.println("비밀번호가 성공적으로 변경되었습니다.");
-	                } else {
-	                    System.out.println("비밀번호 변경에 실패했습니다.");
-	                }
-	                return Command.USER_HOME; // 수정 후 홈으로 이동
-	            } else {
-	                count--;
-	                System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 " + count + "회\n");
-	            }
+					// 비밀번호 해싱 후 업데이트
+					String hashedPassword = PasswordUtil.hashPassword(newPassword);
+					int result = userService.updatePassword(userId, hashedPassword);
+					if (result > 0) {
+						System.out.println("비밀번호가 성공적으로 변경되었습니다.");
+					} else {
+						System.out.println("비밀번호 변경에 실패했습니다.");
+					}
+					return Command.USER_HOME; // 수정 후 홈으로 이동
+				} else {
+					count--;
+					System.out.printf("잘못된 인증 코드입니다. 다시 입력하세요. 남은기회 " + count + "회\n");
+				}
 
-	            if (count <= 0) {
-	                System.out.println("인증 기회를 모두 소진했습니다.");
-	                String retry = ScanUtil.nextLine("다시 인증하시겠습니까? (y/n) >> ");
-	                if (retry.equalsIgnoreCase("y")) {
-	                    count = 3; // 기회 초기화
-	                    verificationController.sendVerificationCode(email); // 인증 코드 재발송
-	                } else {
-	                    return Command.HOME; // 홈으로 이동
-	                }
-	            }
-	        }
-	    } else {
-	        System.out.println("등록된 이메일이 아닙니다.");
-	        return Command.HOME; // 홈으로 이동
-	    }
+				if (count <= 0) {
+					System.out.println("인증 기회를 모두 소진했습니다.");
+					String retry = ScanUtil.nextLine("다시 인증하시겠습니까? (y/n) >> ");
+					if (retry.equalsIgnoreCase("y")) {
+						count = 3; // 기회 초기화
+						verificationController.sendVerificationCode(email); // 인증 코드 재발송
+					} else {
+						return Command.HOME; // 홈으로 이동
+					}
+				}
+			}
+		} else {
+			System.out.println("등록된 이메일이 아닙니다.");
+			return Command.HOME; // 홈으로 이동
+		}
 	}
-
-
-
 
 	// 아이디 찾기
 	public Command findUserId() {
@@ -403,11 +391,8 @@ public class UsersController {
 				}
 
 				if (count <= 0) {
-					System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n"
-							+ "████▌▄▌▄▐▐▌█████\r\n"
-							+ "████▌▄▌▄▐▐▌▀████\r\n"
-							+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n"
-							+ "");
+					System.out.println("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\r\n" + "████▌▄▌▄▐▐▌█████\r\n" + "████▌▄▌▄▐▐▌▀████\r\n"
+							+ "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\r\n" + "");
 					String retry = ScanUtil.nextLine("다시 인증하시겠습니까? (y/n) >> ");
 					if (retry.equalsIgnoreCase("y")) {
 						count = 3; // 기회 초기화
@@ -435,8 +420,7 @@ public class UsersController {
 				+ "|  |     |  |  |  | |  | |_ | |  | |  . `  | \r\n"
 				+ "|  `----.|  `--'  | |  |__| | |  | |  |\\   | \r\n"
 				+ "|_______| \\______/   \\______| |__| |__| \\__| \r\n"
-				+ "                                             \r\n"
-				+ "");
+				+ "                                             \r\n" + "");
 
 		// ID 입력 박스
 		System.out.println("┌────────────────────────────┐");
@@ -457,7 +441,7 @@ public class UsersController {
 			System.out.println("ID 혹은 PW를 잘못 입력하셨습니다.");
 			return Command.LOGIN; // 다시 로그인
 		}
-		if(loginUserVo.getUser_ban()!=null) {
+		if (loginUserVo.getUser_ban() != null) {
 			System.out.println();
 			System.out.println("당신은 관리자에 의해 제재 되었습니다 \n사유 : " + loginUserVo.getUser_ban());
 			System.out.println();
