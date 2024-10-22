@@ -546,7 +546,8 @@ public class PostController {
 	public Command postDelete(int postId) {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인 사용자 정보
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
-		PostVo post = postService.getPost(postId); // 게시물 정보 가져오기
+		PostVo post = postService.getPost(postId); 
+		// 게시물 정보 가져오기
 		
 		 // 게시글 작성자가 본인인 경우 또는 관리자일 경우
 	    if (post.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
@@ -556,6 +557,7 @@ public class PostController {
 	        System.out.println("다른 사용자의 글은 삭제할 수 없습니다.");
 	    }
 	    return Command.POST_LIST; // 게시물 목록으로 돌아감
+	    
 	}
 
 	// 게시글 삭제 메서드 (삭제할 글 번호를 직접 입력)
