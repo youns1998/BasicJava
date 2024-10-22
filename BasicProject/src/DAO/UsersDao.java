@@ -205,6 +205,7 @@ public class UsersDao {
 					//	if()
 						MainController.sessionMap.put("updateUser",uservo); // 로그인한 사용자 정보 가져오기
 						
+
 						System.out.println("1.더 수정하기 0.되돌아가기");
 						int y = ScanUtil.nextInt("선택 >> ");
 						if (y == 1)
