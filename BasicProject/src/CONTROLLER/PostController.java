@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import SERVICE.*;
@@ -332,7 +333,8 @@ public class PostController {
 				generalPosts.add(post); // 일반 게시물에 추가
 			}
 		}
-
+		
+		generalPosts.sort((post1, post2) -> post2.getUpdated_at().compareTo(post1.getUpdated_at()));
 		int totalGeneralPosts = generalPosts.size(); // 전체 일반 게시물 수
 		int totalPages = (int) Math.ceil((double) totalGeneralPosts / pageSize); // 페이지 수 계산
 
