@@ -134,42 +134,60 @@ public class UsersDao {
 
 	// 관리자의 사용자 정보 선택 수정 메서드
 	public void updateUserSelect(UsersVo uservo) {
+		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보 가져오기
 		boolean exit = true;
 		while (exit) {
 			System.out.println();
-			if (uservo.getRole() != 0) {
-				System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 6.회원제제 0.뒤로가기");
+			if (loginUserVo.getRole() != 0) {
+				System.out.println("1.비밀번호 변경(X) 2.이름 수정 3.번호 수정 4.주소 수정 5.이메일 수정 6.회원 제재 0.뒤로가기");
 			} else {
-				System.out.println("1.PW 2.이름 3.번호 4.주소 5.이메일 0.뒤로가기");
+				System.out.println("1.비밀번호 변경 2.이름 변경 3.번호 변경 4.주소 변경 5.이메일 변경 0.뒤로가기");
 			}
 			int choice = ScanUtil.nextInt("수정할 항목을 선택하세요 >> ");
 			switch (choice) {
 			case 1:
-				String newpw = ScanUtil.nextLine("새로운 PW를 입력하세요 : ");
-				uservo.setUser_pass(newpw);
+				if (loginUserVo.getRole() == 0) { // 일반 사용자만 비밀번호 변경
+                    String newpw = ScanUtil.nextLine("새로운 PW를 입력하세요 : ");
+                    
+                    //현재 비밀번호(해싱 코드)와 새로 입력 받은 비밀번호의 해싱코드를 비교
+                    	if(loginUserVo.getUser_pass().equalsIgnoreCase(PasswordUtil.hashPassword(newpw))){
+                    		System.out.println("같은 비밀번호로는 변경할 수 없습니다");
+                    		System.out.println();
+                    	}else {
+                    		uservo.setUser_pass(PasswordUtil.hashPassword(newpw));
+                    		System.out.println("PW 변경 완료");
+                    		System.out.println();
+                    	}
+                } else {
+                    System.out.println("관리자는 비밀번호를 변경할 수 없습니다.");
+                }
 				break;
 			case 2:
 				String newname = ScanUtil.nextLine("새로운 이름을 입력하세요 : ");
 				uservo.setUsername(newname);
+				System.out.println("이름 변경 완료");
 				break;
 			case 3:
 				String newphone_number = ScanUtil.nextLine("새로운 번호를 입력하세요 : ");
 				uservo.setPhone_number(newphone_number);
+				System.out.println("번호 변경 완료");
 				break;
 			case 4:
 				String newAdd = ScanUtil.nextLine("새로운 주소를 입력하세요 : ");
 				uservo.setAddress(newAdd);
+				System.out.println("주소 변경 완료");
 				break;
 			case 5:
-				String newemail = ScanUtil.nextLine("새로운 이메일을 입력하세요 : ");
+				
+				String newemail = ScanUtil.nextLine("이메일은 추후 ID나 PW를 찾을때 인증 수단으로 활용됩니다 신중히 변경해주세요 \n새로운 이메일을 입력하세요 : ");
 				uservo.setEmail(newemail);
+				System.out.println("이메일 변경 완료");
 				break;
 			case 6:
-				String newId = ScanUtil.nextLine("제제할 회원의 ID를 입력하세요 >> ");
-				String banId = ScanUtil.nextLine("제제할 사유를 입력하세요 >> ");
+				String banId = ScanUtil.nextLine("제재할 사유를 입력하세요 >> ");
+				uservo.setUser_id(uservo.getUser_id());
 				uservo.setUser_ban(banId);
-				uservo.setUser_id(newId);
-				MainController.sessionMap.put("loginUser", uservo);
+				System.out.println("선택한 사용자 제재 완료");
 			case 0:
 				exit = false;
 				break;
@@ -183,8 +201,7 @@ public class UsersDao {
 				try {
 					int result = updateUser(uservo); // 회원 정보 업데이트
 					if (result > 0) {
-						MainController.sessionMap.put("loginUser", uservo);
-						System.out.println("회원 정보가 수정되었습니다.\n 1.더 수정하기 0.되돌아가기");
+						System.out.println("1.더 수정하기 0.되돌아가기");
 						int y = ScanUtil.nextInt("선택 >> ");
 						if (y == 1)
 							continue;

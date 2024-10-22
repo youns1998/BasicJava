@@ -139,7 +139,6 @@ public class UsersController {
 		// 사용자 권한 확인 (본인 또는 관리자)
 		if (uservo.getUser_id().equals(loginUserVo.getUser_id()) || loginUserVo.getRole() != 0) {
 			userService.updateUser(uservo); // 회원 정보 수정
-			System.out.println("수정 끝났습니다");
 		}
 
 		return Command.ADMIN_USERDETAIL; // 수정 후 관리자 회원 상세보기로 이동

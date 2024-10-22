@@ -71,7 +71,7 @@ public class CommentController {
         List<UsersVo> users = usersService.getPostList(); // 전체 사용자 목록 불러오기
         for (UsersVo user : users)
         	if(user.getUser_ban()==null) {
-            System.out.println("ID: " + user.getUser_id());
+            System.out.println("ID: " + user.getUser_id() + "\t\t\t이름: " + user.getUsername());
         	}else {
         	System.out.println("ID: " + user.getUser_id() +"\t\t\t 제재당한 사용자입니다(사유: " + user.getUser_ban()+")");
         	}
@@ -107,7 +107,7 @@ public class CommentController {
                 System.out.println("------------------------------");
             }
         }
-        return Command.USER_LIST; // 관리자의 유저리스트 화면으로 돌아감
+        return Command.COMMENT_ADMIN; // 관리자의 유저리스트 화면으로 돌아감
     }
 
     // 댓글 작성 메서드
