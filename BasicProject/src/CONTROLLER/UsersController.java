@@ -455,29 +455,53 @@ public class UsersController {
 	// 내 정보 (마이페이지)
 	public Command myPage() {
 		UsersVo loginUser = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보 가져오기
+		UsersVo updateUser = (UsersVo) MainController.sessionMap.get("updateUser"); // 로그인한 사용자 정보 가져오기
+
 		if (loginUser == null) { // 로그인되지 않은 경우
 			System.out.println("로그인이 필요합니다.");
 			return Command.LOGIN; // 로그인 페이지로 이동
 		}
+		if ( updateUser==null) {
+			System.out.println("+==============================+");
+			System.out.println("|           MY PAGE            |");
+			System.out.println("+------------------------------+");
 
+			System.out.printf("   %-8s         %-15s \n", "ID", loginUser.getUser_id());
+			System.out.println("|-----------|------------------|");
+			System.out.printf("   %-8s         %-15s \n", "이름", loginUser.getUsername());
+			System.out.println("|-----------|------------------|");
+			System.out.printf("   %-8s         %-15s \n", "E-MAIL", loginUser.getEmail());
+			System.out.println("|-----------|------------------|");
+			System.out.printf("   %-8s         %-15s \n", "전화번호", loginUser.getPhone_number());
+			System.out.println("|-----------|------------------|");
+			System.out.printf("   %-8s         %-15s \n", "주소", loginUser.getAddress());
+
+			System.out.println("+==============================+");
+
+			return Command.USER_SELF; // 마이페이지 후 사용자 정보 관리로 이동
+		}
+		else {
+			System.out.println("+==============================+");
+			System.out.println("|           MY PAGE            |");
+			System.out.println("+------------------------------+");
+
+			System.out.printf("   %-8s         %-15s \n", "ID", updateUser.getUser_id());
+			System.out.println("|-----------|------------------|");
+			System.out.printf("   %-8s         %-15s \n", "이름", updateUser.getUsername());
+			System.out.println("|-----------|------------------|");
+			System.out.printf("   %-8s         %-15s \n", "E-MAIL", updateUser.getEmail());
+			System.out.println("|-----------|------------------|");
+			System.out.printf("   %-8s         %-15s \n", "전화번호", updateUser.getPhone_number());
+			System.out.println("|-----------|------------------|");
+			System.out.printf("   %-8s         %-15s \n", "주소", updateUser.getAddress());
+
+			System.out.println("+==============================+");
+
+			return Command.USER_SELF; // 마이페이지 후 사용자 정보 관리로 이동
+		}
 		// 인터페이스 출력
-		System.out.println("+==============================+");
-		System.out.println("|           MY PAGE            |");
-		System.out.println("+------------------------------+");
-
-		System.out.printf("   %-8s         %-15s \n", "ID", loginUser.getUser_id());
-		System.out.println("|-----------|------------------|");
-		System.out.printf("   %-8s         %-15s \n", "이름", loginUser.getUsername());
-		System.out.println("|-----------|------------------|");
-		System.out.printf("   %-8s         %-15s \n", "E-MAIL", loginUser.getEmail());
-		System.out.println("|-----------|------------------|");
-		System.out.printf("   %-8s         %-15s \n", "전화번호", loginUser.getPhone_number());
-		System.out.println("|-----------|------------------|");
-		System.out.printf("   %-8s         %-15s \n", "주소", loginUser.getAddress());
-
-		System.out.println("+==============================+");
-
-		return Command.USER_SELF; // 마이페이지 후 사용자 정보 관리로 이동
+		
+		
 	}
 
 }
