@@ -414,8 +414,8 @@ public class UsersController {
 	// 로그인
 	public Command login() {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println(" __        ______     _______  __  .__   __. \r\n"
-				+ "|  |      /  __  \\   /  _____||  | |  \\ |  | \r\n"
+		System.out.println(" __        ______     ______   __  .__   __. \r\n"
+				+ "|  |      /  __  \\   /  ____| |  | |  \\ |  | \r\n"
 				+ "|  |     |  |  |  | |  |  __  |  | |   \\|  | \r\n"
 				+ "|  |     |  |  |  | |  | |_ | |  | |  . `  | \r\n"
 				+ "|  `----.|  `--'  | |  |__| | |  | |  |\\   | \r\n"
