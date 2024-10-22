@@ -35,7 +35,6 @@ public class FavoriteController {
 	    
 	    PostService postService = PostService.getInstance();
 	    PostVo postvo = postService.getPost(postId); 	// 게시글 조회
-	    System.out.println(postvo.getUser_id());
 	    
 	    // 사용자가 자신의 게시글을 찜하려고 할 경우 처리
 	    if (loginUserVo.getUser_id().equals(postvo.getUser_id())) {
