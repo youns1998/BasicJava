@@ -129,8 +129,8 @@ public class UsersController {
 			if (choice1 == 1) { // 탈퇴 확인
 				userService.deleteUser(user); // 사용자 삭제
 				System.out.println(".　　。+。☆゜*。゜。\r\n" + "　。＊゜゜+☆＊+゜。*。\r\n" + "　＠。゜*゜。+。☆＊＠゜\r\n" + "　゜+。☆゜。*。＠。+*゜\r\n"
-						+ "　＼゜*。゜。*゜*。+／\r\n" + "　　 ＼*゜+ ∧,,∧ .／\r\n" + "　　　　＼ (^ω^＊)　그 동안 Peanut Market을\r\n"
-						+ "　　　　　◎⊂　)　아끼고 찾아 주셔서\r\n" + "　　　　　△し-J　감사 합니다 ﻿ʚ◡̈ɞ\r\n" + "");
+						+ "　＼゜*。゜。*゜*。+／\r\n" + "　　 ＼*゜+ ∧,,∧ .／\r\n" + "　　　　＼ (^ω^＊)　그 동안 땅콩 마켓을\r\n"
+						+ "　　　　　◎⊂　)　이용해 주셔서\r\n" + "　　　　　△し-J　감사 합니다 ﻿ʚ◡̈ɞ\r\n" + "");
 			} else { // 탈퇴 취소
 				System.out.println("좋은 생각입니다 더 좋은 서비스로 보답하겠습니다");
 				return Command.USER_HOME; // 홈으로 돌아가기

@@ -202,10 +202,7 @@ public class UsersDao {
 				try {
 					int result = updateUser(uservo); // 회원 정보 업데이트
 					if (result > 0) {
-					//	if()
-						MainController.sessionMap.put("updateUser",uservo); // 로그인한 사용자 정보 가져오기
-						
-
+						MainController.sessionMap.put("updateUser",uservo); // 업데이트한 사용자 정보 맵에 넣기
 						System.out.println("1.더 수정하기 0.되돌아가기");
 						int y = ScanUtil.nextInt("선택 >> ");
 						if (y == 1)

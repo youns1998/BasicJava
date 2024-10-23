@@ -117,19 +117,25 @@ public class MainController {
 			}
 		}
 	}
+                              
 
 	// 홈 화면 출력 및 입력 처리 메서드
 	private Command home() {
 		// 프로그램 로고 및 선택 메뉴 출력
-		System.out.println(ANSI_BROWN+"            ■■■■■■■■    ■       ■  ");
-        System.out.println("            ■       ■   ■■     ■■  ");
-        System.out.println("            ■■■■■■■■    ■  ■ ■  ■  ");
-        System.out.println("            ■           ■   ■   ■  ");
-        System.out.println("            ■   eanut   ■       ■ arket" +ANSI_RESET);
+		System.out.println(ANSI_BROWN+"  ___  ___  ___  _ _  _ _  ___      ⢠⡜⠋⢍⡉⡙⠶⣄⠀⠀⠀ \r\n"
+				+ " | . \\| __>| . || \\ || | ||_ _|  ⠀⠀⢰⠏⣐⡁⢆⠠⡑⢨⠹⡆⠀⠀\r\n"
+				+ " |  _/| _> |   ||   || ' | | |    ⠀⠸⣆⢙⠣⢮⠔⢿⡀⢏⡗⠀⠀\r\n"
+				+ " |_|  |___>|_|_||_\\_|`___' |_|   ⠀⠀⢰⢃⣞⣤⢂⡼⣂⠜⡟⠀⠀⠀\r\n"
+				+ "  __ __  ___  ___  _ __ ___  ___  ⢠⡏⠤⡈⠰⣈⠩⡑⠸⣧⠀⠀⠀\r\n"
+				+ " |  \\  \\| . || . \\| / /| __>|_ _|⠀⠘⣦⠐⡄⢣⠐⣠⢡⡓⡏⠀⠀⠀\r\n"
+				+ " |     ||   ||   /|  \\ | _>  | |   ⠙⢾⣐⢣⡙⣤⡳⠞⠁⠀⠀⠀\r\n"
+				+ " |_|_|_||_|_||_\\_\\|_\\_\\|___> |_|⠀⠀⠀⠀⠀⠈⠋⠉⠁⠀⠀"+ANSI_RESET);
+        
+        
 
-	    System.out.println("------------------------------------------------");
+	    System.out.println("--------------------------------------------------");
 	    System.out.println("  1.로그인  2.회원가입  3.ID찾기  4.비밀번호찾기  0.나가기 ");
-	    System.out.println("------------------------------------------------");
+	    System.out.println("--------------------------------------------------");
 	    System.out.println();
 	    
 	    // 사용자 입력 처리
@@ -194,6 +200,7 @@ public class MainController {
 
 	// 관리자 홈 화면 메서드
 	public Command admin_home() {
+		
 		// 세션에서 로그인한 사용자 정보 가져오기
 		UsersVo loginUserVo = (UsersVo)MainController.sessionMap.get("loginUser");
 		
