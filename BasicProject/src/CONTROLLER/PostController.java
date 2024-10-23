@@ -109,14 +109,18 @@ public class PostController {
 	private Command commentMenu(int postId) {
 		UsersVo loginUserVo = (UsersVo) MainController.sessionMap.get("loginUser"); // 로그인한 사용자 정보 가져오기
 		PostService postService = PostService.getInstance(); // 게시물 서비스 인스턴스
+		UsersService userService = UsersService.getInstance();
 		PostVo post = postService.getPost(postId); // 게시물 정보 가져오기
-
+		UsersVo user = userService.getUserSelect(post.getUser_id());
+		if(user.getUser_ban()!=null) {
+        	return Command.POST_LIST;
+        }else {
 		System.out.println("1. 댓글 달기 2. 댓글 수정 3. 댓글 삭제 4. 찜하기 0. 전체 게시물 보러가기");
-
+        }
 		if (post.getUser_id().equals(loginUserVo.getUser_id())) { // 게시글 작성자인 경우
 			System.out.println("5. 판매글 수정  6. 판매 상태 변경"); // 수정, 상태 변경 옵션 추가
 		}
-
+        
 		System.out.print("메뉴 선택 >> ");
 		int choice = ScanUtil.nextInt(); // 사용자 선택 입력받기
 
@@ -200,7 +204,7 @@ public class PostController {
 
 			// 내용 출력
 			System.out.printf("| 내용 : %-72s \n", post.getContent());
-			System.out.printf("| %-78s \n", "");
+			System.out.printf("| %-78s \n");
 			System.out.println(borderLine);
 
 			LocalDateTime createdAt = post.getCreated_at(); // 작성 시간
