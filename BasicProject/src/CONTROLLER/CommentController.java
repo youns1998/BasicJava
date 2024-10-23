@@ -132,7 +132,7 @@ public class CommentController {
         } else {
             System.out.println("댓글 추가에 실패했습니다.");
         }
-        return returnToPostDetail(postId); // 댓글 추가 후 해당 게시물 상세 보기로 돌아감
+        return Command.POST_DETAIL; // 댓글 추가 후 해당 게시물 상세 보기로 돌아감
     }
 
     // 댓글 수정 메서드
